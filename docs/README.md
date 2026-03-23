@@ -1,27 +1,18 @@
-# TITULO DO PROJETO
+LAGO DO SOL
+Artur de Figueiredo Neves - arturfneves17@gmail.com
+Guilherme Pereira Bittencourt - guilhermebittencourt.p@gmail.com
+Mateus de Moura Armani - mateusmarmani@gmail.com
+Matheus Figueiredo - matheus.figueiredo15m@gmail.com
+Raphael Thierry Coelho - raphaeltierry08@gmail.com
 
-
-**Nome completo do Aluno 1, email do aluno 1**
-
-**Nome completo do Aluno 2, email do aluno 2**
-
-**Nome completo do Aluno 3, email do aluno 3**
-
-**Nome completo do Aluno 4, email do aluno 4**
-
-**Nome completo do Aluno 5, email do aluno 5**
-
-**Nome completo do Aluno 6, email do aluno 6**
-
----
 
 Professores:
 
-** Prof. Nome do Prof 1 **
+Lucca Soares de Paiva Lacerda
 
-** Prof. Nome do Prof 2 **
+Luiz Carlos da Silva 
 
-** Prof. Nome do Prof 3 **
+Michelle Hanne Soares de Andrade
 
 ---
 
@@ -31,57 +22,71 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade Cató
 
 ---
 
-_**Resumo**. Escrever aqui o resumo. O resumo deve contextualizar rapidamente o trabalho, descrever seu objetivo e, ao final, 
-mostrar algum resultado relevante do trabalho (até 10 linhas)._
+Este trabalho apresenta o desenvolvimento de uma plataforma digital integrada para a gestão de reservas e operações de um empreendimento hoteleiro. O objetivo é substituir processos manuais e sistemas desconectados por uma solução automatizada que une o fluxo de vendas online ao controle interno de facilities e recepção. Através da otimização da jornada do usuário e da sincronização de dados em tempo real, o projeto visa reduzir erros operacionais e elevar as taxas de conversão de clientes. Como resultado esperado, a implementação da proposta permite um controle gerencial preciso e uma comunicação ágil entre os setores, tornando o hotel mais competitivo no cenário digital atual.
 
 ---
 
 
 ## 1. Introdução
 
-_Apresente uma frase introdutória definindo o que será apresentado._
-
+Este documento detalha o planejamento, a análise e a proposta de solução tecnológica para a automação dos processos de reserva e gestão interna de uma unidade hoteleira.
 ### 1.1 Contextualização
 
-_Na **contextualização**, o aluno deve dizer do que se trata o trabalho, em que área ou contexto se insere.
-A **contextualização** deve ser desenvolvida de algo mais genérico para algo mais específico. 
-A citação de pesquisas quantitativas é bem aceita aqui (corretamente referenciadas)._
+O setor de turismo e hotelaria passou por uma transformação digital profunda na última década. Segundo dados do setor, mais de 70% dos viajantes preferem realizar suas reservas de forma direta e online, buscando agilidade e confirmação imediata. Nesse cenário, o site de um hotel deixou de ser uma vitrine estática para se tornar o principal motor de receita e o primeiro ponto de contato na experiência do hóspede. A eficiência desse canal digital está diretamente ligada à capacidade do estabelecimento em converter visitantes em clientes pagantes de forma autônoma e segura.
 
 ### 1.2 Problema
 
-_Em seguida o aluno deve caminhar a contextualização para descrever o **problema** que o trabalho trata. 
-O **problema** pode ser algo vivido em uma empresa específica. Neste caso, o aluno deve rapidamente apresentar 
-o cenário de problema da empresa. A empresa só deve ser citada explicitamente se o aluno tiver autorização 
-para tal._
+Atualmente, o hotel enfrenta dificuldades com um processo de reserva pouco intuitivo e fragmentado. A falta de integração entre o site e os sistemas internos gera um fluxo de trabalho manual, onde a recepção precisa confirmar disponibilidades de forma analógica, aumentando o risco de overbooking. Além disso, há um gargalo na comunicação com a equipe de camareiras, que depende de avisos verbais ou planilhas físicas para a liberação de quartos, resultando em demora no check-in e possíveis falhas no controle gerencial e financeiro.
 
 ### 1.3 Objetivo geral
 
-_O aluno deve escrever um pequeno parágrafo ou frase com o **objetivo geral** do trabalho. 
-O objetivo deve ser bem direto, específico e definido com verbos de ação (elaborar, propor, avaliar, comparar, desenvolver, etc.). No caso específico deste projeto, o objetivo deste trabalho é desenvolver um sistema para automação de processos para um problema específico._
+O objetivo deste trabalho é desenvolver e implementar um sistema integrado de automação de processos para a gestão de reservas e serviços hoteleiros, otimizando a interface de venda direta e a comunicação operacional interna.
 
 #### 1.3.1 Objetivos específicos
 
-_Apresente também alguns (pelo menos 4) **objetivos específicos** dependendo de onde você vai querer 
-concentrar sua prática investigativa, ou como você irá aprofundar seu trabalho._
+Implementar um motor de reservas online com atualização de disponibilidade em tempo real.
+
+Automatizar o processo de cadastro de clientes e validação de pagamentos digitais.
+
+Desenvolver um painel de controle para a gestão de facilities (limpeza e manutenção) integrado à recepção.
+
+Estruturar relatórios gerenciais automatizados para monitoramento de taxas de ocupação e faturamento.
 
 ### 1.4 Justificativas
 
-_Mostre também as **justificativas** para o 
-desenvolvimento do seu trabalho e, caso deseje, destaque alguma contribuição do trabalho._
+A modernização do sistema justifica-se pela necessidade de aumentar a receita direta do hotel, reduzindo as comissões pagas a intermediários. Operacionalmente, a solução reduz erros humanos e retrabalho na recepção. Estratégicamente, o sistema provê dados precisos para a gerência, permitindo tomadas de decisão baseadas em evidências e melhorando a percepção de valor e profissionalismo por parte do hóspede.
 
 ## 2. Participantes do processo
 
-_Apresente aqui os perfis dos usuários-chave do sistema. Diversas são as informações que podem ser relevantes para a definição dos perfis dos usuários, tais como idade, gênero, aspectos culturais, nível de educação, entre outros. A pesquisa de mercado pode ser uma ferramenta poderosa para se identificar e caracterizar os perfis de usuários. Apresente claramente o papel a ser desempenhado por cada usuário._
+Cliente: Indivíduos de diversas faixas etárias, com nível de educação médio/superior e familiaridade com tecnologia. Papel: Realizar o autoatendimento (cadastro, busca e pagamento da reserva).
+
+Recepção: Colaboradores operacionais. Papel: Realizar o atendimento presencial, validar check-ins e check-outs e monitorar as reservas vindas do sistema.
+
+Camareiras (Facilities): Equipe operacional interna. Papel: Atualizar o status de higienização e manutenção dos quartos no sistema para liberação imediata.
+
+Gerência: Perfil administrativo. Papel: Acompanhar métricas de desempenho, ocupação e resultados financeiros através de relatórios.
+
+Equipe de TI: Profissionais técnicos. Papel: Manutenção preventiva, suporte e evolução das funcionalidades da plataforma.
 
 ## 3. Modelagem do processo de negócio
 
 ### 3.1. Análise da situação atual
 
-_Apresente uma descrição textual de como os sistemas atuais resolvem o problema que seu projeto se propõe a resolver. Caso sua proposta seja inovadora e não existam processos claramente definidos, **apresente como as tarefas que o seu sistema pretende implementar são executadas atualmente**, mesmo que não se utilize tecnologia computacional._
+Atualmente, as tarefas são executadas de forma híbrida e descentralizada. O site funciona apenas como um formulário de contato ou exibe informações estáticas, obrigando o cliente a aguardar um retorno por e-mail ou telefone para confirmar a reserva. Internamente, a comunicação entre a recepção e o setor de limpeza é feita via rádio ou planilhas de papel, o que gera atrasos na atualização do inventário de quartos disponíveis. O processamento de pagamentos é manual, realizado no momento do check-in, o que gera filas e insegurança financeira para o hotel em caso de desistências não comunicadas.
 
 ### 3.2. Descrição geral da proposta de solução
 
-_Apresente aqui uma descrição da sua proposta abordando seus limites e suas ligações com as estratégias do negócio e os objetivos geral e específicos do projeto. Apresente aqui as oportunidades de melhorias._
+A solução proposta consiste em uma plataforma end-to-end que conecta o cliente final diretamente ao ecossistema operacional do hotel. A proposta elimina o delay de comunicação ao automatizar quatro pilares:
+
+Venda Direta: Motor de reserva com cálculo automático de tarifas e gateway de pagamento.
+
+Sincronização de Inventário: Bloqueio imediato de quartos no banco de dados após a confirmação da reserva.
+
+Gestão de Fluxo Interno: Interface simplificada para camareiras sinalizarem a prontidão dos quartos via dispositivos móveis.
+
+Inteligência de Negócio: Painel gerencial com indicadores de desempenho (KPIs).
+
+Esta abordagem resolve os limites da situação atual ao transformar o site em uma ferramenta de eficiência operacional, alinhando a tecnologia à estratégia de crescimento e competitividade do negócio.
 
 ### 3.3. Modelagem dos processos
 
