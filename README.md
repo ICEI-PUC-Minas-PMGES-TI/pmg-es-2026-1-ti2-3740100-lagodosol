@@ -16,8 +16,8 @@ Raphael Thierry Coelho;
 
 ## Professor
 
-* Nome completo do professor 1
-* Nome completo do professor 2
+Lucca Soares de Paiva Lacerda
+Michelle Hanne Soares de Andrade
 * Nome completo do professor 3
 
 ## Instruções de utilização
