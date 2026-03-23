@@ -8,11 +8,11 @@ Internamente, o projeto visa estabelecer uma integração completa entre o siste
 
 ## Integrantes
 
-Artur de Figueiredo Neves
-Guilherme Pereira Bittencourt
-Matheus Figueiredo 
-Mateus de Moura Armani 
-Raphael Thierry Coelho
+Artur de Figueiredo Neves;
+Guilherme Pereira Bittencourt;
+Matheus Figueiredo;
+Mateus de Moura Armani; 
+Raphael Thierry Coelho;
 
 ## Professor
 
