@@ -1,67 +1,48 @@
-### 3.3.1 Processo 1 – NOME DO PROCESSO
-
-_Apresente aqui o nome e as oportunidades de melhoria para o processo 1. 
-Em seguida, apresente o modelo do processo 1, descrito no padrão BPMN._
-
-![Exemplo de um Modelo BPMN do PROCESSO 1](images/process.png "Modelo BPMN do Processo 1.")
-
-#### Detalhamento das atividades
-
-_Descreva aqui cada uma das propriedades das atividades do processo 1. 
-Devem estar relacionadas com o modelo de processo apresentado anteriormente._
-
-_Os tipos de dados a serem utilizados são:_
-
-_* **Área de texto** - campo texto de múltiplas linhas_
-
-_* **Caixa de texto** - campo texto de uma linha_
-
-_* **Número** - campo numérico_
-
-_* **Data** - campo do tipo data (dd-mm-aaaa)_
-
-_* **Hora** - campo do tipo hora (hh:mm:ss)_
-
-_* **Data e Hora** - campo do tipo data e hora (dd-mm-aaaa, hh:mm:ss)_
-
-_* **Imagem** - campo contendo uma imagem_
-
-_* **Seleção única** - campo com várias opções de valores que são mutuamente exclusivas (tradicional radio button ou combobox)_
-
-_* **Seleção múltipla** - campo com várias opções que podem ser selecionadas mutuamente (tradicional checkbox ou listbox)_
-
-_* **Arquivo** - campo de upload de documento_
-
-_* **Link** - campo que armazena uma URL_
-
-_* **Tabela** - campo formado por uma matriz de valores_
+### 3.3.1 Processo 1 – Cadastro de Cliente
 
 
-**Nome da atividade 1**
 
-| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
-| [Nome do campo] | [tipo de dados]  |                |                   |
-| ***Exemplo:***  |                  |                |                   |
-| login           | Caixa de Texto   | formato de e-mail |                |
-| senha           | Caixa de Texto   | mínimo de 8 caracteres |           |
-
-| **Comandos**         |  **Destino**                   | **Tipo** |
-| ---                  | ---                            | ---               |
-| [Nome do botão/link] | Atividade/processo de destino  | (default/cancel  ) |
-| ***Exemplo:***       |                                |                   |
-| entrar               | Fim do Processo 1              | default           |
-| cadastrar            | Início do proceso de cadastro  |                   |
+<img width="739" height="233" alt="image" src="https://github.com/user-attachments/assets/028da01f-fd62-4c30-933b-f62822170ee5" />
 
 
-**Nome da atividade 2**
 
-| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
-| [Nome do campo] | [tipo de dados]  |                |                   |
-|                 |                  |                |                   |
-
-| **Comandos**         |  **Destino**                   | **Tipo**          |
-| ---                  | ---                            | ---               |
-| [Nome do botão/link] | Atividade/processo de destino  | (default/cancel/  ) |
-|                      |                                |                   |
+Preencher Dados
+Campo	Tipo	Restrições	Valor default
+nome completo	Caixa de texto	obrigatório, mínimo 3 caracteres	
+email	Caixa de texto	obrigatório, formato de e-mail	
+senha	Caixa de texto	obrigatório, mínimo 8 caracteres	
+confirmar senha	Caixa de texto	deve ser igual à senha	
+data de nascimento	Data	obrigatório	
+telefone	Caixa de texto	formato numérico (com DDD)	
+endereço	Área de texto	opcional	
+gênero	Seleção única	opções: masculino, feminino, outro	
+aceitar termos	Seleção múltipla	obrigatório	não marcado
+Comandos	Destino	Tipo
+enviar	Persistir Cadastro	default
+cancelar	Fim do Processo	cancel
+Persistir Cadastro
+Campo	Tipo	Restrições	Valor default
+id do usuário	Número	gerado automaticamente	auto
+nome completo	Caixa de texto	obrigatório	
+email	Caixa de texto	único, obrigatório	
+senha criptografada	Caixa de texto	obrigatório	
+data de cadastro	Data e Hora	preenchido automaticamente	atual
+status	Seleção única	ativo/inativo	ativo
+Comandos	Destino	Tipo
+confirmar	Salvar no Banco de Dados	default
+cancelar	Preencher Dados	cancel
+Salvar no Banco de Dados (SQL)
+Campo	Tipo	Restrições	Valor default
+comando SQL	Área de texto	instrução válida (INSERT)	gerado automático
+tabela	Caixa de texto	obrigatório	usuários
+data execução	Data e Hora	automático	atual
+resultado	Caixa de texto	sucesso/erro	
+Comandos	Destino	Tipo
+concluir	Cadastro Concluído	default
+erro	Preencher Dados	cancel
+Cadastro Concluído
+Campo	Tipo	Restrições	Valor default
+mensagem	Área de texto	informativa	Cadastro realizado com sucesso
+data conclusão	Data e Hora	automático	atual
+Comandos	Destino	Tipo
+finalizar	Fim do Processo	default
