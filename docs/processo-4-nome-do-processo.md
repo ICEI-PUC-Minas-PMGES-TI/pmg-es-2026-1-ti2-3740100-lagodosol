@@ -1,67 +1,76 @@
-### 3.3.4 Processo 4 – NOME DO PROCESSO
+### 3.3.4 Processo 4 – processo de gestao de facilites
 
-_Apresente aqui o nome e as oportunidades de melhoria para o processo 4. 
-Em seguida, apresente o modelo do processo 4, descrito no padrão BPMN._
-
-![Exemplo de um Modelo BPMN do PROCESSO 4](images/process.png "Modelo BPMN do Processo 4.")
+<img width="1097" height="365" alt="image" src="https://github.com/user-attachments/assets/0ca559e6-e558-4d82-9898-23293d0a0786" />
 
 
-#### Detalhamento das atividades
 
-_Descreva aqui cada uma das propriedades das atividades do processo 4. 
-Devem estar relacionadas com o modelo de processo apresentado anteriormente._
+Atualizar status: necessita limpeza
+Campo	Tipo	Restrições	Valor default
+Número do quarto	Número	obrigatório	
+Status	Seleção única	"necessita limpeza"	necessita limpeza
+Data check-out	Data e Hora	obrigatório	
+Comandos	Destino	Tipo
+confirmar	Notificar camareira	default
+Notificar camareira
+Campo	Tipo	Restrições	Valor default
+Camareira	Seleção única	obrigatório	
+Número do quarto	Número	obrigatório	
+Mensagem	Área de texto		Limpeza solicitada
+Comandos	Destino	Tipo
+enviar notificação	Receber notificação	default
+Receber notificação
+Campo	Tipo	Restrições	Valor default
+Camareira	Seleção única	automático	
+Quarto	Número	obrigatório	
+Data recebimento	Data e Hora	automático	
+Comandos	Destino	Tipo
+iniciar limpeza	Limpar quarto	default
+Limpar quarto
+Campo	Tipo	Restrições	Valor default
+Número do quarto	Número	obrigatório	
+Observações	Área de texto		
+Tempo de limpeza	Número	minutos	
+Comandos	Destino	Tipo
+finalizar limpeza	Verificar problema no quarto	default
+Decisão: Problema no quarto?
 
-_Os tipos de dados a serem utilizados são:_
+(atividade automática de decisão, sem campos de entrada)
 
-_* **Área de texto** - campo texto de múltiplas linhas_
-
-_* **Caixa de texto** - campo texto de uma linha_
-
-_* **Número** - campo numérico_
-
-_* **Data** - campo do tipo data (dd-mm-aaaa)_
-
-_* **Hora** - campo do tipo hora (hh:mm:ss)_
-
-_* **Data e Hora** - campo do tipo data e hora (dd-mm-aaaa, hh:mm:ss)_
-
-_* **Imagem** - campo contendo uma imagem_
-
-_* **Seleção única** - campo com várias opções de valores que são mutuamente exclusivas (tradicional radio button ou combobox)_
-
-_* **Seleção múltipla** - campo com várias opções que podem ser selecionadas mutuamente (tradicional checkbox ou listbox)_
-
-_* **Arquivo** - campo de upload de documento_
-
-_* **Link** - campo que armazena uma URL_
-
-_* **Tabela** - campo formado por uma matriz de valores_
-
-**Nome da atividade 1**
-
-| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
-| [Nome do campo] | [tipo de dados]  |                |                   |
-| ***Exemplo:***  |                  |                |                   |
-| login           | Caixa de Texto   | formato de e-mail |                |
-| senha           | Caixa de Texto   | mínimo de 8 caracteres |           |
-
-| **Comandos**         |  **Destino**                   | **Tipo** |
-| ---                  | ---                            | ---               |
-| [Nome do botão/link] | Atividade/processo de destino  | (default/cancel  ) |
-| ***Exemplo:***       |                                |                   |
-| entrar               | Fim do Processo 1              | default           |
-| cadastrar            | Início do proceso de cadastro  |                   |
-
-
-**Nome da atividade 2**
-
-| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
-| [Nome do campo] | [tipo de dados]  |                |                   |
-|                 |                  |                |                   |
-
-| **Comandos**         |  **Destino**                   | **Tipo**          |
-| ---                  | ---                            | ---               |
-| [Nome do botão/link] | Atividade/processo de destino  | (default/cancel/  ) |
+Comandos	Destino	Tipo
+sim	Reportar problema	default
+não	Atualizar status: limpo	default
+Reportar problema
+Campo	Tipo	Restrições	Valor default
+Número do quarto	Número	obrigatório	
+Tipo de problema	Seleção única	obrigatório	
+Descrição	Área de texto	obrigatório	
+Foto do problema	Imagem	opcional	
+Comandos	Destino	Tipo
+enviar	Atualizar status: manutenção	default
+Atualizar status: manutenção
+Campo	Tipo	Restrições	Valor default
+Número do quarto	Número	obrigatório	
+Status	Seleção única	"manutenção"	manutenção
+Data atualização	Data e Hora	automático	
+Comandos	Destino	Tipo
+finalizar	Fim	default
+Atualizar status: limpo
+Campo	Tipo	Restrições	Valor default
+Número do quarto	Número	obrigatório	
+Status	Seleção única	"limpo"	limpo
+Data atualização	Data e Hora	automático	
+Comandos	Destino	Tipo
+confirmar	Notificar recepção	default
+Notificar recepção
+Campo	Tipo	Restrições	Valor default
+Quarto	Número	obrigatório	
+Mensagem	Área de texto		Quarto limpo
+Comandos	Destino	Tipo
+enviar	Liberar quarto	default
+Liberar quarto
+Campo	Tipo	Restrições	Valor default
+Número do quarto	Número	obrigatório	
+Status	Seleção única	"disponível"	disponível
+Comandos	Destino	Tipo
+finalizar	Fim	default
 |                      |                                |                   |
