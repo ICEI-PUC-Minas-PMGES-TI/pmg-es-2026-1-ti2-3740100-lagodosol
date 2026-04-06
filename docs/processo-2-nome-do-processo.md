@@ -4,79 +4,184 @@
 
 
 
-Selecionar Forma de Pagamento
-Campo	Tipo	Restrições	Valor default
-forma de pagamento	Seleção única	obrigatório (cartão, pix, boleto)	
-número do cartão	Caixa de texto	obrigatório se cartão, 16 dígitos	
-nome no cartão	Caixa de texto	obrigatório se cartão	
-validade	Data	obrigatório se cartão	
-cvv	Número	obrigatório se cartão, 3 dígitos	
-Comandos	Destino	Tipo
-continuar	Calcular Valor Total da Reserva	default
-cancelar	Fim do Processo	cancel
-Calcular Valor Total da Reserva
-Campo	Tipo	Restrições	Valor default
-valor da reserva	Número	obrigatório	
-taxas	Número	calculado automaticamente	0
-descontos	Número	opcional	0
-valor total	Número	calculado automaticamente	
-Comandos	Destino	Tipo
-avançar	Exibir Resumo de Pagamento	default
-Exibir Resumo de Pagamento
-Campo	Tipo	Restrições	Valor default
-forma de pagamento	Caixa de texto	somente leitura	
-valor total	Número	somente leitura	
-descrição da reserva	Área de texto	somente leitura	
-Comandos	Destino	Tipo
-confirmar	Confirmar Pagamento	default
-voltar	Selecionar Forma	cancel
-Confirmar Pagamento
-Campo	Tipo	Restrições	Valor default
-confirmação	Seleção única	sim/não	não
-data da confirmação	Data e Hora	automático	atual
-Comandos	Destino	Tipo
-processar	Pagamento Aprovado?	default
-cancelar	Exibir Resumo	cancel
-Pagamento Aprovado? (Decisão do Sistema)
+## Cadastrar Quarto
 
-(Atividade automática — não possui campos editáveis)
+| Campo              | Tipo            | Restrições        | Valor default |
+|--------------------|-----------------|-------------------|--------------|
+| nome do quarto     | Caixa de texto  | obrigatório       |              |
+| número do quarto   | Número          | obrigatório, único|              |
 
-Comandos	Destino	Tipo
-sim	Registrar Pagamento	default
-não	Exibir Mensagem de Erro	cancel
-Exibir Mensagem de Erro
-Campo	Tipo	Restrições	Valor default
-mensagem de erro	Área de texto	obrigatório	Pagamento não aprovado
-código do erro	Caixa de texto	gerado pelo sistema	
-Comandos	Destino	Tipo
-tentar novamente	Exibir Resumo de Pagamento	default
-cancelar	Fim do Processo	cancel
-Registrar Pagamento
-Campo	Tipo	Restrições	Valor default
-id do pagamento	Número	gerado automaticamente	auto
-valor pago	Número	obrigatório	
-forma de pagamento	Caixa de texto	obrigatório	
-data do pagamento	Data e Hora	automático	atual
-status	Seleção única	aprovado/rejeitado	aprovado
-Comandos	Destino	Tipo
-confirmar registro	Gerar Confirmação Digital	default
-Gerar Confirmação Digital
-Campo	Tipo	Restrições	Valor default
-comprovante	Arquivo	gerado automaticamente	
-código de confirmação	Caixa de texto	único	
-data de geração	Data e Hora	automático	atual
-Comandos	Destino	Tipo
-enviar comprovante	Enviar Comprovante ao Cliente	default
-Enviar Comprovante ao Cliente
-Campo	Tipo	Restrições	Valor default
-email do cliente	Caixa de texto	formato de e-mail	
-comprovante	Arquivo	obrigatório	
-mensagem	Área de texto	opcional	
-Comandos	Destino	Tipo
-enviar	Pagamento Confirmado	default
-Pagamento Confirmado (Fim)
-Campo	Tipo	Restrições	Valor default
-mensagem final	Área de texto	informativa	Pagamento realizado com sucesso
-data final	Data e Hora	automático	atual
-Comandos	Destino	Tipo
-finalizar	Fim do Processo	default               |                   |
+| Comandos  | Destino                 | Tipo    |
+|-----------|--------------------------|---------|
+| continuar | Inserir dados do quarto  | default |
+| cancelar  | Fim                      | cancel  |
+
+
+## Inserir Dados do Quarto
+
+| Campo              | Tipo              | Restrições              | Valor default |
+|--------------------|-------------------|--------------------------|--------------|
+| tipo de quarto     | Seleção única     | solteiro, casal, suíte   |              |
+| capacidade         | Número            | obrigatório              |              |
+| preço por noite    | Número            | obrigatório              |              |
+| descrição          | Área de texto     | opcional                 |              |
+| fotos              | Imagem            | opcional                 |              |
+| status             | Seleção única     | disponível/indisponível  | disponível   |
+
+| Comandos  | Destino                 | Tipo    |
+|-----------|--------------------------|---------|
+| validar   | Dados válidos?          | default |
+| cancelar  | Cadastrar quarto        | cancel  |
+
+
+## Dados válidos? (Quarto)
+
+| Comandos | Destino                | Tipo    |
+|----------|------------------------|---------|
+| sim      | Disponibilizar quarto  | default |
+| não      | Inserir dados do quarto| cancel  |
+
+
+## Disponibilizar Quarto
+
+| Campo            | Tipo          | Restrições | Valor default |
+|------------------|---------------|------------|--------------|
+| status           | Seleção única | disponível | disponível   |
+| data liberação   | Data e Hora   | automático | atual        |
+
+| Comandos  | Destino                  | Tipo    |
+|-----------|---------------------------|---------|
+| confirmar | Hóspede acessa sistema    | default |
+
+
+## Hóspede acessa sistema
+
+| Comandos | Destino        | Tipo    |
+|----------|----------------|---------|
+| iniciar  | Informar datas | default |
+
+
+## Informar Datas
+
+| Campo           | Tipo | Restrições              | Valor default |
+|-----------------|------|--------------------------|--------------|
+| data check-in   | Data | obrigatório             |              |
+| data check-out  | Data | > check-in              |              |
+
+| Comandos | Destino                   | Tipo    |
+|----------|---------------------------|---------|
+| buscar   | Verificar disponibilidade | default |
+| cancelar | Fim                       | cancel  |
+
+
+## Verificar Disponibilidade
+
+| Campo   | Tipo           | Restrições | Valor default |
+|---------|----------------|------------|--------------|
+| período | Caixa de texto | automático |              |
+| status  | Seleção única  | disponível/não |          |
+
+| Comandos  | Destino               | Tipo    |
+|-----------|------------------------|---------|
+| verificar | Quarto disponível?     | default |
+
+
+## Quarto disponível?
+
+| Comandos | Destino             | Tipo    |
+|----------|---------------------|---------|
+| sim      | Exibir opções       | default |
+| não      | Exibir indisponível | cancel  |
+
+
+## Exibir indisponível
+
+| Campo     | Tipo          | Valor default        |
+|-----------|---------------|----------------------|
+| mensagem  | Área de texto | Quarto indisponível  |
+
+| Comandos | Destino        | Tipo    |
+|----------|----------------|---------|
+| voltar   | Informar datas | default |
+
+
+## Exibir Opções
+
+| Campo             | Tipo             | Restrições              | Valor default |
+|-------------------|------------------|--------------------------|--------------|
+| lista de quartos  | Tabela           | disponíveis              |              |
+| filtros           | Seleção múltipla | tipo, preço, capacidade  |              |
+
+| Comandos   | Destino            | Tipo    |
+|------------|--------------------|---------|
+| selecionar | Selecionar quarto  | default |
+
+
+## Selecionar Quarto
+
+| Campo            | Tipo           | Restrições | Valor default |
+|------------------|----------------|------------|--------------|
+| quarto escolhido | Caixa de texto | obrigatório|              |
+
+| Comandos  | Destino        | Tipo    |
+|-----------|----------------|---------|
+| continuar | Informar dados | default |
+
+
+## Informar Dados (Hóspede)
+
+| Campo     | Tipo           | Restrições        | Valor default |
+|-----------|----------------|-------------------|--------------|
+| nome      | Caixa de texto | obrigatório       |              |
+| email     | Caixa de texto | formato e-mail    |              |
+| telefone  | Caixa de texto | obrigatório       |              |
+| documento | Caixa de texto | obrigatório       |              |
+
+| Comandos | Destino            | Tipo    |
+|----------|--------------------|---------|
+| validar  | Dados válidos?     | default |
+| voltar   | Selecionar quarto  | cancel  |
+
+
+## Dados válidos? (Hóspede)
+
+| Comandos | Destino           | Tipo    |
+|----------|-------------------|---------|
+| sim      | Confirmar reserva | default |
+| não      | Informar dados    | cancel  |
+
+
+## Confirmar Reserva
+
+| Campo               | Tipo          | Valor default |
+|---------------------|---------------|--------------|
+| resumo da reserva   | Área de texto |              |
+| confirmação         | Seleção única | não          |
+
+| Comandos  | Destino                   | Tipo    |
+|-----------|---------------------------|---------|
+| confirmar | Atualizar disponibilidade | default |
+| cancelar  | Fim                       | cancel  |
+
+
+## Atualizar Disponibilidade
+
+| Campo               | Tipo           | Valor default |
+|---------------------|----------------|--------------|
+| status do quarto    | Seleção única  | ocupado      |
+| período reservado   | Caixa de texto |              |
+
+| Comandos  | Destino | Tipo    |
+|-----------|----------|---------|
+| finalizar | Fim      | default |
+
+
+## Fim
+
+| Campo           | Tipo          | Valor default       |
+|-----------------|---------------|---------------------|
+| mensagem final  | Área de texto | Reserva concluída   |
+
+| Comandos | Destino | Tipo    |
+|----------|----------|---------|
+| encerrar | —        | default |
