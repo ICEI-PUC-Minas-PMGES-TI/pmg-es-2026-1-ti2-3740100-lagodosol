@@ -1,67 +1,82 @@
-### 3.3.2 Processo 2 – NOME DO PROCESSO
+### 3.3.2 Processo 2 – processo de pagamento
 
-_Apresente aqui o nome e as oportunidades de melhoria para o processo 2. 
-Em seguida, apresente o modelo do processo 2, descrito no padrão BPMN._
-
-![Exemplo de um Modelo BPMN do PROCESSO 2](images/process.png "Modelo BPMN do Processo 2.")
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/aeaeb0b9-5197-45a7-a5a8-414e0ce543e9" />
 
 
-#### Detalhamento das atividades
 
-_Descreva aqui cada uma das propriedades das atividades do processo 2. 
-Devem estar relacionadas com o modelo de processo apresentado anteriormente._
+Selecionar Forma de Pagamento
+Campo	Tipo	Restrições	Valor default
+forma de pagamento	Seleção única	obrigatório (cartão, pix, boleto)	
+número do cartão	Caixa de texto	obrigatório se cartão, 16 dígitos	
+nome no cartão	Caixa de texto	obrigatório se cartão	
+validade	Data	obrigatório se cartão	
+cvv	Número	obrigatório se cartão, 3 dígitos	
+Comandos	Destino	Tipo
+continuar	Calcular Valor Total da Reserva	default
+cancelar	Fim do Processo	cancel
+Calcular Valor Total da Reserva
+Campo	Tipo	Restrições	Valor default
+valor da reserva	Número	obrigatório	
+taxas	Número	calculado automaticamente	0
+descontos	Número	opcional	0
+valor total	Número	calculado automaticamente	
+Comandos	Destino	Tipo
+avançar	Exibir Resumo de Pagamento	default
+Exibir Resumo de Pagamento
+Campo	Tipo	Restrições	Valor default
+forma de pagamento	Caixa de texto	somente leitura	
+valor total	Número	somente leitura	
+descrição da reserva	Área de texto	somente leitura	
+Comandos	Destino	Tipo
+confirmar	Confirmar Pagamento	default
+voltar	Selecionar Forma	cancel
+Confirmar Pagamento
+Campo	Tipo	Restrições	Valor default
+confirmação	Seleção única	sim/não	não
+data da confirmação	Data e Hora	automático	atual
+Comandos	Destino	Tipo
+processar	Pagamento Aprovado?	default
+cancelar	Exibir Resumo	cancel
+Pagamento Aprovado? (Decisão do Sistema)
 
-_Os tipos de dados a serem utilizados são:_
+(Atividade automática — não possui campos editáveis)
 
-_* **Área de texto** - campo texto de múltiplas linhas_
-
-_* **Caixa de texto** - campo texto de uma linha_
-
-_* **Número** - campo numérico_
-
-_* **Data** - campo do tipo data (dd-mm-aaaa)_
-
-_* **Hora** - campo do tipo hora (hh:mm:ss)_
-
-_* **Data e Hora** - campo do tipo data e hora (dd-mm-aaaa, hh:mm:ss)_
-
-_* **Imagem** - campo contendo uma imagem_
-
-_* **Seleção única** - campo com várias opções de valores que são mutuamente exclusivas (tradicional radio button ou combobox)_
-
-_* **Seleção múltipla** - campo com várias opções que podem ser selecionadas mutuamente (tradicional checkbox ou listbox)_
-
-_* **Arquivo** - campo de upload de documento_
-
-_* **Link** - campo que armazena uma URL_
-
-_* **Tabela** - campo formado por uma matriz de valores_
-
-**Nome da atividade 1**
-
-| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
-| [Nome do campo] | [tipo de dados]  |                |                   |
-| ***Exemplo:***  |                  |                |                   |
-| login           | Caixa de Texto   | formato de e-mail |                |
-| senha           | Caixa de Texto   | mínimo de 8 caracteres |           |
-
-| **Comandos**         |  **Destino**                   | **Tipo** |
-| ---                  | ---                            | ---               |
-| [Nome do botão/link] | Atividade/processo de destino  | (default/cancel  ) |
-| ***Exemplo:***       |                                |                   |
-| entrar               | Fim do Processo 1              | default           |
-| cadastrar            | Início do proceso de cadastro  |                   |
-
-
-**Nome da atividade 2**
-
-| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
-| [Nome do campo] | [tipo de dados]  |                |                   |
-|                 |                  |                |                   |
-
-| **Comandos**         |  **Destino**                   | **Tipo**          |
-| ---                  | ---                            | ---               |
-| [Nome do botão/link] | Atividade/processo de destino  | (default/cancel/  ) |
-|                      |                                |                   |
+Comandos	Destino	Tipo
+sim	Registrar Pagamento	default
+não	Exibir Mensagem de Erro	cancel
+Exibir Mensagem de Erro
+Campo	Tipo	Restrições	Valor default
+mensagem de erro	Área de texto	obrigatório	Pagamento não aprovado
+código do erro	Caixa de texto	gerado pelo sistema	
+Comandos	Destino	Tipo
+tentar novamente	Exibir Resumo de Pagamento	default
+cancelar	Fim do Processo	cancel
+Registrar Pagamento
+Campo	Tipo	Restrições	Valor default
+id do pagamento	Número	gerado automaticamente	auto
+valor pago	Número	obrigatório	
+forma de pagamento	Caixa de texto	obrigatório	
+data do pagamento	Data e Hora	automático	atual
+status	Seleção única	aprovado/rejeitado	aprovado
+Comandos	Destino	Tipo
+confirmar registro	Gerar Confirmação Digital	default
+Gerar Confirmação Digital
+Campo	Tipo	Restrições	Valor default
+comprovante	Arquivo	gerado automaticamente	
+código de confirmação	Caixa de texto	único	
+data de geração	Data e Hora	automático	atual
+Comandos	Destino	Tipo
+enviar comprovante	Enviar Comprovante ao Cliente	default
+Enviar Comprovante ao Cliente
+Campo	Tipo	Restrições	Valor default
+email do cliente	Caixa de texto	formato de e-mail	
+comprovante	Arquivo	obrigatório	
+mensagem	Área de texto	opcional	
+Comandos	Destino	Tipo
+enviar	Pagamento Confirmado	default
+Pagamento Confirmado (Fim)
+Campo	Tipo	Restrições	Valor default
+mensagem final	Área de texto	informativa	Pagamento realizado com sucesso
+data final	Data e Hora	automático	atual
+Comandos	Destino	Tipo
+finalizar	Fim do Processo	default               |                   |
