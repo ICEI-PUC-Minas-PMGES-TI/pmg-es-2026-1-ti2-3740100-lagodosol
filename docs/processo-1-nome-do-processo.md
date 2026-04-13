@@ -54,13 +54,8 @@
 | Campo             | Tipo           | Restrições           | Valor default |
 |-------------------|----------------|----------------------|--------------|
 | id cliente        | Número         | gerado automaticamente | auto        |
-| data cadastro     | Data e Hora    | automático           | atual        |
 
 
-| Comandos  | Destino              | Tipo    |
-|-----------|----------------------|---------|
-| salvar    | Cadastro concluído   | default |
-| cancelar  | Cadastro de Cliente  | cancel  |
 
 
 ## Cadastro Concluído
@@ -70,9 +65,6 @@
 | mensagem         | Área de texto | Cadastro realizado com sucesso    |
 
 
-| Comandos | Destino | Tipo    |
-|----------|----------|---------|
-| finalizar| Fim      | default |
 
 
 ## Fim
@@ -81,6 +73,4 @@
 |-----------------|---------------|--------------|
 | status final    | Área de texto | Concluído    |
 
-| Comandos | Destino | Tipo    |
-|----------|----------|---------|
-| encerrar | —        | default |
+
