@@ -18,7 +18,7 @@
 
 | Comandos   | Destino                 | Tipo    |
 |------------|-------------------------|---------|
-| confirmar  | Notificar camareira     | default |
+| enviar pedido  | Receber pedido de manutenção  | default |
 
 
 **Notificar camareira**
