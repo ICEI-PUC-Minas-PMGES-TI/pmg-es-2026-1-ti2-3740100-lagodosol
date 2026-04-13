@@ -6,7 +6,7 @@
 
 
 
-**Atualizar status: necessita limpeza**
+**Pedido de manutenção (Cliente inicia)**
 
 | Campo                 | Tipo            | Restrições                  | Valor default       |
 |----------------------|-----------------|-----------------------------|---------------------|
@@ -21,112 +21,84 @@
 | enviar pedido  | Receber pedido de manutenção  | default |
 
 
-**Notificar camareira**
+**Receber pedido de manutenção (Sistema/Equipe)**
 
 | Campo                 | Tipo            | Restrições                  | Valor default       |
 |----------------------|-----------------|-----------------------------|---------------------|
-| Camareira            | Seleção única   | obrigatório                 |                     |
+| Tipo de probleme     | Seleção única   | obrigatório                 |                     |
 | Número do quarto     | Número          | obrigatório                 |                     |
-| Mensagem             | Área de texto   |                             | Limpeza solicitada  |
+| Descrição            | Área de texto   | obrigatório                 |                     |
+| Data recebimento     | Data e Hora     | automático                  |                     |
 
 | Comandos             | Destino               | Tipo    |
 |----------------------|------------------------|---------|
-| enviar notificação   | Receber notificação    | default |
+| analisar             | Analisar pedido de manutenção   | default |
 
 
-**Receber notificação**
+**Analisar pedido de manutenção**
 
 | Campo                 | Tipo            | Restrições                  | Valor default       |
 |----------------------|-----------------|-----------------------------|---------------------|
-| Camareira            | Seleção única   | automático                  |                     |
-| Quarto               | Número          | obrigatório                 |                     |
-| Data recebimento     | Data e Hora     | automático                  |                     |
+| Tipo de problema     | Seleção única   | obrigatório                 |                     |
+| Número do quarto     | Número          | obrigatório                 |                     |
+| Descrição            | Área de texto   | obrigatório                 |                     |
+
 
 | Comandos         | Destino        | Tipo    |
 |------------------|----------------|---------|
-| iniciar limpeza  | Limpar quarto  | default |
+| validar pedido   | Decisão: Pedido válido? | default |
 
 
-**Limpar quarto**
-
-| Campo                 | Tipo            | Restrições                  | Valor default |
-|----------------------|-----------------|-----------------------------|---------------|
-| Número do quarto     | Número          | obrigatório                 |               |
-| Observações          | Área de texto   |                             |               |
-| Tempo de limpeza     | Número          | em minutos                  |               |
+**Decisão: Pedido válido?**
 
 | Comandos            | Destino                      | Tipo    |
 |---------------------|------------------------------|---------|
-| finalizar limpeza   | Verificar problema no quarto | default |
+|       não           |   Informar cliente           | default |
+|       sim           |   Realizar manutenção        | default |
 
 
-**Decisão: Problema no quarto?**
-
-| Comandos | Destino                    | Tipo    |
-|----------|----------------------------|---------|
-| sim      | Reportar problema          | default |
-| não      | Atualizar status: limpo    | default |
 
 
-**Reportar problema**
+
+**Informar cliente (pedido inválido)**
 
 | Campo                 | Tipo            | Restrições                  | Valor default |
 |----------------------|-----------------|-----------------------------|---------------|
 | Número do quarto     | Número          | obrigatório                 |               |
-| Tipo de problema     | Seleção única   | obrigatório                 |               |
-| Descrição            | Área de texto   | obrigatório                 |               |
-| Foto do problema     | Imagem          | opcional                    |               |
+| Mensagem             | Área de texto   | obrigatório                 | Pedido não aprovado |
+
 
 | Comandos | Destino                        | Tipo    |
 |----------|--------------------------------|---------|
-| enviar   | Atualizar status: manutenção   | default |
+| enviar   |     Pedido cancelado           | default |
 
 
-**Atualizar status: manutenção**
 
-| Campo                 | Tipo            | Restrições          | Valor default |
-|----------------------|-----------------|---------------------|---------------|
-| Número do quarto     | Número          | obrigatório         |               |
-| Status               | Seleção única   | "manutenção"        | manutenção    |
-| Data atualização     | Data e Hora     | automático          |               |
+**Pedido cancelado (Fim)**
 
-| Comandos  | Destino | Tipo    |
-|-----------|---------|---------|
-| finalizar | Fim     | default |
+| Campo                 | Tipo            | Valor default |
+|----------------------|-----------------|---------------|
+| Status               | Seleção única   | cancelado     |     
 
 
-**Atualizar status: limpo**
 
-| Campo                 | Tipo            | Restrições          | Valor default |
-|----------------------|-----------------|---------------------|---------------|
-| Número do quarto     | Número          | obrigatório         |               |
-| Status               | Seleção única   | "limpo"             | limpo         |
-| Data atualização     | Data e Hora     | automático          |               |
-
-| Comandos  | Destino              | Tipo    |
-|-----------|----------------------|---------|
-| confirmar | Notificar recepção   | default |
-
-
-**Notificar recepção**
+**Realizar manutenção**
 
 | Campo                 | Tipo            | Restrições | Valor default |
 |----------------------|-----------------|------------|---------------|
 | Quarto               | Número          | obrigatório|               |
-| Mensagem             | Área de texto   |            | Quarto limpo  |
+| Ação realizada       | Área de texto   |            |               |
+| Técnico responsável  | Seleção única   | obrigatório|               |
 
 | Comandos | Destino         | Tipo    |
 |----------|-----------------|---------|
-| enviar   | Liberar quarto  | default |
+| finalizar manutenção | Serviço finalizado  | default |
 
 
-**Liberar quarto**
+**Serviço finalizado (Fim)**
 
-| Campo                 | Tipo            | Restrições      | Valor default |
-|----------------------|-----------------|-----------------|---------------|
-| Número do quarto     | Número          | obrigatório     |               |
-| Status               | Seleção única   | "disponível"    | disponível    |
+| Campo                 | Tipo            | Valor default |
+|----------------------|-----------------|---------------|
+| Data conclusão       | Data e Hora     | automático    |   
+| Status               | Seleção única   | finalizado    |
 
-| Comandos  | Destino | Tipo    |
-|-----------|---------|---------|
-| finalizar | Fim     | default |
