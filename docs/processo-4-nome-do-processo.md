@@ -1,6 +1,7 @@
 ### 3.3.4 Processo 4 – processo de gestao de facilites(camareira)
 
-<img width="1207" height="655" alt="image" src="https://github.com/user-attachments/assets/26c40c87-c753-4393-a346-d441e0ab199e" />
+<img width="1216" height="662" alt="image" src="https://github.com/user-attachments/assets/7a4f10d8-f7d2-4898-bdfd-6f1e77705070" />
+
 
 
 
