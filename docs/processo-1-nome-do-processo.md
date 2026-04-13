@@ -21,7 +21,7 @@
 | Comandos   | Destino               | Tipo    |
 |------------|------------------------|---------|
 | continuar  | Inserir dados         | default |
-| cancelar   | Fim                   | cancel  |
+
 
 
 ## Inserir Dados
@@ -37,8 +37,8 @@
 
 | Comandos   | Destino            | Tipo    |
 |------------|--------------------|---------|
-| validar    | Dados válidos?     | default |
-| voltar     | Cadastro de Cliente| cancel  |
+| continuar    | Inserir dados     | default |
+
 
 
 ## Dados válidos?
@@ -55,7 +55,7 @@
 |-------------------|----------------|----------------------|--------------|
 | id cliente        | Número         | gerado automaticamente | auto        |
 | data cadastro     | Data e Hora    | automático           | atual        |
-| status            | Seleção única  | ativo/inativo        | ativo        |
+
 
 | Comandos  | Destino              | Tipo    |
 |-----------|----------------------|---------|
@@ -68,7 +68,7 @@
 | Campo            | Tipo          | Valor default                     |
 |------------------|---------------|-----------------------------------|
 | mensagem         | Área de texto | Cadastro realizado com sucesso    |
-| data conclusão   | Data e Hora   | atual                             |
+
 
 | Comandos | Destino | Tipo    |
 |----------|----------|---------|
