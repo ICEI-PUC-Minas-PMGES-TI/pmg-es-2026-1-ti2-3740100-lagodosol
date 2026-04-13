@@ -11,8 +11,10 @@
 | Campo                 | Tipo            | Restrições                  | Valor default       |
 |----------------------|-----------------|-----------------------------|---------------------|
 | Número do quarto     | Número          | obrigatório                 |                     |
-| Status               | Seleção única   | "necessita limpeza"         | necessita limpeza   |
-| Data check-out       | Data e Hora     | obrigatório                 |                     |
+| Tipo de problema     | Seleção única   | obrigatório                 | necessita limpeza   |
+| Descrição            | Área de texto   | obrigatório                 |                     |
+| Prioridade           | Seleção única   | (baixa, média, alta)        | média               |
+| Data do pedido       | Data e hora     | automático                  |                     |
 
 | Comandos   | Destino                 | Tipo    |
 |------------|-------------------------|---------|
