@@ -74,3 +74,13 @@
 | status final    | Área de texto | Concluído    |
 
 
+
+
+
+<img width="1536" height="1024" alt="file_000000005bb871f5a432bc746180cc4d" src="https://github.com/user-attachments/assets/8b1cd27e-dd7b-42d2-ae07-e16e2842c6d7" />
+
+
+
+
+
+
