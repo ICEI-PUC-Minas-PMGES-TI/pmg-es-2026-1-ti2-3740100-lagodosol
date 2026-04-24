@@ -102,3 +102,7 @@
 | Data conclusão       | Data e Hora     | automático    |   
 | Status               | Seleção única   | finalizado    |
 
+
+
+![alt text](image-3.png)
+
