@@ -185,3 +185,6 @@
 | Comandos | Destino | Tipo    |
 |----------|----------|---------|
 | encerrar | —        | default |
+
+
+![alt text](image-1.png)
