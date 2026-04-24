@@ -90,13 +90,13 @@ Esta abordagem resolve os limites da situação atual ao transformar o site em u
 
 ### 3.3. Modelagem dos processos
 
-[PROCESSO 1 -Processo de cadastro](processo-1-nome-do-processo.md "Detalhamento do Processo 1.")
+[PROCESSO 1 - Cadastro de cliente](processo-1-cadastro-de-cliente.md "Detalhamento do processo de cadastro de cliente")
 
-[PROCESSO 2 - Preocesso de pagamento](processo-2-nome-do-processo.md "Detalhamento do Processo 2.")
+[PROCESSO 2 - Processo de pagamento](processo-2-processo-de-pagamento.md "Detalhamento do processo de pagamento")
 
-[PROCESSO 3 - Processo de reserva](processo-3-nome-do-processo.md "Detalhamento do Processo 3.")
+[PROCESSO 3 - Reserva de quarto](processo-3-reserva-de-quarto.md "Detalhamento do processo de reserva")
 
-[PROCESSO 4 - Processo de facilities](processo-4-nome-do-processo.md "Detalhamento do Processo 4.")
+[PROCESSO 4 - Gestão de quarto](processo-4-gestao-de-quarto.md "Detalhamento da gestão de quartos")
 
 ## 4. Projeto da solução
 
