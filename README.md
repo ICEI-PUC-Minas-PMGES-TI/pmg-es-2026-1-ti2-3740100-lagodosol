@@ -18,7 +18,7 @@ Raphael Thierry Coelho;
 
 Lucca Soares de Paiva Lacerda
 Michelle Hanne Soares de Andrade
-* Nome completo do professor 3
+Luiz Carlos da Silva
 
 ## Instruções de utilização
 
