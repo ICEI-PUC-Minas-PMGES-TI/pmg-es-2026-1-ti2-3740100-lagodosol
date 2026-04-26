@@ -1,6 +1,6 @@
 ### 3.3.2 Processo 2 – processo de pagamento
 
-<img width="1929" height="559" alt="Processo de Pagamento Diagrama" src="https://github.com/user-attachments/assets/aa13177d-4521-433a-abf3-28904010370a" />
+<img width="1929" height="559" alt="Processo de Pagamento Diagrama (1)" src="https://github.com/user-attachments/assets/2199fc30-2261-4a7c-8492-ea65c91a727a" />
 
 
 ## Selecionar Forma de Pagamento
