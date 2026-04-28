@@ -1,5 +1,3 @@
-# Nome do projeto
-
 LAGO DO SOL
 
 O objetivo central deste projeto é otimizar o site do hotel, transformando-o em uma plataforma de reservas ágil, intuitiva e automatizada. A iniciativa busca solucionar a atual baixa conversão de visitantes e os atritos de usabilidade, focando em aprimorar a experiência digital do hóspede por meio de cadastros simplificados, disponibilidade em tempo real e pagamentos seguros. Dessa forma, o site deixa de ser apenas uma página informativa para se consolidar como um canal de vendas altamente eficiente.
