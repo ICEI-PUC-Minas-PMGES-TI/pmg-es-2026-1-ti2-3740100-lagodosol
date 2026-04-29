@@ -1,0 +1,47 @@
+# Dependências
+node_modules/
+*/node_modules/
+
+# Build (frontend)
+dist/
+build/
+.vite/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ambiente
+.env
+.env.*
+!.env.example
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Coverage (testes)
+coverage/
+
+# Banco de dados local (se usar)
+*.sqlite
+*.db
+
+# Misc
+*.pid
+*.seed
