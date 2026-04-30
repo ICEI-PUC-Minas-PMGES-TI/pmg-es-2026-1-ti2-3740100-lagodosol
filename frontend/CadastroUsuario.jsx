@@ -1,91 +1,160 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-const CadastroUsuario = () => {
-  // Estado para armazenar os valores do formulário
-  const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    senha: ''
+export default function CadastroUsuario() {
+  const [form, setForm] = useState({
+    nome: "",
+    email: "",
+    senha: "",
   });
 
-  // Função para atualizar os campos conforme o usuário digita
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
+  function handleChange(e) {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
     });
-  };
+  }
 
-  // Função disparada ao enviar o formulário
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    console.log('Dados enviados:', formData);
-    alert(`Usuário ${formData.nome} cadastrado com sucesso!`);
-    
-    // Aqui você integraria com sua API ou Banco de Dados
-  };
+    console.log("Usuário cadastrado:", form);
+  }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', fontFamily: 'Arial' }}>
-      <h2>Cadastro de Usuário</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        
-        <div>
-          <label htmlFor="nome">Nome:</label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            value={formData.nome}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-          />
-        </div>
+    <div style={styles.page}>
 
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-          />
-        </div>
+      {/* HEADER */}
+      <header style={styles.header}>
+        <div style={styles.headerContainer}>
+          <div style={styles.logo}>ícone</div>
 
-        <div>
-          <label htmlFor="senha">Senha:</label>
-          <input
-            type="password"
-            id="senha"
-            name="senha"
-            value={formData.senha}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-          />
+          <nav style={styles.nav}>
+            <a href="#">HOTEL</a>
+            <a href="#">ACOMODAÇÕES</a>
+            <a href="#">PACOTES</a>
+            <a href="#">GASTRONOMIA</a>
+            <a href="#">EVENTOS</a>
+            <a href="#">CORPORATIVO</a>
+          </nav>
         </div>
+      </header>
 
-        <button 
-          type="submit" 
-          style={{ 
-            padding: '10px', 
-            backgroundColor: '#007bff', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '4px',
-            cursor: 'pointer' 
-          }}
-        >
-          Cadastrar
-        </button>
-      </form>
+      {/* CONTEÚDO */}
+      <main style={styles.main}>
+        <div style={styles.formContainer}>
+          <h2>Cadastro de Usuário</h2>
+
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="nome"
+              placeholder="Nome"
+              value={form.nome}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+
+            <input
+              type="password"
+              name="senha"
+              placeholder="Senha"
+              value={form.senha}
+              onChange={handleChange}
+              required
+              style={styles.input}
+            />
+
+            <button type="submit" style={styles.button}>
+              Cadastrar
+            </button>
+          </form>
+        </div>
+      </main>
+
+      {/* FOOTER */}
+      <footer style={styles.footer}>
+        <p>©2022 Hotel Lago do Sol | CNPJ: 37.790.093/0001-05</p>
+      </footer>
     </div>
   );
-};
+}
 
-export default CadastroUsuario;
+/* ESTILOS */
+const styles = {
+  page: {
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
+    fontFamily: "Arial",
+  },
+
+  header: {
+    background: "#333",
+    color: "#fff",
+    padding: "10px 0",
+  },
+
+  headerContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    maxWidth: "1000px",
+    margin: "0 auto",
+  },
+
+  logo: {
+    fontWeight: "bold",
+  },
+
+  nav: {
+    display: "flex",
+    gap: "15px",
+  },
+
+  main: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  formContainer: {
+    background: "#fff",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+    width: "300px",
+  },
+
+  input: {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "10px",
+  },
+
+  button: {
+    width: "100%",
+    padding: "10px",
+    background: "#333",
+    color: "#fff",
+    border: "none",
+    cursor: "pointer",
+  },
+
+  footer: {
+    background: "#333",
+    color: "#fff",
+    textAlign: "center",
+    padding: "10px",
+  },
+};
