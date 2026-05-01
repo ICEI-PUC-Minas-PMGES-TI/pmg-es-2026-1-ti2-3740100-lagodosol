@@ -4,7 +4,7 @@
 
 _Apresente o modelo de dados por meio de um modelo relacional que contemple todos os conceitos e atributos apresentados na modelagem dos processos._ 
 
-<img width="315" height="241" alt="image" src="https://github.com/user-attachments/assets/5666f938-41d0-4ec9-91e6-6c4bbc0c7130" />
+<img width="796" height="482" alt="Image" src="https://github.com/user-attachments/assets/f75c4d00-1359-4454-8f1a-4904544804d1" />
 
 ---
 
