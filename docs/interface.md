@@ -65,4 +65,10 @@ Como elemento complementar, a interface pode incluir funcionalidades como visual
 
 A estrutura visual segue o padrão do sistema, com layout simples e centralizado, facilitando a interação do usuário logo no primeiro contato com a plataforma.
 
-![alt text](image-4.png)
+![alt text](image-5.png)
+
+
+6.7. Tela De Demonstracao de quartos
+
+
+![alt text](image-6.png)
