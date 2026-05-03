@@ -2,48 +2,59 @@
 
 ![alt text](image-6.png)
 
-## Cadastrar Quarto
+## Consulta de Quartos
+Ação inicial realizada pelo Admin/Gerente para visualizar os quartos existentes antes de decidir a próxima ação.
 
 | Campo | Tipo | Restrições | Valor default |
 | :--- | :--- | :--- | :--- |
-| nome do quarto | Caixa de texto | obrigatório | |
-| número do quarto | Número | obrigatório, único | |
+| Busca/Filtro | Texto | Opcional | |
+| Listagem de Quartos | Grid/Tabela | Visualização | |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| continuar | Inserir dados do quarto | default |
-| cancelar | Fim | cancel |
+| Selecionar Editar | Editar cadastro | Link |
+| Selecionar Novo | Cadastrar novo | Botão |
+| Selecionar Excluir | Excluir | Botão |
 
-## Inserir Dados do Quarto
+---
+
+## Editar cadastro
+Permite a modificação de informações de um quarto já existente no sistema.
 
 | Campo | Tipo | Restrições | Valor default |
 | :--- | :--- | :--- | :--- |
-| tipo de quarto | Seleção única | solteiro, casal, suíte | |
-| capacidade | Número | obrigatório | |
-| preço por noite | Número | obrigatório | |
-| descrição | Área de texto | opcional | |
-| fotos | Imagem | opcional | |
-| status | Seleção única | disponível/indisponível | disponível |
+| Nome/Número | Texto | Obrigatório | Valor atual |
+| Preço/Tipo | Seleção/Número | Obrigatório | Valor atual |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| validar | Dados válidos? | default |
-| cancelar | Cadastrar quarto | cancel |
+| Salvar Alterações | Fim | Default |
+| Cancelar | Consulta de Quartos | Cancel |
 
-## Dados válidos? (Validação do Sistema)
+---
 
-| Comandos | Destino | Tipo |
-| :--- | :--- | :--- |
-| sim | Disponibilizar quarto | default |
-| não | Inserir dados do quarto | cancel |
-
-## Disponibilizar Quarto
+## Cadastrar novo
+Etapa para inclusão de uma nova unidade habitacional no inventário.
 
 | Campo | Tipo | Restrições | Valor default |
 | :--- | :--- | :--- | :--- |
-| status | Seleção única | disponível | disponível |
-| data liberação | Data e Hora | automático | atual |
+| Dados do Quarto | Diversos | Obrigatórios | Vazio |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| confirmar | Hóspede acessa sistema | default |
+| Confirmar Cadastro | Fim | Default |
+| Cancelar | Consulta de Quartos | Cancel |
+
+---
+
+## Excluir
+Remoção do registro de quarto selecionado.
+
+| Campo | Tipo | Restrições | Valor default |
+| :--- | :--- | :--- | :--- |
+| Confirmação | Alerta/Modal | Obrigatório | |
+
+| Comandos | Destino | Tipo |
+| :--- | :--- | :--- |
+| Confirmar Exclusão | Fim | Danger |
+| Voltar | Consulta de Quartos | Cancel |

@@ -36,7 +36,7 @@
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
 | sim | Exibir opções | default |
-| não | Exibir indisponível | cancel |
+| não | Exibir indisponível | cancel
 
 ## Exibir indisponível (Caminho Alternativo)
 
