@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import GestaoClientes from "./GestaoClientes";
 
+
 function CadastroUsuario() {
   const [form, setForm] = useState({
     nome: "",
@@ -86,6 +87,10 @@ function CadastroUsuario() {
             required
           />
         </div>
+
+        <p className="login-link">
+          Já tem uma conta? <span>Entrar</span>
+        </p>
 
         <button type="submit" className="btn-cadastrar">
           Cadastrar

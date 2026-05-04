@@ -1,0 +1,105 @@
+/* Container central */
+.gestao-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* 🔥 impede de subir demais */
+  padding-top: 80px; /* 🔥 cria espaço abaixo do header */
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Card */
+.card-clientes {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Título */
+.card-clientes h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Busca */
+.input-busca {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.input-busca:focus {
+  border-color: #1b6666;
+  outline: none;
+  box-shadow: 0 0 5px rgba(27, 102, 102, 0.2);
+}
+
+/* Tabela */
+.tabela-clientes {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Cabeçalho */
+.tabela-clientes th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid #eee;
+}
+
+/* Linhas */
+.tabela-clientes td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Hover linha */
+.tabela-clientes tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Coluna ações */
+.acoes {
+  display: flex;
+  gap: 10px;
+}
+
+/* Botões */
+.btn-editar {
+  background-color: #1b6666;
+  color: #fff;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-editar:hover {
+  background-color: #155252;
+}
+
+.btn-excluir {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-excluir:hover {
+  background-color: #c0392b;
+}
+
+/* Nenhum dado */
+.sem-dados {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+}
+

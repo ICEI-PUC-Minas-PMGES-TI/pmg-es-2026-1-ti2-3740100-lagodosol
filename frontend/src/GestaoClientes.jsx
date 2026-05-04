@@ -1,4 +1,7 @@
 import { useState } from "react";
+import "./GestaoClientes.css";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function GestaoClientes() {
   const [clientes, setClientes] = useState([
@@ -18,71 +21,69 @@ function GestaoClientes() {
 
   const [busca, setBusca] = useState("");
 
-  // busca mais completa
   const clientesFiltrados = clientes.filter(
     (cliente) =>
       cliente.nome.toLowerCase().includes(busca.toLowerCase()) ||
       cliente.email.toLowerCase().includes(busca.toLowerCase()) ||
-      cliente.cpf.includes(busca),
+      cliente.cpf.includes(busca)
   );
 
-  // excluir cliente
   function excluirCliente(id) {
     setClientes(clientes.filter((c) => c.id !== id));
   }
 
   return (
     <div className="gestao-container">
-      <h2>Gestão de Clientes</h2>
+      <div className="card-clientes">
+        <h2>Gestão de Clientes</h2>
 
-      {/* campo de busca */}
-      <input
-        type="text"
-        placeholder="Buscar por nome, email ou CPF..."
-        value={busca}
-        onChange={(e) => setBusca(e.target.value)}
-        className="input-busca"
-      />
+        <input
+          type="text"
+          placeholder="Buscar por nome, email ou CPF..."
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          className="input-busca"
+        />
 
-      {/* tabela */}
-      <table className="tabela-clientes">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>CPF</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
+        <table className="tabela-clientes">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>CPF</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {clientesFiltrados.length > 0 ? (
-            clientesFiltrados.map((cliente) => (
-              <tr key={cliente.id}>
-                <td>{cliente.nome}</td>
-                <td>{cliente.email}</td>
-                <td>{cliente.cpf}</td>
-                <td>
-                  <button className="btn-editar">Editar</button>
+          <tbody>
+            {clientesFiltrados.length > 0 ? (
+              clientesFiltrados.map((cliente) => (
+                <tr key={cliente.id}>
+                  <td>{cliente.nome}</td>
+                  <td>{cliente.email}</td>
+                  <td>{cliente.cpf}</td>
+                  <td className="acoes">
+                    <button className="btn-editar">Editar</button>
 
-                  <button
-                    className="btn-excluir"
-                    onClick={() => excluirCliente(cliente.id)}
-                  >
-                    Excluir
-                  </button>
+                    <button
+                      className="btn-excluir"
+                      onClick={() => excluirCliente(cliente.id)}
+                    >
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="sem-dados">
+                  Nenhum cliente encontrado
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" style={{ textAlign: "center" }}>
-                Nenhum cliente encontrado
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
