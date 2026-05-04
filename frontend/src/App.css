@@ -1,3 +1,8 @@
+/* Reset essencial (corrige overflow dos inputs) */
+* {
+  box-sizing: border-box;
+}
+
 /* Fundo */
 body {
   margin: 0;
@@ -8,16 +13,18 @@ body {
 /* Card */
 .cadastro-container {
   background: #fff;
-  padding: 16px;              /* menor */
-  border-radius: 10px;        /* menos arredondado */
+  padding: 18px;
+  border-radius: 10px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 280px;           /* menor ainda */
+  max-width: 260px;
 }
 
-/* Grupo */
-.form-group {
-  margin-bottom: 12px;        /* menos espaço */
+/* Form (controle de layout) */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* Label */
@@ -31,7 +38,7 @@ body {
 /* Input */
 .form-group input {
   width: 100%;
-  padding: 7px;               /* menor */
+  padding: 7px;
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 13px;
@@ -39,7 +46,7 @@ body {
 
 /* Foco */
 .form-group input:focus {
-  border-color: #1b6666;      /* mesma cor do header */
+  border-color: #1b6666;
   outline: none;
   box-shadow: 0 0 3px rgba(27, 102, 102, 0.3);
 }
@@ -47,8 +54,8 @@ body {
 /* Botão */
 button {
   width: 100%;
-  padding: 9px;               /* menor */
-  background-color: #1b6666;  /* cor do header */
+  padding: 9px;
+  background-color: #1b6666;
   border: none;
   border-radius: 6px;
   color: white;
@@ -63,8 +70,15 @@ button:hover {
   background-color: #155252;
 }
 
+/* Clique */
+button:active {
+  transform: scale(0.98);
+}
+
 /* Layout geral */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }
@@ -80,5 +94,5 @@ html, body, #root {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 30px 0;           /* espaço menor */
+  padding: 30px 0;
 }
