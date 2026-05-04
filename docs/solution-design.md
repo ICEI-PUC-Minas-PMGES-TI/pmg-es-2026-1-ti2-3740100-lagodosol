@@ -10,14 +10,26 @@ _Apresente o modelo de dados por meio de um modelo relacional que contemple todo
 
 ### 4.2. Tecnologias
 
-_Descreva qual(is) tecnologias você vai usar para resolver o seu problema, ou seja, implementar a sua solução. Liste todas as tecnologias envolvidas, linguagens a serem utilizadas, serviços Web, frameworks, bibliotecas, IDEs de desenvolvimento, e ferramentas._
+Para o desenvolvimento deste projeto, será utilizado um conjunto de tecnologias modernas e amplamente adotadas no mercado, cobrindo todas as camadas da aplicação.
 
-| **Dimensão**   | **Tecnologia**  |
-| ---            | ---             |
-| SGBD           | MySQL           |
-| Front end      | HTML+CSS+JS     |
-| Back end       | Java SpringBoot |
-| IDE            | Visual Studio Code |
-| Versionamento  | Github e Git    |
-| Deploy         | Github Pages    |
+No banco de dados, será utilizado o MySQL (versão 8.x), um sistema de gerenciamento de banco de dados relacional robusto, eficiente e amplamente utilizado em aplicações web.
+
+No front-end, será utilizada a biblioteca React (versão 18.x), que permite a construção de interfaces de usuário dinâmicas e componentizadas. Em conjunto, serão utilizadas as linguagens HTML, CSS e JavaScript (ES6+), responsáveis pela estrutura, estilização e lógica da aplicação no lado do cliente.
+
+No back-end, será utilizado Java (versão 17 LTS), juntamente com o framework Spring Boot (versão 3.x), facilitando a criação de APIs REST, o gerenciamento de dependências e a configuração da aplicação.
+
+Como ambiente de desenvolvimento, será utilizado o Visual Studio Code, que oferece suporte a diversas linguagens e extensões, otimizando a produtividade no desenvolvimento.
+
+Para controle de versão, serão utilizados Git e a plataforma GitHub, permitindo o versionamento do código e a colaboração entre desenvolvedores.
+
+Por fim, o deploy da aplicação será realizado na plataforma Vercel, que oferece integração contínua e hospedagem eficiente, especialmente para aplicações front-end desenvolvidas com React.
+
+| **Dimensão**   | **Tecnologia**      |
+| ---            | ---                 |
+| SGBD           | MySQL               |
+| Front end      | HTML+CSS+JS e React |
+| Back end       | Java SpringBoot     |
+| IDE            | Visual Studio Code  |
+| Versionamento  | Github e Git        |
+| Deploy         | Versel              |
 
