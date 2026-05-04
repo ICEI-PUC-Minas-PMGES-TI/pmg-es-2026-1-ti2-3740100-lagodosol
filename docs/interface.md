@@ -27,6 +27,9 @@ A segunda tela apresenta os quartos disponíveis para seleção. Os quartos são
 
 Após a seleção do quarto, o sistema exibe um resumo da reserva, com dados consolidados da estadia, incluindo datas, quantidade de diárias e valor total estimado, permitindo ao usuário confirmar a reserva.
 
+6.2.1 Tela de reserva caso indisponivel
+![alt text](image-8.png)
+
 ![alt text](image-1.png)
 
 6.3. Telas do processo 2 (Processo de pagamento)
