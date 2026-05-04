@@ -12,7 +12,7 @@ Além dos indicadores, o dashboard contém uma seção de reservas recentes, per
 
 O menu lateral permite acesso rápido às demais funcionalidades, como reserva de quartos, processo de pagamento, gestão de quartos, relatórios e configurações.
 
-![alt text](image.png)
+![alt text](wireframe-dashboard.png)
 
 6.2. Telas do processo 1 (Reserva de quarto)
 Descrição da tela relativa à atividade 1
@@ -26,10 +26,10 @@ Descrição da tela relativa à atividade 2
 A segunda tela apresenta os quartos disponíveis para seleção. Os quartos são exibidos em formato de cards contendo informações como número do quarto, tipo, capacidade e valor da diária.
 
 Após a seleção do quarto, o sistema exibe um resumo da reserva, com dados consolidados da estadia, incluindo datas, quantidade de diárias e valor total estimado, permitindo ao usuário confirmar a reserva.
-![alt text](image-10.png)
+![alt text](wireframe-reservadequarto.png)
 
 6.2.1 Tela de reserva caso indisponivel
-![alt text](image-9.png)
+![alt text](wireframe-nenhumquartodisp)
 
 
 
@@ -46,7 +46,7 @@ A segunda tela apresenta o resumo da reserva, contendo informações do hóspede
 
 Nessa etapa, o usuário pode confirmar o pagamento ou cancelar a operação. Após a confirmação, o sistema realiza o registro do pagamento e gera a confirmação da reserva.
 
-![alt text](image-2.png)
+![alt text](wireframe-teladepagamento.png)
 
 6.4. Telas do processo 3 (Gestão de quartos)
 Descrição da tela relativa à atividade 1
@@ -57,7 +57,7 @@ Descrição da tela relativa à atividade 2
 
 A interface também apresenta uma lista de pedidos recentes, contendo informações como número do quarto, tipo de problema, status do atendimento e data da solicitação, permitindo o acompanhamento e controle das atividades de manutenção.
 
-![alt text](image-3.png)
+![alt text](wireframe-gestaodequartos.png)
 
 6.5. Tela de Login
 
@@ -69,10 +69,10 @@ Como elemento complementar, a interface pode incluir funcionalidades como visual
 
 A estrutura visual segue o padrão do sistema, com layout simples e centralizado, facilitando a interação do usuário logo no primeiro contato com a plataforma.
 
-![alt text](image-5.png)
+![alt text](wireframe-criarconta.png)
 
 
 6.7. Tela De Demonstracao de quartos
 
 
-![alt text](image-6.png)
+![alt text](wireframe-demonstracao.png)
