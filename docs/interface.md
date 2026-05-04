@@ -26,8 +26,12 @@ Descrição da tela relativa à atividade 2
 A segunda tela apresenta os quartos disponíveis para seleção. Os quartos são exibidos em formato de cards contendo informações como número do quarto, tipo, capacidade e valor da diária.
 
 Após a seleção do quarto, o sistema exibe um resumo da reserva, com dados consolidados da estadia, incluindo datas, quantidade de diárias e valor total estimado, permitindo ao usuário confirmar a reserva.
+![alt text](image-10.png)
 
-![alt text](image-1.png)
+6.2.1 Tela de reserva caso indisponivel
+![alt text](image-9.png)
+
+
 
 6.3. Telas do processo 2 (Processo de pagamento)
 Descrição da tela relativa à atividade 1
@@ -65,4 +69,10 @@ Como elemento complementar, a interface pode incluir funcionalidades como visual
 
 A estrutura visual segue o padrão do sistema, com layout simples e centralizado, facilitando a interação do usuário logo no primeiro contato com a plataforma.
 
-![alt text](image-4.png)
+![alt text](image-5.png)
+
+
+6.7. Tela De Demonstracao de quartos
+
+
+![alt text](image-6.png)

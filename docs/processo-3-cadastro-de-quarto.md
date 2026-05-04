@@ -1,6 +1,7 @@
 ### 3.3.3 Processo 3 – Cadastro de Quarto
 
-![alt text](image-6.png)
+![alt text](image-6.jpeg)
+
 
 ## Consulta de Quartos
 Ação inicial realizada pelo Admin/Gerente para visualizar os quartos existentes antes de decidir a próxima ação.
