@@ -1,124 +1,176 @@
 ### 3.3.4 Processo 4 – processo de reserva de quarto
 
-![alt text](image-7.png)
+![alt text](modelagem-reserva-quarto.png)
 
-## Hóspede acessa sistema
-
-| Comandos | Destino | Tipo |
-| :--- | :--- | :--- |
-| iniciar | Informar datas | default |
-
-## Informar Datas
+## Informar dados da reserva  
+Tela inicial onde o hóspede informa os dados básicos da estadia.
 
 | Campo | Tipo | Restrições | Valor default |
 | :--- | :--- | :--- | :--- |
-| data check-in | Data | obrigatório | |
-| data check-out | Data | > check-in | |
+| Data check-in | Data | Obrigatório | |
+| Data check-out | Data | > check-in | |
+| Hóspedes | Número | Obrigatório | 1 |
+| Tipo de hospedagem | Seleção | Opcional | |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| buscar | Verificar disponibilidade | default |
-| cancelar | Fim | cancel |
+| Buscar quartos | Verificar disponibilidade | Default |
+| Cancelar | Fim | Cancel |
 
-## Verificar Disponibilidade
+---
+
+## Verificar disponibilidade  
+Sistema processa as informações e verifica disponibilidade.
 
 | Campo | Tipo | Restrições | Valor default |
 | :--- | :--- | :--- | :--- |
-| período | Caixa de texto | automático | |
-| status | Seleção única | disponível/não | |
+| Período | Texto | Automático | |
+| Status | Seleção | disponível/não | |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| verificar | Quarto disponível? | default |
+| Verificar | Quarto disponível? | Default |
 
-## Quarto disponível?
+---
 
-| Comandos | Destino | Tipo |
-| :--- | :--- | :--- |
-| sim | Exibir opções | default |
-| não | Exibir indisponível | cancel
-
-## Exibir indisponível (Caminho Alternativo)
-
-| Campo | Tipo | Valor default |
-| :--- | :--- | :--- |
-| mensagem | Área de texto | Quarto indisponível |
+## Quarto disponível?  
+Decisão do sistema com base na consulta.
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| voltar | Informar datas | default |
+| Sim | Exibir opções | Default |
+| Não | Exibir indisponível | Cancel |
 
-## Exibir Opções
+---
+
+## Exibir indisponível  
+Mensagem informando indisponibilidade.
 
 | Campo | Tipo | Restrições | Valor default |
 | :--- | :--- | :--- | :--- |
-| lista de quartos | Tabela | disponíveis | |
-| filtros | Seleção múltipla | tipo, preço, capacidade | |
+| Mensagem | Área de texto | | Quarto indisponível |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| selecionar | Selecionar quarto | default |
+| Voltar | Informar dados da reserva | Default |
 
-## Selecionar Quarto
+---
+
+## Exibir opções  
+Lista de quartos disponíveis.
 
 | Campo | Tipo | Restrições | Valor default |
 | :--- | :--- | :--- | :--- |
-| quarto escolhido | Caixa de texto | obrigatório | |
+| Lista de quartos | Tabela | Disponíveis | |
+| Filtros | Seleção múltipla | Tipo, preço, capacidade | |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| continuar | Informar dados | default |
+| Selecionar | Selecionar quarto | Default |
 
-## Informar Dados (Hóspede)
+---
+
+## Selecionar quarto  
+Escolha do quarto desejado.
 
 | Campo | Tipo | Restrições | Valor default |
 | :--- | :--- | :--- | :--- |
-| nome | Caixa de texto | obrigatório | |
-| email | Caixa de texto | formato e-mail | |
-| telefone | Caixa de texto | obrigatório | |
-| documento | Caixa de texto | obrigatório | |
+| Quarto escolhido | Texto | Obrigatório | |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| validar | Dados válidos? | default |
-| voltar | Selecionar quarto | cancel |
+| Continuar | Exibir resumo da reserva | Default |
+| Voltar | Exibir opções | Cancel |
 
-## Dados válidos? (Validação do Sistema)
+---
 
-| Comandos | Destino | Tipo |
-| :--- | :--- | :--- |
-| sim | Confirmar reserva | default |
-| não | Informar dados | cancel |
+## Exibir resumo da reserva  
+Apresenta os dados consolidados antes da confirmação.
 
-##  Confirmar Reserva
-
-| Campo | Tipo | Valor default |
-| :--- | :--- | :--- |
-| resumo da reserva | Área de texto | |
-| confirmação | Seleção única | não |
+| Campo | Tipo | Restrições | Valor default |
+| :--- | :--- | :--- | :--- |
+| Resumo da reserva | Área de texto | | |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| confirmar | Atualizar disponibilidade | default |
-| cancelar | Fim | cancel |
+| Confirmar | Confirmar reserva | Default |
+| Cancelar | Fim | Cancel |
 
-##  Atualizar Disponibilidade
+---
 
-| Campo | Tipo | Valor default |
-| :--- | :--- | :--- |
-| status do quarto | Seleção única | ocupado |
-| período reservado | Caixa de texto | |
+## Confirmar reserva  
+Decisão do usuário antes de prosseguir.
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
-| finalizar | Fim | default |
+| Confirmar | Pagamento | Default |
+| Cancelar | Fim | Cancel |
+
+---
+
+## Pagamento (Subprocesso)  
+Processo responsável pela realização do pagamento.
+
+| Campo | Tipo | Restrições | Valor default |
+| :--- | :--- | :--- | :--- |
+| Forma de pagamento | Seleção | Obrigatório | |
+| Dados do pagamento | Texto | Obrigatório | |
+
+| Comandos | Destino | Tipo |
+| :--- | :--- | :--- |
+| Pagar | Pagamento aprovado? | Default |
+| Cancelar | Fim | Cancel |
+
+---
+
+## Pagamento aprovado?  
+Validação do resultado do pagamento.
+
+| Comandos | Destino | Tipo |
+| :--- | :--- | :--- |
+| Sim | Registrar reserva | Default |
+| Não | Fim | Cancel |
+
+---
+
+## Registrar reserva  
+Criação definitiva da reserva no sistema.
+
+| Campo | Tipo | Restrições | Valor default |
+| :--- | :--- | :--- | :--- |
+| Status da reserva | Seleção | | Confirmada |
+
+| Comandos | Destino | Tipo |
+| :--- | :--- | :--- |
+| Registrar | Atualizar disponibilidade | Default |
+
+---
+
+## Atualizar disponibilidade  
+Atualiza o status do quarto no sistema.
+
+| Campo | Tipo | Restrições | Valor default |
+| :--- | :--- | :--- | :--- |
+| Status do quarto | Seleção | | Ocupado |
+| Período reservado | Texto | | |
+
+| Comandos | Destino | Tipo |
+| :--- | :--- | :--- |
+| Atualizar | Enviar confirmação | Default |
+
+---
+
+## Enviar confirmação  
+Envio de confirmação ao cliente.
+
+| Campo | Tipo | Restrições | Valor default |
+| :--- | :--- | :--- | :--- |
+| Mensagem | Área de texto | | Reserva confirmada |
+
+| Comandos | Destino | Tipo |
+| :--- | :--- | :--- |
+| Finalizar | Fim | Default |
+
+---
 
 ## Fim
-
-| Campo | Tipo | Valor default |
-| :--- | :--- | :--- |
-| mensagem final | Área de texto | Reserva concluída |
-
-| Comandos | Destino | Tipo |
-| :--- | :--- | :--- |
-| encerrar | — | default |
