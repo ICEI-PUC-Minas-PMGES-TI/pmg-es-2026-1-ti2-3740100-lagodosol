@@ -1,6 +1,6 @@
 ### 3.3.3 Processo 3 – Cadastro de Quarto
 
-![alt text](image-6.jpeg)
+![alt text](modelagem-cadastro-quarto.jpeg)
 
 
 ## Consulta de Quartos
