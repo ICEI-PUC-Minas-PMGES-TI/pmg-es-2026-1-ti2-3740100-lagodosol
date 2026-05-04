@@ -1,8 +1,8 @@
-### 3.3.1 Processo 1 – Cadastro de Cliente
+### 3.3.1 Processo 1 – Gestão de Cliente
 
 
+<img width="1827" height="861" alt="image" src="https://github.com/user-attachments/assets/1abf1486-4edc-40ab-a13d-89510fa897e6" />
 
-<img width="1182" height="637" alt="image" src="https://github.com/user-attachments/assets/0a0e0c5c-942d-4f7e-a6a0-2170e123cd6b" />
 
 
 
