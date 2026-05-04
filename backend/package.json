@@ -25,6 +25,9 @@
   },
   "homepage": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2026-1-ti2-3740100-lagodosol#readme",
   "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
