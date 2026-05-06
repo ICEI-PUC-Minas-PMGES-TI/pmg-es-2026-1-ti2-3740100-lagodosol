@@ -150,9 +150,9 @@ _Atualizar os links e adicionar novos links para que a estrutura do código este
 
 ## Apêndice A - Código fonte
 
-[Código do front-end](../src/front) -- repositório do código do front-end
+[Código do front-end](../frontend) -- repositório do código do front-end
 
-[Código do back-end](../src/back)  -- repositório do código do back-end
+[Código do back-end](../backend)  -- repositório do código do back-end
 
 
 ## Apêndice B - Apresentação final
