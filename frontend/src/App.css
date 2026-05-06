@@ -1,88 +1,11 @@
-/* Reset essencial (corrige overflow dos inputs) */
+/* Reset básico */
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-/* Fundo */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f6f8;
-}
-
-/* Card */
-.cadastro-container {
-  background: #fff;
-  padding: 18px;
-  border-radius: 10px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 260px;
-}
-
-/* Form (controle de layout) */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Label */
-.form-group label {
-  margin-bottom: 4px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #444;
-}
-
-/* Input */
-.form-group input {
-  width: 100%;
-  padding: 7px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 13px;
-}
-
-/* Foco */
-.form-group input:focus {
-  border-color: #1b6666;
-  outline: none;
-  box-shadow: 0 0 3px rgba(27, 102, 102, 0.3);
-}
-
-/* Botão */
-button {
-  width: 100%;
-  padding: 9px;
-  background-color: #1b6666;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-/* Hover */
-button:hover {
-  background-color: #155252;
-}
-
-/* Clique */
-button:active {
-  transform: scale(0.98);
-}
-
 /* Layout geral */
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-}
-
 .app-container {
   display: flex;
   flex-direction: column;
@@ -91,26 +14,118 @@ body,
 
 .main-content {
   flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 30px 0;
+  background-color: #f5f6f8;
 }
 
+/* Container da página */
+/* Container da página */
+.cadastro-container {
+  display: flex;
+  flex-direction: column; /* 🔥 ESSENCIAL */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* centraliza vertical */
+  padding: 60px 20px;
+}
 
+/* Card */
+.cadastro-box {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 35px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Título */
+.cadastro-box h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Grupo de input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+/* Inputs */
+.form-group input {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition:
+    border 0.2s,
+    box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+}
+
+/* Botão */
+.btn-cadastrar {
+  margin-top: 10px;
+  padding: 12px;
+  background: linear-gradient(90deg, #2f2f2f, #4a4a4a);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+}
+
+.btn-cadastrar:hover {
+  opacity: 0.9;
+}
+
+.btn-cadastrar:active {
+  transform: scale(0.98);
+}
+
+/* Link login */
 .login-link {
+  margin-top: 12px;
   font-size: 13px;
   text-align: center;
-  margin-top: 5px;
   color: #555;
 }
 
 .login-link span {
-  color: #1b6666;
-  font-weight: 600;
+  color: #4a90e2;
   cursor: pointer;
+  font-weight: 500;
 }
 
-.login-link span:hover {
-  text-decoration: underline;
+/* Termos */
+.termos {
+  margin-top: 18px;
+  font-size: 12px;
+  text-align: center;
+  color: #777;
+  line-height: 1.4;
 }

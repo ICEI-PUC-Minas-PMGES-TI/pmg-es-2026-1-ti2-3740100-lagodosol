@@ -4,7 +4,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import GestaoClientes from "./GestaoClientes";
-
+import logo from "./assets/logo.jpg";
 
 function CadastroUsuario() {
   const [form, setForm] = useState({
@@ -12,6 +12,7 @@ function CadastroUsuario() {
     cpf: "",
     email: "",
     senha: "",
+    confirmarSenha: "",
   });
 
   function formatCPF(value) {
@@ -38,64 +39,100 @@ function CadastroUsuario() {
 
   function handleSubmit(e) {
     e.preventDefault();
+
+    if (form.senha !== form.confirmarSenha) {
+      alert("As senhas não coincidem!");
+      return;
+    }
+
     console.log("Dados cadastrados:", form);
   }
 
   return (
     <div className="cadastro-container">
-      <form onSubmit={handleSubmit} className="form">
-        <div className="form-group">
-          <label>Nome:</label>
-          <input
-            type="text"
-            name="nome"
-            value={form.nome}
-            onChange={handleChange}
-            required
-          />
+      <img
+        src={logo}
+        alt="Logo do Hotel Lago do Sol"
+        className="logo-cadastro"
+      />
+      <div className="cadastro-box">
+        <h2>CRIAR NOVA CONTA</h2>
+
+        <form onSubmit={handleSubmit} className="form">
+          <div className="form-group">
+            <label>Nome completo</label>
+            <input
+              type="text"
+              name="nome"
+              placeholder="Digite seu nome completo..."
+              value={form.nome}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>CPF</label>
+            <input
+              type="text"
+              name="cpf"
+              placeholder="000.000.000-00"
+              value={form.cpf}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>E-mail</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="exemplo@email.com"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Senha</label>
+            <input
+              type="password"
+              name="senha"
+              value={form.senha}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Confirmar senha</label>
+            <input
+              type="password"
+              name="confirmarSenha"
+              value={form.confirmarSenha}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn-cadastrar">
+            Cadastrar Conta
+          </button>
+
+          <p className="login-link">
+            Já tem uma conta? <span>Entrar</span>
+          </p>
+        </form>
+
+        <div className="termos">
+          <p>
+            Ao se cadastrar, você concorda com nossos termos de uso e política
+            de privacidade.
+          </p>
         </div>
-
-        <div className="form-group">
-          <label>CPF:</label>
-          <input
-            type="text"
-            name="cpf"
-            value={form.cpf}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Senha:</label>
-          <input
-            type="password"
-            name="senha"
-            value={form.senha}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <p className="login-link">
-          Já tem uma conta? <span>Entrar</span>
-        </p>
-
-        <button type="submit" className="btn-cadastrar">
-          Cadastrar
-        </button>
-      </form>
+      </div>
     </div>
   );
 }
@@ -103,8 +140,6 @@ function CadastroUsuario() {
 function App() {
   return (
     <div className="app-container">
-      <Header />
-
       <main className="main-content">
         <Routes>
           <Route path="/" element={<h1>Home</h1>} />
