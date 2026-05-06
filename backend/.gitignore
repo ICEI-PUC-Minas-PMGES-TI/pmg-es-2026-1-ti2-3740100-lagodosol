@@ -1,0 +1,52 @@
+# ========================
+# NODE / REACT
+# ========================
+node_modules/
+dist/
+build/
+.env
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================
+# JAVA / SPRING BOOT
+# ========================
+backend/target/
+*.class
+*.jar
+*.war
+*.log
+
+# Maven wrapper (opcional manter)
+# backend/.mvn/wrapper/maven-wrapper.jar
+
+# ========================
+# IDEs
+# ========================
+
+# VS Code
+.vscode/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# ========================
+# OS
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# H2 database (se usar)
+# ========================
+*.mv.db
+*.trace.db
