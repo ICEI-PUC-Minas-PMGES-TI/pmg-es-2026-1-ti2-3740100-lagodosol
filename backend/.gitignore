@@ -50,3 +50,10 @@ Thumbs.db
 # ========================
 *.mv.db
 *.trace.db
+
+
+target/
+.idea/
+.vscode/
+*.log
+*.class
