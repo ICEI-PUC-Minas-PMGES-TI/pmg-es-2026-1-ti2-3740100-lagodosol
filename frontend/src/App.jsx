@@ -5,6 +5,9 @@ import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import GestaoClientes from "./GestaoClientes";
 import logo from "./assets/logo.jpg";
+import PagamentoQuarto from "./PagamentoQuarto";
+// ...
+<Route path="/pagamento" element={<PagamentoQuarto />} />
 
 function CadastroUsuario() {
   const [form, setForm] = useState({
@@ -145,6 +148,7 @@ function App() {
           <Route path="/" element={<h1>Home</h1>} />
           <Route path="/cadastro" element={<CadastroUsuario />} />
           <Route path="/clientes" element={<GestaoClientes />} />
+          <Route path="/pagamento" element={<PagamentoQuarto />} />
         </Routes>
       </main>
 
