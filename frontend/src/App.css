@@ -129,3 +129,13 @@
   color: #777;
   line-height: 1.4;
 }
+
+.login-link a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-link a:hover {
+  opacity: 0.8;
+}

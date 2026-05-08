@@ -1,9 +1,9 @@
-import Footer from "../components/Footer";
 import "../App.css";
 
 import { useState } from "react";
 
 import logo from "../assets/logo.jpg";
+import { Link } from "react-router-dom";
 
 function CadastroUsuario() {
   const [form, setForm] = useState({
@@ -167,7 +167,7 @@ function CadastroUsuario() {
               </button>
 
               <p className="login-link">
-                Já tem uma conta? <span>Entrar</span>
+                Já tem uma conta? <Link to="/login">Entrar</Link>
               </p>
             </form>
 
@@ -180,8 +180,6 @@ function CadastroUsuario() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
