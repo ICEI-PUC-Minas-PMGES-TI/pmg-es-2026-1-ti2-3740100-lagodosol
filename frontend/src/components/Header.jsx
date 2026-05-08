@@ -1,10 +1,13 @@
 import "./Header.css";
+import logo from "../assets/logo.jpg";
 
 export default function Header() {
   return (
     <header className="header">
       <div className="header-container">
-        <div className="logo">ícone</div>
+        <div className="logo">
+          <img src={logo} alt="Logo" />
+        </div>
 
         <nav className="nav">
           <a href="#">HOTEL</a>
