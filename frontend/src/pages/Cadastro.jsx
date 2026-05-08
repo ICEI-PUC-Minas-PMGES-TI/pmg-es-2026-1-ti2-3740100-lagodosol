@@ -9,6 +9,7 @@ function CadastroUsuario() {
   const [form, setForm] = useState({
     nome: "",
     cpf: "",
+    dataNascimento: "",
     email: "",
     senha: "",
     confirmarSenha: "",
@@ -54,6 +55,7 @@ function CadastroUsuario() {
       body: JSON.stringify({
         nome: form.nome,
         cpf: form.cpf,
+        dataNascimento: form.dataNascimento,
         email: form.email,
         senha: form.senha,
       }),
@@ -73,6 +75,7 @@ function CadastroUsuario() {
         setForm({
           nome: "",
           cpf: "",
+          dataNascimento: "",
           email: "",
           senha: "",
           confirmarSenha: "",
@@ -120,6 +123,18 @@ function CadastroUsuario() {
                   name="cpf"
                   placeholder="000.000.000-00"
                   value={form.cpf}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Data de nascimento</label>
+
+                <input
+                  type="date"
+                  name="dataNascimento"
+                  value={form.dataNascimento}
                   onChange={handleChange}
                   required
                 />
