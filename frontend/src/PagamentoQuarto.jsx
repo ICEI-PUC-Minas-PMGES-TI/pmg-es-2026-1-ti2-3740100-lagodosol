@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 function PagamentoQuarto() {
-  // Dados simulados da reserva (viriam via props/router state)
+  // Dados simulados da reserva
   const reserva = {
     quarto: "Suite Luxo - 302",
     checkIn: "2026-05-15",
@@ -32,6 +32,7 @@ function PagamentoQuarto() {
   });
   const [pago, setPago] = useState(false);
   const [erro, setErro] = useState("");
+  const [carregando, setCarregando] = useState(false);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -54,7 +55,7 @@ function PagamentoQuarto() {
   }
 
   function validar() {
-    if (metodoPagamento === "cartao") {
+    if (metodoPagamento === "cartao" || metodoPagamento === "debito") {
       if (!form.nomeCartao.trim()) return "Informe o nome no cartão.";
       if (form.numeroCartao.replace(/\s/g, "").length < 16)
         return "Número do cartão inválido.";
@@ -68,13 +69,45 @@ function PagamentoQuarto() {
     return "";
   }
 
-  function handleSubmit() {
+  // Função que envia os dados para o seu Back-end
+  async function handleSubmit() {
     const erroMsg = validar();
     if (erroMsg) {
       setErro(erroMsg);
       return;
     }
-    setPago(true);
+
+    setCarregando(true);
+    setErro("");
+
+    try {
+      // Fazendo a requisição para o Node.js
+      const resposta = await fetch('http://localhost:3001/api/pagamentos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reserva: reserva,
+          metodoPagamento: metodoPagamento,
+          parcelas: metodoPagamento === 'cartao' ? parcelas : 1,
+          dadosFormulario: form
+        }),
+      });
+
+      const dados = await resposta.json();
+
+      if (dados.sucesso) {
+        setPago(true); // Se deu certo, mostra a tela verde
+      } else {
+        setErro(dados.mensagem || "Erro ao processar pagamento.");
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      setErro("Falha na comunicação com o servidor. Verifique se o back-end está rodando.");
+    } finally {
+      setCarregando(false);
+    }
   }
 
   if (pago) {
@@ -331,8 +364,13 @@ function PagamentoQuarto() {
 
             {erro && <p className="erro-msg">⚠️ {erro}</p>}
 
-            <button className="btn-confirmar" onClick={handleSubmit}>
-              Confirmar Pagamento · R$ {total.toFixed(2).replace(".", ",")}
+            <button 
+              className="btn-confirmar" 
+              onClick={handleSubmit}
+              disabled={carregando}
+              style={{ opacity: carregando ? 0.7 : 1, cursor: carregando ? 'not-allowed' : 'pointer' }}
+            >
+              {carregando ? "Processando..." : `Confirmar Pagamento · R$ ${total.toFixed(2).replace(".", ",")}`}
             </button>
 
             <p className="seguranca-msg">🔒 Pagamento seguro e criptografado</p>
