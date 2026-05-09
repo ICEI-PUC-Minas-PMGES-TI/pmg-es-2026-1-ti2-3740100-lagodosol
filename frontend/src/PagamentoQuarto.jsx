@@ -198,95 +198,95 @@ function PagamentoQuarto() {
             {/* Formulário Cartão */}
             {(metodoPagamento === "cartao" ||
               metodoPagamento === "debito") && (
-              <div className="form-pagamento">
-                <div className="form-group">
-                  <label>Nome no Cartão</label>
-                  <input
-                    type="text"
-                    name="nomeCartao"
-                    placeholder="Como está no cartão"
-                    value={form.nomeCartao}
-                    onChange={handleChange}
-                    className="input-pag"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Número do Cartão</label>
-                  <input
-                    type="text"
-                    name="numeroCartao"
-                    placeholder="0000 0000 0000 0000"
-                    value={form.numeroCartao}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        numeroCartao: formatarCartao(e.target.value),
-                      })
-                    }
-                    className="input-pag"
-                    maxLength={19}
-                  />
-                </div>
-
-                <div className="form-row">
+                <div className="form-pagamento">
                   <div className="form-group">
-                    <label>Validade</label>
+                    <label>Nome no Cartão</label>
                     <input
                       type="text"
-                      name="validade"
-                      placeholder="MM/AA"
-                      value={form.validade}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          validade: formatarValidade(e.target.value),
-                        })
-                      }
+                      name="nomeCartao"
+                      placeholder="Como está no cartão"
+                      value={form.nomeCartao}
+                      onChange={handleChange}
                       className="input-pag"
-                      maxLength={5}
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>CVV</label>
+                    <label>Número do Cartão</label>
                     <input
                       type="text"
-                      name="cvv"
-                      placeholder="000"
-                      value={form.cvv}
+                      name="numeroCartao"
+                      placeholder="0000 0000 0000 0000"
+                      value={form.numeroCartao}
                       onChange={(e) =>
                         setForm({
                           ...form,
-                          cvv: e.target.value.replace(/\D/g, "").slice(0, 4),
+                          numeroCartao: formatarCartao(e.target.value),
                         })
                       }
                       className="input-pag"
-                      maxLength={4}
+                      maxLength={19}
                     />
                   </div>
-                </div>
 
-                {metodoPagamento === "cartao" && (
-                  <div className="form-group">
-                    <label>Parcelas</label>
-                    <select
-                      className="input-pag"
-                      value={parcelas}
-                      onChange={(e) => setParcelas(e.target.value)}
-                    >
-                      {[1, 2, 3, 6, 12].map((p) => (
-                        <option key={p} value={p}>
-                          {p}x de R${" "}
-                          {(total / p).toFixed(2).replace(".", ",")}
-                          {p === 1 ? " (à vista)" : " sem juros"}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Validade</label>
+                      <input
+                        type="text"
+                        name="validade"
+                        placeholder="MM/AA"
+                        value={form.validade}
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            validade: formatarValidade(e.target.value),
+                          })
+                        }
+                        className="input-pag"
+                        maxLength={5}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>CVV</label>
+                      <input
+                        type="text"
+                        name="cvv"
+                        placeholder="000"
+                        value={form.cvv}
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            cvv: e.target.value.replace(/\D/g, "").slice(0, 4),
+                          })
+                        }
+                        className="input-pag"
+                        maxLength={4}
+                      />
+                    </div>
                   </div>
-                )}
-              </div>
-            )}
+
+                  {metodoPagamento === "cartao" && (
+                    <div className="form-group">
+                      <label>Parcelas</label>
+                      <select
+                        className="input-pag"
+                        value={parcelas}
+                        onChange={(e) => setParcelas(e.target.value)}
+                      >
+                        {[1, 2, 3, 6, 12].map((p) => (
+                          <option key={p} value={p}>
+                            {p}x de R${" "}
+                            {(total / p).toFixed(2).replace(".", ",")}
+                            {p === 1 ? " (à vista)" : " sem juros"}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
 
             {/* Formulário PIX */}
             {metodoPagamento === "pix" && (
