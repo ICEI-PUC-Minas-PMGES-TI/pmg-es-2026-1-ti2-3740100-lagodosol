@@ -23,7 +23,7 @@ function Login() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    fetch("http://localhost:8080/login", {
+    fetch("http://localhost:8080/usuarios/login", {
       method: "POST",
 
       headers: {
