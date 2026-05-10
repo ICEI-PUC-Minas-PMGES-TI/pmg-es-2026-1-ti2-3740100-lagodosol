@@ -15,10 +15,40 @@ export default function CadastroQuarto() {
     });
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    console.log("Quarto cadastrado:", form);
+ async function handleSubmit(e) {
+  e.preventDefault();
+
+  try {
+    const response = await fetch("http://localhost:3001/quartos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.erro);
+      return;
+    }
+
+    alert(data.mensagem);
+
+    setForm({
+      numero: "",
+      tipo: "",
+      capacidade: "",
+      preco: "",
+    });
+
+    console.log("Quarto cadastrado:", data.quarto);
+  } catch (error) {
+    console.error("Erro ao cadastrar quarto:", error);
+    alert("Erro ao conectar com o servidor.");
   }
+}
 
   return (
     <div style={styles.page}>

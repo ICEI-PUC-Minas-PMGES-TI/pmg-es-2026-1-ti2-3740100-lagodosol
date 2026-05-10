@@ -3,5 +3,30 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "react-router-dom": "^7.14.2"
+  },
+  "name": "pmg-es-2026-1-ti2-3740100-lagodosol",
+  "version": "1.0.0",
+  "description": "LAGO DO SOL",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2026-1-ti2-3740100-lagodosol.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2026-1-ti2-3740100-lagodosol/issues"
+  },
+  "homepage": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2026-1-ti2-3740100-lagodosol#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
