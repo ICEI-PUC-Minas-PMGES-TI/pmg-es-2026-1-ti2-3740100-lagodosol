@@ -81,27 +81,24 @@ function PagamentoQuarto() {
     setErro("");
 
     try {
-      // Fazendo a requisição para o Node.js
-      const resposta = await fetch('http://localhost:3001/api/pagamentos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          reserva: reserva,
-          metodoPagamento: metodoPagamento,
-          parcelas: metodoPagamento === 'cartao' ? parcelas : 1,
-          dadosFormulario: form
-        }),
-      });
+      const resposta = await fetch('http://localhost:8080/pagamentos', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    metodoPagamento: metodoPagamento,
+    parcelas: metodoPagamento === 'cartao' ? parseInt(parcelas) : 1,
+    total: total,
+    nomeCartao: form.nomeCartao || null
+  }),
+});
 
-      const dados = await resposta.json();
-
-      if (dados.sucesso) {
-        setPago(true); // Se deu certo, mostra a tela verde
-      } else {
-        setErro(dados.mensagem || "Erro ao processar pagamento.");
-      }
+if (resposta.ok) {
+  setPago(true);
+} else {
+  setErro("Erro ao processar pagamento.");
+}
     } catch (error) {
       console.error("Erro na requisição:", error);
       setErro("Falha na comunicação com o servidor. Verifique se o back-end está rodando.");
