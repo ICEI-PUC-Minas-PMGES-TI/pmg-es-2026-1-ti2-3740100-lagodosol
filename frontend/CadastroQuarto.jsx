@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function CadastroQuarto() {
   const [form, setForm] = useState({
@@ -116,8 +117,14 @@ export default function CadastroQuarto() {
             />
 
             <button type="submit" style={styles.button}>
-              Cadastrar Quarto
+                Cadastrar Quarto
             </button>
+
+            <Link to="/">
+            <button type="button" style={styles.backButton}>
+               Voltar para Home
+              </button>
+            </Link>
           </form>
         </div>
       </main>
@@ -199,4 +206,14 @@ const styles = {
     textAlign: "center",
     padding: "10px",
   },
+  
+  backButton: {
+  width: "100%",
+  padding: "10px",
+  background: "#777",
+  color: "#fff",
+  border: "none",
+  cursor: "pointer",
+  marginTop: "10px",
+},
 };
