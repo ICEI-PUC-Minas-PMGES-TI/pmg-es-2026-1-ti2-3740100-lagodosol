@@ -81,8 +81,8 @@ function PagamentoQuarto() {
     setErro("");
 
     try {
-      // Fazendo a requisição para o Node.js
-      const resposta = await fetch('http://localhost:3001/api/pagamentos', {
+      // Fazendo a requisição para o backend Java Spring Boot
+      const resposta = await fetch('http://localhost:8080/api/pagamentos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
