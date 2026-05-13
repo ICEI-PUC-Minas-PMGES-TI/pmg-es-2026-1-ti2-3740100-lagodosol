@@ -81,8 +81,8 @@ function PagamentoQuarto() {
     setErro("");
 
     try {
-      // Fazendo a requisição para o backend Java Spring Boot
-      const resposta = await fetch('http://localhost:8080/api/pagamentos', {
+      // Fazendo a requisição para o Node.js
+      const resposta = await fetch('http://localhost:3001/api/pagamentos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,13 +95,11 @@ function PagamentoQuarto() {
         }),
       });
 
-      const dados = await resposta.json();
-
-      if (dados.sucesso) {
-        setPago(true); // Se deu certo, mostra a tela verde
-      } else {
-        setErro(dados.mensagem || "Erro ao processar pagamento.");
-      }
+if (resposta.ok) {
+  setPago(true);
+} else {
+  setErro("Erro ao processar pagamento.");
+}
     } catch (error) {
       console.error("Erro na requisição:", error);
       setErro("Falha na comunicação com o servidor. Verifique se o back-end está rodando.");
