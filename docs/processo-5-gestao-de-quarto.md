@@ -13,7 +13,7 @@
 | Número do quarto     | Número          | obrigatório                 |                     |
 | Tipo de problema     | Seleção única   | obrigatório                 | necessita limpeza   |
 | Descrição            | Área de texto   | obrigatório                 |                     |
-| Prioridade           | Seleção única   | (baixa, média, alta)        | média               |
+| Prioridade           | Seleção única   | (baixa, média, alta)        | baixa               |
 | Data do pedido       | Data e hora     | automático                  |                     |
 
 | Comandos   | Destino                 | Tipo    |
