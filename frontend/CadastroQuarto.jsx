@@ -56,19 +56,22 @@ export default function CadastroQuarto() {
 
       {/* HEADER */}
       <header style={styles.header}>
-        <div style={styles.headerContainer}>
-          <div style={styles.logo}>ícone</div>
+  <div style={styles.headerContainer}>
+    <div style={styles.logo}>ícone</div>
 
-          <nav style={styles.nav}>
-            <a href="#">HOTEL</a>
-            <a href="#">ACOMODAÇÕES</a>
-            <a href="#">PACOTES</a>
-            <a href="#">GASTRONOMIA</a>
-            <a href="#">EVENTOS</a>
-            <a href="#">CORPORATIVO</a>
-          </nav>
-        </div>
-      </header>
+    <nav style={styles.nav}>
+      {/* Alterado para Link apontando para a raiz (App.jsx) */}
+      <Link to="/" style={styles.navLink}>HOTEL</Link>
+      
+      {/* Mantidos como '#' até você criar as outras telas, mas já com o estilo correto */}
+      <a href="#" style={styles.navLink}>ACOMODAÇÕES</a>
+      <a href="#" style={styles.navLink}>PACOTES</a>
+      <a href="#" style={styles.navLink}>GASTRONOMIA</a>
+      <a href="#" style={styles.navLink}>EVENTOS</a>
+      <a href="#" style={styles.navLink}>CORPORATIVO</a>
+    </nav>
+  </div>
+</header>
 
       {/* CONTEÚDO */}
       <main style={styles.main}>
