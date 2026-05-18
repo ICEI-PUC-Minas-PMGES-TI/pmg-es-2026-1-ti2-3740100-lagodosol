@@ -16,100 +16,97 @@ export default function CadastroQuarto() {
     });
   }
 
- async function handleSubmit(e) {
-  e.preventDefault();
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-  try {
-    const response = await fetch("http://localhost:3001/quartos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    try {
+      const response = await fetch("http://localhost:3001/quartos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      alert(data.erro);
-      return;
+      if (!response.ok) {
+        alert(data.erro);
+        return;
+      }
+
+      alert(data.mensagem);
+
+      setForm({
+        numero: "",
+        tipo: "",
+        capacidade: "",
+        preco: "",
+      });
+
+      console.log("Quarto cadastrado:", data.quarto);
+    } catch (error) {
+      console.error("Erro ao cadastrar quarto:", error);
+      alert("Erro ao conectar com o servidor.");
     }
-
-    alert(data.mensagem);
-
-    setForm({
-      numero: "",
-      tipo: "",
-      capacidade: "",
-      preco: "",
-    });
-
-    console.log("Quarto cadastrado:", data.quarto);
-  } catch (error) {
-    console.error("Erro ao cadastrar quarto:", error);
-    alert("Erro ao conectar com o servidor.");
   }
-}
 
   return (
     <div style={styles.page}>
-
-      {/* HEADER */}
-      <header style={styles.header}>
-        <div style={styles.headerContainer}>
-          <div style={styles.logo}>ícone</div>
-
-          <nav style={styles.nav}>
-            <a href="#">HOTEL</a>
-            <a href="#">ACOMODAÇÕES</a>
-            <a href="#">PACOTES</a>
-            <a href="#">GASTRONOMIA</a>
-            <a href="#">EVENTOS</a>
-            <a href="#">CORPORATIVO</a>
-          </nav>
-        </div>
-      </header>
-
-      {/* CONTEÚDO */}
       <main style={styles.main}>
-        <div style={styles.formContainer}>
-          <h2>Cadastro de Quarto</h2>
+<header style={styles.header}>
+  <div style={styles.headerContainer}>
+    <img
+  src="src/assets/logo.jpg"
+  alt="Logo Lago do Sol"
+  style={styles.logoImg}
+/>
+
+  </div>
+</header>
+
+        <section style={styles.card}>
+          <h2 style={styles.title}>CADASTRO DE QUARTO</h2>
 
           <form onSubmit={handleSubmit}>
+            <label style={styles.label}>Número do quarto</label>
             <input
               type="text"
               name="numero"
-              placeholder="Número do Quarto"
+              placeholder="Ex: 101"
               value={form.numero}
               onChange={handleChange}
               required
               style={styles.input}
             />
 
+            <label style={styles.label}>Tipo do quarto</label>
             <input
               type="text"
               name="tipo"
-              placeholder="Tipo do Quarto"
+              placeholder="Ex: Luxo, Standard, Suíte"
               value={form.tipo}
               onChange={handleChange}
               required
               style={styles.input}
             />
 
+            <label style={styles.label}>Capacidade</label>
             <input
               type="number"
               name="capacidade"
-              placeholder="Capacidade de Pessoas"
+              placeholder="Ex: 2"
               value={form.capacidade}
               onChange={handleChange}
               required
               style={styles.input}
             />
 
+            <label style={styles.label}>Preço da diária</label>
             <input
               type="number"
               name="preco"
-              placeholder="Preço da Diária"
+              placeholder="Ex: 350"
               value={form.preco}
               onChange={handleChange}
               required
@@ -117,103 +114,147 @@ export default function CadastroQuarto() {
             />
 
             <button type="submit" style={styles.button}>
-                Cadastrar Quarto
+              Cadastrar Quarto
             </button>
 
-            <Link to="/">
-            <button type="button" style={styles.backButton}>
-               Voltar para Home
-              </button>
+            <Link to="/" style={styles.link}>
+              Voltar para Home
             </Link>
           </form>
-        </div>
+        </section>
       </main>
 
-      {/* FOOTER */}
-      <footer style={styles.footer}>
-        <p>©2022 Hotel Lago do Sol | CNPJ: 37.790.093/0001-05</p>
-      </footer>
     </div>
   );
 }
 
-/* ESTILOS */
 const styles = {
   page: {
+    minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
-    minHeight: "100vh",
-    fontFamily: "Arial",
-  },
-
-  header: {
-    background: "#333",
-    color: "#fff",
-    padding: "10px 0",
-  },
-
-  headerContainer: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    maxWidth: "1000px",
-    margin: "0 auto",
-  },
-
-  logo: {
-    fontWeight: "bold",
-  },
-
-  nav: {
-    display: "flex",
-    gap: "15px",
+    background: "#f5f6f8",
+    fontFamily: "Arial, sans-serif",
+    color: "#1f2933",
   },
 
   main: {
     flex: 1,
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "column",
     alignItems: "center",
-    background: "#f4f4f4",
+    justifyContent: "center",
+    padding: "35px 20px",
   },
 
-  formContainer: {
+  logoArea: {
+    textAlign: "center",
+    marginBottom: "25px",
+  },
+
+  logoCircle: {
+    width: "85px",
+    height: "85px",
+    borderRadius: "50%",
+    background: "#ffd447",
+    color: "#1f7a8c",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "42px",
+    margin: "0 auto 8px",
+  },
+ logoImg: {
+  width: "150px",
+  height: "auto",
+  display: "block",
+  margin: "0 auto 25px",
+},
+
+nav: {
+  display: "flex",
+  justifyContent: "center",
+  gap: "22px",
+  marginBottom: "0px",
+  flexWrap: "wrap",
+},
+
+navLink: {
+  textDecoration: "none",
+  color: "#1f2933",
+  fontSize: "14px",
+  fontWeight: "600",
+},
+
+  logoText: {
+    fontSize: "16px",
+    color: "#1f7a8c",
+    fontWeight: "600",
+  },
+
+  card: {
+    width: "100%",
+    maxWidth: "420px",
     background: "#fff",
-    padding: "30px",
-    borderRadius: "10px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    width: "320px",
+    padding: "34px 30px",
+    borderRadius: "12px",
+    boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
+  },
+
+  title: {
+    textAlign: "center",
+    fontSize: "22px",
+    marginBottom: "26px",
+    letterSpacing: "0.5px",
+    color: "#1f2933",
+  },
+
+  label: {
+    display: "block",
+    fontSize: "15px",
+    fontWeight: "600",
+    marginBottom: "8px",
+    color: "#263238",
   },
 
   input: {
     width: "100%",
-    padding: "10px",
-    marginBottom: "10px",
+    boxSizing: "border-box",
+    padding: "12px",
+    marginBottom: "17px",
+    border: "1px solid #cfcfcf",
+    borderRadius: "6px",
+    fontSize: "14px",
+    outline: "none",
   },
 
   button: {
     width: "100%",
-    padding: "10px",
+    padding: "13px",
     background: "#333",
     color: "#fff",
     border: "none",
+    borderRadius: "6px",
     cursor: "pointer",
+    fontWeight: "600",
+    fontSize: "14px",
+    marginTop: "8px",
+  },
+
+  link: {
+    display: "block",
+    textAlign: "center",
+    marginTop: "16px",
+    color: "#3b3b3b",
+    textDecoration: "none",
+    fontSize: "14px",
   },
 
   footer: {
-    background: "#333",
-    color: "#fff",
     textAlign: "center",
-    padding: "10px",
+    padding: "18px",
+    background: "#f0f0f0",
+    color: "#666",
+    fontSize: "13px",
   },
-  
-  backButton: {
-  width: "100%",
-  padding: "10px",
-  background: "#777",
-  color: "#fff",
-  border: "none",
-  cursor: "pointer",
-  marginTop: "10px",
-},
 };
