@@ -1,5 +1,8 @@
 package com.lagodosol.backend.model;
 
+
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,22 +16,19 @@ public class Usuario {
     private Long id;
 
     private String nome;
-
     private String cpf;
-
-    private String dataNascimento;
-
     private String email;
-
     private String senha;
-
-    public Usuario() {
-    }
+    private LocalDate dataNascimento;
 
     public Long getId() {
         return id;
     }
 
+
+
+    
+    
     public String getNome() {
         return nome;
     }
@@ -37,6 +37,9 @@ public class Usuario {
         this.nome = nome;
     }
 
+
+
+    
     public String getCpf() {
         return cpf;
     }
@@ -45,14 +48,8 @@ public class Usuario {
         this.cpf = cpf;
     }
 
-    public String getDataNascimento() {
-        return dataNascimento;
-    }
 
-    public void setDataNascimento(String dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
+    
     public String getEmail() {
         return email;
     }
@@ -61,6 +58,8 @@ public class Usuario {
         this.email = email;
     }
 
+
+
     public String getSenha() {
         return senha;
     }
@@ -68,4 +67,14 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+    
 }
