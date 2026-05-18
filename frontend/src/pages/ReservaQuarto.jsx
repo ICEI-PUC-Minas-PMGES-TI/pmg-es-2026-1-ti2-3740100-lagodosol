@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Footer from "../components/Footer";
+import logo from "../assets/logo.jpg";
 import "./ReservaQuarto.css";
 
 function ReservaQuarto() {
@@ -13,7 +13,6 @@ function ReservaQuarto() {
       imagem:
         "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop",
     },
-
     {
       id: 102,
       nome: "102 - Standard",
@@ -23,7 +22,6 @@ function ReservaQuarto() {
       imagem:
         "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1200&auto=format&fit=crop",
     },
-
     {
       id: 201,
       nome: "201 - Luxo",
@@ -33,7 +31,6 @@ function ReservaQuarto() {
       imagem:
         "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop",
     },
-
     {
       id: 301,
       nome: "301 - Suíte",
@@ -56,10 +53,12 @@ function ReservaQuarto() {
   const [quartoSelecionado, setQuartoSelecionado] = useState(null);
 
   function handleChange(e) {
-    setDadosReserva({
-      ...dadosReserva,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setDadosReserva((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   }
 
   function calcularDiarias() {
@@ -68,17 +67,31 @@ function ReservaQuarto() {
     const entrada = new Date(dadosReserva.checkIn);
     const saida = new Date(dadosReserva.checkOut);
 
-    const diferenca = saida - entrada;
+    const diff = saida - entrada;
 
-    return diferenca / (1000 * 60 * 60 * 24);
+    if (diff <= 0) return 0;
+
+    return diff / (1000 * 60 * 60 * 24);
   }
 
   const diarias = calcularDiarias();
 
-  const valorTotal = quartoSelecionado ? diarias * quartoSelecionado.preco : 0;
+  const valorTotal =
+    quartoSelecionado && diarias > 0
+      ? diarias * quartoSelecionado.preco
+      : 0;
+
+  const isDataValida =
+    dadosReserva.checkIn &&
+    dadosReserva.checkOut &&
+    new Date(dadosReserva.checkOut) > new Date(dadosReserva.checkIn);
 
   return (
     <div className="reserva-wrapper">
+      <div className="logo-reserva">
+        <img src={logo} alt="Logo Lago do Sol" />
+      </div>
+
       <main className="reserva-container">
         <div className="reserva-grid">
           <div className="card-reserva form-card">
@@ -87,7 +100,6 @@ function ReservaQuarto() {
             <div className="form-row">
               <div className="form-group">
                 <label>Check-in</label>
-
                 <input
                   type="date"
                   name="checkIn"
@@ -98,12 +110,12 @@ function ReservaQuarto() {
 
               <div className="form-group">
                 <label>Check-out</label>
-
                 <input
                   type="date"
                   name="checkOut"
                   value={dadosReserva.checkOut}
                   onChange={handleChange}
+                  min={dadosReserva.checkIn || undefined}
                 />
               </div>
             </div>
@@ -111,7 +123,6 @@ function ReservaQuarto() {
             <div className="form-row">
               <div className="form-group">
                 <label>Número de hóspedes</label>
-
                 <select
                   name="hospedes"
                   value={dadosReserva.hospedes}
@@ -126,7 +137,6 @@ function ReservaQuarto() {
 
               <div className="form-group">
                 <label>Tipo de hospedagem</label>
-
                 <select
                   name="tipo"
                   value={dadosReserva.tipo}
@@ -142,7 +152,6 @@ function ReservaQuarto() {
 
             <div className="form-group">
               <label>Observações</label>
-
               <textarea
                 name="observacoes"
                 placeholder="Alguma observação sobre sua reserva?"
@@ -150,6 +159,10 @@ function ReservaQuarto() {
                 onChange={handleChange}
               />
             </div>
+
+            <button className="btn-buscar" disabled={!isDataValida}>
+              Buscar Quartos
+            </button>
           </div>
 
           <div className="card-reserva resumo-card">
@@ -157,31 +170,26 @@ function ReservaQuarto() {
 
             <div className="resumo-item">
               <span>Check-in</span>
-
               <strong>{dadosReserva.checkIn || "Não informado"}</strong>
             </div>
 
             <div className="resumo-item">
               <span>Check-out</span>
-
               <strong>{dadosReserva.checkOut || "Não informado"}</strong>
             </div>
 
             <div className="resumo-item">
               <span>Diárias</span>
-
               <strong>{diarias}</strong>
             </div>
 
             <div className="resumo-item">
               <span>Hóspedes</span>
-
               <strong>{dadosReserva.hospedes}</strong>
             </div>
 
             <div className="resumo-item">
               <span>Quarto</span>
-
               <strong>
                 {quartoSelecionado
                   ? quartoSelecionado.nome
@@ -191,7 +199,6 @@ function ReservaQuarto() {
 
             <div className="resumo-total">
               <span>Valor Total</span>
-
               <strong>R$ {valorTotal.toFixed(2).replace(".", ",")}</strong>
             </div>
           </div>
@@ -207,9 +214,7 @@ function ReservaQuarto() {
 
                 <div className="quarto-info">
                   <h3>{quarto.nome}</h3>
-
                   <p>{quarto.cama}</p>
-
                   <p>{quarto.pessoas}</p>
 
                   <div className="quarto-footer">
@@ -227,8 +232,6 @@ function ReservaQuarto() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

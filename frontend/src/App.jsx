@@ -6,6 +6,8 @@ import GestaoClientes from "./GestaoClientes";
 import PagamentoQuarto from "./PagamentoQuarto";
 import CadastroQuarto from "./CadastroQuarto";
 
+import ReservaQuarto from "./pages/ReservaQuarto";
+
 import CadastroUsuario from "./pages/Cadastro";
 import Login from "./pages/Login";
 
@@ -25,6 +27,8 @@ function App() {
           <Route path="/clientes" element={<GestaoClientes />} />
 
           <Route path="/pagamento" element={<PagamentoQuarto />} />
+
+          <Route path="/reserva" element={<ReservaQuarto />} />
 
           <Route path="/quarto" element={<CadastroQuarto />} />
         </Routes>
