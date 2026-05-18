@@ -1,0 +1,64 @@
+.reserva-wrapper {
+}
+
+.quartos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.quarto-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.quarto-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.quarto-info {
+  padding: 16px;
+}
+
+.quarto-info h3 {
+  margin-bottom: 10px;
+}
+
+.quarto-info p {
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.quarto-footer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quarto-footer button {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.quarto-footer button:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 900px) {
+  .reserva-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+}
