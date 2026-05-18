@@ -40,7 +40,7 @@ Etapa para inclusão de uma nova unidade habitacional no inventário.
 | Campo            | Tipo              | Restrições                     | Valor default |
 |------------------|-------------------|--------------------------------|---------------|
 | Numero do quarto | Caixa de texto    | obrigatório, único             |               |
-| Tipo             | Caixa de texto    | opcional                       |               |
+| Tipo             | Caixa de texto    | obrigatório                    |               |
 | Capacidade       | Campo numérico    | obrigatório                    |               |
 | Preço            | Campo numérico    | obrigatório                    |               |
 
