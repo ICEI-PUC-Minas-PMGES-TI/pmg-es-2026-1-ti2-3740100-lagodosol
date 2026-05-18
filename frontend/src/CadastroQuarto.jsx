@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import logo from "./assets/logo.jpg";
 
 export default function CadastroQuarto() {
   const [form, setForm] = useState({
@@ -57,7 +58,7 @@ export default function CadastroQuarto() {
 <header style={styles.header}>
   <div style={styles.headerContainer}>
     <img
-  src="src/assets/logo.jpg"
+  src={logo}
   alt="Logo Lago do Sol"
   style={styles.logoImg}
 />
