@@ -145,4 +145,3 @@
 |----------|----------|---------|
 | encerrar | —        | default |
 
-![alt text](image-2.png)

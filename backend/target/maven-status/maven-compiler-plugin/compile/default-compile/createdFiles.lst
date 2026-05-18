@@ -1,4 +1,7 @@
 com\lagodosol\backend\BackendApplication.class
-com\lagodosol\backend\controller\UsuarioController.class
+com\lagodosol\backend\model\Pagamento.class
+com\lagodosol\backend\controller\PagamentoController.class
 com\lagodosol\backend\model\Usuario.class
+com\lagodosol\backend\controller\UsuarioController.class
+com\lagodosol\backend\repository\PagamentoRepository.class
 com\lagodosol\backend\repository\UsuarioRepository.class

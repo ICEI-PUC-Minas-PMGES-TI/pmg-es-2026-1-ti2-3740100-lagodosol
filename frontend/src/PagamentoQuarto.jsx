@@ -82,29 +82,30 @@ function PagamentoQuarto() {
 
     try {
       // Fazendo a requisição para o Node.js
-      const resposta = await fetch('http://localhost:3001/api/pagamentos', {
-        method: 'POST',
+      const resposta = await fetch("http://localhost:8080/pagamentos", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          reserva: reserva,
           metodoPagamento: metodoPagamento,
-          parcelas: metodoPagamento === 'cartao' ? parcelas : 1,
-          dadosFormulario: form
+          parcelas: metodoPagamento === "cartao" ? parseInt(parcelas) : 1,
+          valorTotal: total,
+          nomeCartao: form.nomeCartao,
+          cpfPix: form.cpfPix,
         }),
       });
 
-      const dados = await resposta.json();
-
-      if (dados.sucesso) {
-        setPago(true); // Se deu certo, mostra a tela verde
+      if (resposta.ok) {
+        setPago(true);
       } else {
-        setErro(dados.mensagem || "Erro ao processar pagamento.");
+        setErro("Erro ao processar pagamento.");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      setErro("Falha na comunicação com o servidor. Verifique se o back-end está rodando.");
+      setErro(
+        "Falha na comunicação com o servidor. Verifique se o back-end está rodando.",
+      );
     } finally {
       setCarregando(false);
     }
@@ -129,13 +130,13 @@ function PagamentoQuarto() {
               <span>
                 <strong>Check-in:</strong>{" "}
                 {new Date(reserva.checkIn + "T12:00:00").toLocaleDateString(
-                  "pt-BR"
+                  "pt-BR",
                 )}
               </span>
               <span>
                 <strong>Check-out:</strong>{" "}
                 {new Date(reserva.checkOut + "T12:00:00").toLocaleDateString(
-                  "pt-BR"
+                  "pt-BR",
                 )}
               </span>
               <span>
@@ -169,11 +170,11 @@ function PagamentoQuarto() {
                 <p className="resumo-titulo">{reserva.quarto}</p>
                 <p className="resumo-datas">
                   {new Date(reserva.checkIn + "T12:00:00").toLocaleDateString(
-                    "pt-BR"
+                    "pt-BR",
                   )}{" "}
                   →{" "}
                   {new Date(reserva.checkOut + "T12:00:00").toLocaleDateString(
-                    "pt-BR"
+                    "pt-BR",
                   )}
                 </p>
               </div>
@@ -229,97 +230,95 @@ function PagamentoQuarto() {
             </div>
 
             {/* Formulário Cartão */}
-            {(metodoPagamento === "cartao" ||
-              metodoPagamento === "debito") && (
-                <div className="form-pagamento">
-                  <div className="form-group">
-                    <label>Nome no Cartão</label>
-                    <input
-                      type="text"
-                      name="nomeCartao"
-                      placeholder="Como está no cartão"
-                      value={form.nomeCartao}
-                      onChange={handleChange}
-                      className="input-pag"
-                    />
-                  </div>
+            {(metodoPagamento === "cartao" || metodoPagamento === "debito") && (
+              <div className="form-pagamento">
+                <div className="form-group">
+                  <label>Nome no Cartão</label>
+                  <input
+                    type="text"
+                    name="nomeCartao"
+                    placeholder="Como está no cartão"
+                    value={form.nomeCartao}
+                    onChange={handleChange}
+                    className="input-pag"
+                  />
+                </div>
 
+                <div className="form-group">
+                  <label>Número do Cartão</label>
+                  <input
+                    type="text"
+                    name="numeroCartao"
+                    placeholder="0000 0000 0000 0000"
+                    value={form.numeroCartao}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        numeroCartao: formatarCartao(e.target.value),
+                      })
+                    }
+                    className="input-pag"
+                    maxLength={19}
+                  />
+                </div>
+
+                <div className="form-row">
                   <div className="form-group">
-                    <label>Número do Cartão</label>
+                    <label>Validade</label>
                     <input
                       type="text"
-                      name="numeroCartao"
-                      placeholder="0000 0000 0000 0000"
-                      value={form.numeroCartao}
+                      name="validade"
+                      placeholder="MM/AA"
+                      value={form.validade}
                       onChange={(e) =>
                         setForm({
                           ...form,
-                          numeroCartao: formatarCartao(e.target.value),
+                          validade: formatarValidade(e.target.value),
                         })
                       }
                       className="input-pag"
-                      maxLength={19}
+                      maxLength={5}
                     />
                   </div>
 
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label>Validade</label>
-                      <input
-                        type="text"
-                        name="validade"
-                        placeholder="MM/AA"
-                        value={form.validade}
-                        onChange={(e) =>
-                          setForm({
-                            ...form,
-                            validade: formatarValidade(e.target.value),
-                          })
-                        }
-                        className="input-pag"
-                        maxLength={5}
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label>CVV</label>
-                      <input
-                        type="text"
-                        name="cvv"
-                        placeholder="000"
-                        value={form.cvv}
-                        onChange={(e) =>
-                          setForm({
-                            ...form,
-                            cvv: e.target.value.replace(/\D/g, "").slice(0, 4),
-                          })
-                        }
-                        className="input-pag"
-                        maxLength={4}
-                      />
-                    </div>
+                  <div className="form-group">
+                    <label>CVV</label>
+                    <input
+                      type="text"
+                      name="cvv"
+                      placeholder="000"
+                      value={form.cvv}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          cvv: e.target.value.replace(/\D/g, "").slice(0, 4),
+                        })
+                      }
+                      className="input-pag"
+                      maxLength={4}
+                    />
                   </div>
-
-                  {metodoPagamento === "cartao" && (
-                    <div className="form-group">
-                      <label>Parcelas</label>
-                      <select
-                        className="input-pag"
-                        value={parcelas}
-                        onChange={(e) => setParcelas(e.target.value)}
-                      >
-                        {[1, 2, 3, 6, 12].map((p) => (
-                          <option key={p} value={p}>
-                            {p}x de R${" "}
-                            {(total / p).toFixed(2).replace(".", ",")}
-                            {p === 1 ? " (à vista)" : " sem juros"}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
                 </div>
-              )}
+
+                {metodoPagamento === "cartao" && (
+                  <div className="form-group">
+                    <label>Parcelas</label>
+                    <select
+                      className="input-pag"
+                      value={parcelas}
+                      onChange={(e) => setParcelas(e.target.value)}
+                    >
+                      {[1, 2, 3, 6, 12].map((p) => (
+                        <option key={p} value={p}>
+                          {p}x de R$ {(total / p).toFixed(2).replace(".", ",")}
+                          {p === 1 ? " (à vista)" : " sem juros"}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Formulário PIX */}
             {metodoPagamento === "pix" && (
@@ -364,13 +363,18 @@ function PagamentoQuarto() {
 
             {erro && <p className="erro-msg">⚠️ {erro}</p>}
 
-            <button 
-              className="btn-confirmar" 
+            <button
+              className="btn-confirmar"
               onClick={handleSubmit}
               disabled={carregando}
-              style={{ opacity: carregando ? 0.7 : 1, cursor: carregando ? 'not-allowed' : 'pointer' }}
+              style={{
+                opacity: carregando ? 0.7 : 1,
+                cursor: carregando ? "not-allowed" : "pointer",
+              }}
             >
-              {carregando ? "Processando..." : `Confirmar Pagamento · R$ ${total.toFixed(2).replace(".", ",")}`}
+              {carregando
+                ? "Processando..."
+                : `Confirmar Pagamento · R$ ${total.toFixed(2).replace(".", ",")}`}
             </button>
 
             <p className="seguranca-msg">🔒 Pagamento seguro e criptografado</p>
