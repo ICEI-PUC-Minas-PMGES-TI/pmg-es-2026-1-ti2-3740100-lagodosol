@@ -37,9 +37,12 @@ Permite a modificação de informações de um quarto já existente no sistema.
 ## Cadastrar novo
 Etapa para inclusão de uma nova unidade habitacional no inventário.
 
-| Campo | Tipo | Restrições | Valor default |
-| :--- | :--- | :--- | :--- |
-| Dados do Quarto | Diversos | Obrigatórios | Vazio |
+| Campo            | Tipo              | Restrições                     | Valor default |
+|------------------|-------------------|--------------------------------|---------------|
+| Numero do quarto | Caixa de texto    | obrigatório, único             |               |
+| Tipo             | Caixa de texto    | opcional                       |               |
+| Capacidade       | Campo numérico    | obrigatório                    |               |
+| Preço            | Campo numérico    | obrigatório                    |               |
 
 | Comandos | Destino | Tipo |
 | :--- | :--- | :--- |
