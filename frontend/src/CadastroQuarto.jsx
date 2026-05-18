@@ -21,7 +21,7 @@ export default function CadastroQuarto() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3001/quartos", {
+      const response = await fetch("http://localhost:8080/quartos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,22 +30,16 @@ export default function CadastroQuarto() {
       });
 
       const data = await response.json();
-
+      
       if (!response.ok) {
-        alert(data.erro);
+        alert("Erro ao cadastrar quarto.");
         return;
       }
-
-      alert(data.mensagem);
-
-      setForm({
-        numero: "",
-        tipo: "",
-        capacidade: "",
-        preco: "",
-      });
-
-      console.log("Quarto cadastrado:", data.quarto);
+      
+      alert("Quarto cadastrado com sucesso!");
+      setForm({ numero: "", tipo: "", capacidade: "", preco: "" });
+      console.log("Quarto cadastrado:", data);
+      
     } catch (error) {
       console.error("Erro ao cadastrar quarto:", error);
       alert("Erro ao conectar com o servidor.");
