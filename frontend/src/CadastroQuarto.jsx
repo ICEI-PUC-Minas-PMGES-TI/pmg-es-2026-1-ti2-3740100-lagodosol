@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "./assets/logo.jpg";
 
@@ -10,6 +10,29 @@ export default function CadastroQuarto() {
     preco: "",
   });
 
+  const [quartos, setQuartos] = useState([]);
+  const [editandoId, setEditandoId] = useState(null);
+
+  // =========================
+  // BUSCAR QUARTOS
+  // =========================
+  async function buscarQuartos() {
+    try {
+      const response = await fetch("http://localhost:8080/quartos");
+      const data = await response.json();
+      setQuartos(data);
+    } catch (error) {
+      console.error("Erro ao buscar quartos:", error);
+    }
+  }
+
+  useEffect(() => {
+    buscarQuartos();
+  }, []);
+
+  // =========================
+  // ALTERAR INPUTS
+  // =========================
   function handleChange(e) {
     setForm({
       ...form,
@@ -17,54 +40,130 @@ export default function CadastroQuarto() {
     });
   }
 
+  // =========================
+  // CADASTRAR OU EDITAR
+  // =========================
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/quartos", {
-        method: "POST",
+      const url = editandoId
+        ? `http://localhost:8080/quartos/${editandoId}`
+        : "http://localhost:8080/quartos";
+
+      const metodo = editandoId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: metodo,
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(form),
       });
 
-      const data = await response.json();
-      
       if (!response.ok) {
-        alert("Erro ao cadastrar quarto.");
+        alert("Erro ao salvar quarto.");
         return;
       }
-      
-      alert("Quarto cadastrado com sucesso!");
-      setForm({ numero: "", tipo: "", capacidade: "", preco: "" });
-      console.log("Quarto cadastrado:", data);
-      
+
+      alert(
+        editandoId
+          ? "Quarto atualizado com sucesso!"
+          : "Quarto cadastrado com sucesso!"
+      );
+
+      setForm({
+        numero: "",
+        tipo: "",
+        capacidade: "",
+        preco: "",
+      });
+
+      setEditandoId(null);
+
+      buscarQuartos();
     } catch (error) {
-      console.error("Erro ao cadastrar quarto:", error);
+      console.error("Erro:", error);
       alert("Erro ao conectar com o servidor.");
     }
+  }
+
+  // =========================
+  // EXCLUIR
+  // =========================
+  async function excluirQuarto(id) {
+    const confirmar = window.confirm(
+      "Deseja realmente excluir este quarto?"
+    );
+
+    if (!confirmar) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/quartos/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        alert("Erro ao excluir quarto.");
+        return;
+      }
+
+      alert("Quarto excluído com sucesso!");
+
+      buscarQuartos();
+    } catch (error) {
+      console.error("Erro ao excluir:", error);
+    }
+  }
+
+  // =========================
+  // EDITAR
+  // =========================
+  function editarQuarto(quarto) {
+    setForm({
+      numero: quarto.numero,
+      tipo: quarto.tipo,
+      capacidade: quarto.capacidade,
+      preco: quarto.preco,
+    });
+
+    setEditandoId(quarto.id);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   return (
     <div style={styles.page}>
       <main style={styles.main}>
-<header style={styles.header}>
-  <div style={styles.headerContainer}>
-    <img
-  src={logo}
-  alt="Logo Lago do Sol"
-  style={styles.logoImg}
-/>
+        <header style={styles.header}>
+          <div style={styles.headerContainer}>
+            <img
+              src={logo}
+              alt="Logo Lago do Sol"
+              style={styles.logoImg}
+            />
+          </div>
+        </header>
 
-  </div>
-</header>
-
+        {/* FORMULÁRIO */}
         <section style={styles.card}>
-          <h2 style={styles.title}>CADASTRO DE QUARTO</h2>
+          <h2 style={styles.title}>
+            {editandoId
+              ? "EDITAR QUARTO"
+              : "CADASTRO DE QUARTO"}
+          </h2>
 
           <form onSubmit={handleSubmit}>
-            <label style={styles.label}>Número do quarto</label>
+            <label style={styles.label}>
+              Número do quarto
+            </label>
+
             <input
               type="text"
               name="numero"
@@ -75,7 +174,10 @@ export default function CadastroQuarto() {
               style={styles.input}
             />
 
-            <label style={styles.label}>Tipo do quarto</label>
+            <label style={styles.label}>
+              Tipo do quarto
+            </label>
+
             <input
               type="text"
               name="tipo"
@@ -86,7 +188,10 @@ export default function CadastroQuarto() {
               style={styles.input}
             />
 
-            <label style={styles.label}>Capacidade</label>
+            <label style={styles.label}>
+              Capacidade
+            </label>
+
             <input
               type="number"
               name="capacidade"
@@ -97,7 +202,10 @@ export default function CadastroQuarto() {
               style={styles.input}
             />
 
-            <label style={styles.label}>Preço da diária</label>
+            <label style={styles.label}>
+              Preço da diária
+            </label>
+
             <input
               type="number"
               name="preco"
@@ -109,7 +217,9 @@ export default function CadastroQuarto() {
             />
 
             <button type="submit" style={styles.button}>
-              Cadastrar Quarto
+              {editandoId
+                ? "Salvar Alterações"
+                : "Cadastrar Quarto"}
             </button>
 
             <Link to="/" style={styles.link}>
@@ -117,8 +227,60 @@ export default function CadastroQuarto() {
             </Link>
           </form>
         </section>
-      </main>
 
+        {/* LISTA DE QUARTOS */}
+        <section style={styles.listaSection}>
+          <h2 style={styles.listaTitulo}>
+            QUARTOS CADASTRADOS
+          </h2>
+
+          {quartos.length === 0 ? (
+            <p>Nenhum quarto cadastrado.</p>
+          ) : (
+            quartos.map((quarto) => (
+              <div key={quarto.id} style={styles.quartoCard}>
+                <p>
+                  <strong>Número:</strong>{" "}
+                  {quarto.numero}
+                </p>
+
+                <p>
+                  <strong>Tipo:</strong>{" "}
+                  {quarto.tipo}
+                </p>
+
+                <p>
+                  <strong>Capacidade:</strong>{" "}
+                  {quarto.capacidade}
+                </p>
+
+                <p>
+                  <strong>Preço:</strong> R${" "}
+                  {quarto.preco}
+                </p>
+
+                <div style={styles.botoesArea}>
+                  <button
+                    style={styles.editarBtn}
+                    onClick={() => editarQuarto(quarto)}
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    style={styles.excluirBtn}
+                    onClick={() =>
+                      excluirQuarto(quarto.id)
+                    }
+                  >
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </section>
+      </main>
     </div>
   );
 }
@@ -126,130 +288,115 @@ export default function CadastroQuarto() {
 const styles = {
   page: {
     minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
     background: "#f5f6f8",
     fontFamily: "Arial, sans-serif",
-    color: "#1f2933",
+    paddingBottom: "40px",
   },
 
   main: {
-    flex: 1,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    padding: "35px 20px",
+    padding: "30px 20px",
   },
 
-  logoArea: {
-    textAlign: "center",
-    marginBottom: "25px",
-  },
-
-  logoCircle: {
-    width: "85px",
-    height: "85px",
-    borderRadius: "50%",
-    background: "#ffd447",
-    color: "#1f7a8c",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "42px",
-    margin: "0 auto 8px",
-  },
- logoImg: {
-  width: "150px",
-  height: "auto",
-  display: "block",
-  margin: "0 auto 25px",
-},
-
-nav: {
-  display: "flex",
-  justifyContent: "center",
-  gap: "22px",
-  marginBottom: "0px",
-  flexWrap: "wrap",
-},
-
-navLink: {
-  textDecoration: "none",
-  color: "#1f2933",
-  fontSize: "14px",
-  fontWeight: "600",
-},
-
-  logoText: {
-    fontSize: "16px",
-    color: "#1f7a8c",
-    fontWeight: "600",
+  logoImg: {
+    width: "150px",
+    marginBottom: "20px",
   },
 
   card: {
     width: "100%",
-    maxWidth: "420px",
+    maxWidth: "450px",
     background: "#fff",
-    padding: "34px 30px",
+    padding: "30px",
     borderRadius: "12px",
-    boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+    marginBottom: "35px",
   },
 
   title: {
     textAlign: "center",
-    fontSize: "22px",
-    marginBottom: "26px",
-    letterSpacing: "0.5px",
-    color: "#1f2933",
+    marginBottom: "25px",
   },
 
   label: {
     display: "block",
-    fontSize: "15px",
-    fontWeight: "600",
     marginBottom: "8px",
-    color: "#263238",
+    fontWeight: "bold",
   },
 
   input: {
     width: "100%",
-    boxSizing: "border-box",
     padding: "12px",
-    marginBottom: "17px",
-    border: "1px solid #cfcfcf",
+    marginBottom: "18px",
     borderRadius: "6px",
-    fontSize: "14px",
-    outline: "none",
+    border: "1px solid #ccc",
+    boxSizing: "border-box",
   },
 
   button: {
     width: "100%",
-    padding: "13px",
+    padding: "12px",
     background: "#333",
     color: "#fff",
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
-    fontWeight: "600",
-    fontSize: "14px",
-    marginTop: "8px",
+    fontWeight: "bold",
   },
 
   link: {
     display: "block",
+    marginTop: "15px",
     textAlign: "center",
-    marginTop: "16px",
-    color: "#3b3b3b",
     textDecoration: "none",
-    fontSize: "14px",
+    color: "#333",
   },
 
-  footer: {
+  listaSection: {
+    width: "100%",
+    maxWidth: "900px",
+  },
+
+  listaTitulo: {
     textAlign: "center",
-    padding: "18px",
-    background: "#f0f0f0",
-    color: "#666",
-    fontSize: "13px",
+    marginBottom: "25px",
+  },
+
+  quartoCard: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "10px",
+    marginBottom: "20px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+  },
+
+  botoesArea: {
+    display: "flex",
+    gap: "10px",
+    marginTop: "15px",
+  },
+
+  editarBtn: {
+    flex: 1,
+    padding: "10px",
+    border: "none",
+    borderRadius: "6px",
+    background: "#f0ad4e",
+    color: "#fff",
+    cursor: "pointer",
+    fontWeight: "bold",
+  },
+
+  excluirBtn: {
+    flex: 1,
+    padding: "10px",
+    border: "none",
+    borderRadius: "6px",
+    background: "#d9534f",
+    color: "#fff",
+    cursor: "pointer",
+    fontWeight: "bold",
   },
 };
