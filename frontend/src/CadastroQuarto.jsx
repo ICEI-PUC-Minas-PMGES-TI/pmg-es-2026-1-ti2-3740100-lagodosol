@@ -8,6 +8,7 @@ export default function CadastroQuarto() {
     tipo: "",
     capacidade: "",
     preco: "",
+    imagens: [],
   });
 
   const [quartos, setQuartos] = useState([]);
@@ -37,6 +38,31 @@ export default function CadastroQuarto() {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
+    });
+  }
+
+  function handleImagensChange(e) {
+    const files = Array.from(e.target.files);
+
+    if (files.length === 0) return;
+
+    const promises = files.map((file) => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(promises).then((imagensBase64) => {
+      setForm({
+        ...form,
+        imagens: imagensBase64,
+      });
     });
   }
 
@@ -77,6 +103,7 @@ export default function CadastroQuarto() {
         tipo: "",
         capacidade: "",
         preco: "",
+        imagens: [],
       });
 
       setEditandoId(null);
@@ -128,6 +155,7 @@ export default function CadastroQuarto() {
       tipo: quarto.tipo,
       capacidade: quarto.capacidade,
       preco: quarto.preco,
+      imagens: quarto.imagens || [],
     });
 
     setEditandoId(quarto.id);
@@ -173,6 +201,26 @@ export default function CadastroQuarto() {
               required
               style={styles.input}
             />
+
+            <label style={styles.label}>
+              Imagens do quarto
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImagensChange}
+              style={styles.input}
+            />
+
+            {form.imagens && (
+              <img
+                src={form.imagens}
+                alt="Prévia do quarto"
+                style={styles.previewImagem}
+              />
+            )}
 
             <label style={styles.label}>
               Tipo do quarto
@@ -239,6 +287,32 @@ export default function CadastroQuarto() {
           ) : (
             quartos.map((quarto) => (
               <div key={quarto.id} style={styles.quartoCard}>
+                {quarto.imagens && quarto.imagens.length > 0 && (
+                  <img
+                    src={quarto.imagens[0]}
+                    alt={`Capa do quarto ${quarto.numero}`}
+                    style={styles.imagemQuarto}
+                  />
+                )}
+                {quarto.imagens && quarto.imagens.length > 1 && (
+                  <div style={styles.galeria}>
+                    {quarto.imagens.slice(1).map((imagem, index) => (
+                      <img
+                        key={index}
+                        src={imagem}
+                        alt={`Foto ${index + 2} do quarto`}
+                        style={styles.miniatura}
+                      />
+                    ))}
+                  </div>
+                )}
+                {quarto.imagem && (
+                  <img
+                    src={quarto.imagem}
+                    alt={`Quarto ${quarto.numero}`}
+                    style={styles.imagemQuarto}
+                  />
+                )}
                 <p>
                   <strong>Número:</strong>{" "}
                   {quarto.numero}
@@ -398,5 +472,34 @@ const styles = {
     color: "#fff",
     cursor: "pointer",
     fontWeight: "bold",
+  },
+  previewImagem: {
+    width: "100%",
+    height: "180px",
+    objectFit: "cover",
+    borderRadius: "8px",
+    marginBottom: "18px",
+  },
+
+  imagemQuarto: {
+    width: "100%",
+    height: "220px",
+    objectFit: "cover",
+    borderRadius: "8px",
+    marginBottom: "15px",
+  },
+
+  galeria: {
+    display: "flex",
+    gap: "8px",
+    flexWrap: "wrap",
+    marginBottom: "15px",
+  },
+
+  miniatura: {
+    width: "80px",
+    height: "60px",
+    objectFit: "cover",
+    borderRadius: "6px",
   },
 };
