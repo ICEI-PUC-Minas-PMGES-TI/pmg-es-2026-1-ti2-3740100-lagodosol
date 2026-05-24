@@ -1,0 +1,130 @@
+/* ── Wrapper geral ── */
+.gestao-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.gestao-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 80px 20px 40px;
+}
+
+.gestao-inner {
+  width: 100%;
+  max-width: 860px;
+}
+
+/* ── Topo ── */
+.gestao-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.gestao-topbar h2 {
+  font-size: 1.2rem;
+  color: #1b6666;
+  margin: 0;
+}
+
+.btn-novo {
+  padding: 10px 18px;
+  background: #1b6666;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-novo:hover {
+  background: #155252;
+}
+
+/* ── Tabela ── */
+.gestao-tabela {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.gestao-linha {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 100px 170px;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.93rem;
+  color: #444;
+  gap: 10px;
+}
+
+.gestao-linha:last-child {
+  border-bottom: none;
+}
+
+.gestao-cabecalho {
+  background: #1b6666;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-bottom: none;
+}
+
+.gestao-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Botões ── */
+.btn-editar,
+.btn-excluir {
+  flex: 1;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-editar {
+  background: #f0ad4e;
+  color: #fff;
+}
+
+.btn-excluir {
+  background: #d9534f;
+  color: #fff;
+}
+
+.btn-editar:hover,
+.btn-excluir:hover {
+  opacity: 0.85;
+}
+
+/* ── Vazio ── */
+.gestao-vazio {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 600px) {
+  .gestao-linha {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+}

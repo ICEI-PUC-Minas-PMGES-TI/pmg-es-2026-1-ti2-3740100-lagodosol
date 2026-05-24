@@ -10,6 +10,7 @@ import ReservaQuarto from "./pages/ReservaQuarto";
 
 import CadastroUsuario from "./pages/Cadastro";
 import Login from "./pages/Login";
+import GestaoQuartos from "./GestaoQuartos";
 
 import "./App.css";
 
@@ -31,6 +32,8 @@ function App() {
           <Route path="/reserva" element={<ReservaQuarto />} />
 
           <Route path="/quarto" element={<CadastroQuarto />} />
+
+          <Route path="/gestao-quartos" element={<GestaoQuartos />} />
         </Routes>
       </main>
 
