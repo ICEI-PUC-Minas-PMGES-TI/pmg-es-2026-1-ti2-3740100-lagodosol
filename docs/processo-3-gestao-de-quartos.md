@@ -1,6 +1,7 @@
 ### 3.3.3 Processo 3 – Cadastro de Quarto
 
-![alt text](modelagem-cadastro-quarto.jpeg)
+<img width="969" height="365" alt="Gestão de Quarto Diagrama" src="https://github.com/user-attachments/assets/01980a85-c683-48c1-bba2-7b2381f43311" />
+
 
 
 ## Consulta de Quartos
