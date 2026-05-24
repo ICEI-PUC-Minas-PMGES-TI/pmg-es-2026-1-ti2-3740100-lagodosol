@@ -94,7 +94,7 @@ Esta abordagem resolve os limites da situação atual ao transformar o site em u
 
 [PROCESSO 2 - Processo de pagamento](processo-2-processo-de-pagamento.md "Detalhamento do processo de pagamento")
 
-[PROCESSO 3 - Reserva de quarto](processo-3-reserva-de-quarto.md "Detalhamento do processo de reserva")
+[PROCESSO 3 - Reserva de quarto](processo-3-reserva-quarto.md "Detalhamento do processo de reserva")
 
 [PROCESSO 4 - Gestão de quarto](processo-4-gestao-de-quarto.md "Detalhamento da gestão de quartos")
 
