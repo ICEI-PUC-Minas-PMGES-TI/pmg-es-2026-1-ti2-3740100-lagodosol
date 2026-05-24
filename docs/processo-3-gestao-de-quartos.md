@@ -1,6 +1,6 @@
 ### 3.3.3 Processo 3 – Cadastro de Quarto
 
-<img width="969" height="365" alt="Gestão de Quarto Diagrama" src="https://github.com/user-attachments/assets/01980a85-c683-48c1-bba2-7b2381f43311" />
+<img width="969" height="365" alt="Gestão de Quarto Diagrama (1)" src="https://github.com/user-attachments/assets/ad71b302-1c51-4e60-909c-dfd4166bc3ce" />
 
 
 
