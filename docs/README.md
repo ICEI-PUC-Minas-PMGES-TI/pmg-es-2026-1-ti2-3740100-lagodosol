@@ -92,11 +92,13 @@ Esta abordagem resolve os limites da situação atual ao transformar o site em u
 
 [PROCESSO 1 - Cadastro de cliente](processo-1-cadastro-de-cliente.md "Detalhamento do processo de cadastro de cliente")
 
-[PROCESSO 2 - Processo de pagamento](processo-2-processo-de-pagamento.md "Detalhamento do processo de pagamento")
+[PROCESSO 2 - Pagamento](processo-2-processo-de-pagamento.md "Detalhamento do processo de pagamento")
 
-[PROCESSO 3 - Reserva de quarto](processo-4-reserva-de-quarto.md "Detalhamento do processo de reserva")
+[PROCESSO 3 - Gestão de Quartos](processo-3-gestao-de-quartos.md "Detalhamento do processo de gestão de quartos")
 
-[PROCESSO 4 - Gestão de quarto](processo-5-gestao-de-quarto.md "Detalhamento da gestão de quartos")
+[PROCESSO 4 - Reserva de quarto](processo-4-reserva-de-quarto.md "Detalhamento do processo de reserva")
+
+[PROCESSO 5 - Cadastro de quarto](processo-5-cadastro-de-quarto.md "Detalhamento do cadastro de quartos")
 
 ## 4. Projeto da solução
 
