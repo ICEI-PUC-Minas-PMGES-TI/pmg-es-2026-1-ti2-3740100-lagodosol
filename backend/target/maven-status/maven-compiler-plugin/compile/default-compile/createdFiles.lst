@@ -1,10 +1,13 @@
 com\lagodosol\backend\BackendApplication.class
-com\lagodosol\backend\model\Pagamento.class
 com\lagodosol\backend\controller\PagamentoController.class
+com\lagodosol\backend\controller\ReservaController.class
 com\lagodosol\backend\model\Usuario.class
+com\lagodosol\backend\model\Reserva.class
 com\lagodosol\backend\model\Quarto.class
+com\lagodosol\backend\controller\UsuarioController.class
+com\lagodosol\backend\model\Pagamento.class
+com\lagodosol\backend\repository\ReservaRepository.class
 com\lagodosol\backend\repository\QuartoRepository.class
 com\lagodosol\backend\controller\QuartoController.class
-com\lagodosol\backend\controller\UsuarioController.class
 com\lagodosol\backend\repository\PagamentoRepository.class
 com\lagodosol\backend\repository\UsuarioRepository.class

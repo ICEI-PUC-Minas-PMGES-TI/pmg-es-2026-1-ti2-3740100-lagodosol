@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.jpg";
 import "./ReservaQuarto.css";
 
 function ReservaQuarto() {
+  const navigate = useNavigate();
+
   const quartos = [
     {
       id: 101,
@@ -51,40 +54,68 @@ function ReservaQuarto() {
   });
 
   const [quartoSelecionado, setQuartoSelecionado] = useState(null);
+  const [carregando, setCarregando] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
-
-    setDadosReserva((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setDadosReserva((prev) => ({ ...prev, [name]: value }));
   }
 
   function calcularDiarias() {
     if (!dadosReserva.checkIn || !dadosReserva.checkOut) return 0;
-
     const entrada = new Date(dadosReserva.checkIn);
     const saida = new Date(dadosReserva.checkOut);
-
     const diff = saida - entrada;
-
     if (diff <= 0) return 0;
-
     return diff / (1000 * 60 * 60 * 24);
   }
 
   const diarias = calcularDiarias();
-
   const valorTotal =
-    quartoSelecionado && diarias > 0
-      ? diarias * quartoSelecionado.preco
-      : 0;
+    quartoSelecionado && diarias > 0 ? diarias * quartoSelecionado.preco : 0;
 
   const isDataValida =
     dadosReserva.checkIn &&
     dadosReserva.checkOut &&
     new Date(dadosReserva.checkOut) > new Date(dadosReserva.checkIn);
+
+  const podeFinalizar = isDataValida && quartoSelecionado;
+
+  async function handleFinalizar() {
+    if (!podeFinalizar) return;
+
+    setCarregando(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/reservas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          quartoId: quartoSelecionado.id,
+          nomeQuarto: quartoSelecionado.nome,
+          checkIn: dadosReserva.checkIn,
+          checkOut: dadosReserva.checkOut,
+          hospedes: dadosReserva.hospedes,
+          tipo: dadosReserva.tipo,
+          observacoes: dadosReserva.observacoes,
+          valorTotal: valorTotal,
+        }),
+      });
+
+      if (!response.ok) {
+        alert("Erro ao realizar reserva. Tente novamente.");
+        return;
+      }
+
+      alert("Reserva realizada com sucesso!");
+      navigate("/pagamento");
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Falha na comunicação com o servidor. Verifique se o backend está rodando.");
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   return (
     <div className="reserva-wrapper">
@@ -159,10 +190,6 @@ function ReservaQuarto() {
                 onChange={handleChange}
               />
             </div>
-
-            <button className="btn-buscar" disabled={!isDataValida}>
-              Buscar Quartos
-            </button>
           </div>
 
           <div className="card-reserva resumo-card">
@@ -191,9 +218,7 @@ function ReservaQuarto() {
             <div className="resumo-item">
               <span>Quarto</span>
               <strong>
-                {quartoSelecionado
-                  ? quartoSelecionado.nome
-                  : "Nenhum selecionado"}
+                {quartoSelecionado ? quartoSelecionado.nome : "Nenhum selecionado"}
               </strong>
             </div>
 
@@ -201,6 +226,15 @@ function ReservaQuarto() {
               <span>Valor Total</span>
               <strong>R$ {valorTotal.toFixed(2).replace(".", ",")}</strong>
             </div>
+
+            <button
+              className="btn-buscar"
+              onClick={handleFinalizar}
+              disabled={!podeFinalizar || carregando}
+              style={{ marginTop: "20px", opacity: podeFinalizar ? 1 : 0.5 }}
+            >
+              {carregando ? "Salvando..." : "Finalizar Reserva"}
+            </button>
           </div>
         </div>
 
@@ -209,7 +243,16 @@ function ReservaQuarto() {
 
           <div className="quartos-grid">
             {quartos.map((quarto) => (
-              <div className="quarto-card" key={quarto.id}>
+              <div
+                className="quarto-card"
+                key={quarto.id}
+                style={{
+                  border:
+                    quartoSelecionado?.id === quarto.id
+                      ? "2px solid #1a5276"
+                      : "2px solid transparent",
+                }}
+              >
                 <img src={quarto.imagem} alt={quarto.nome} />
 
                 <div className="quarto-info">
@@ -222,8 +265,18 @@ function ReservaQuarto() {
                       R$ {quarto.preco.toFixed(2).replace(".", ",")}
                     </strong>
 
-                    <button onClick={() => setQuartoSelecionado(quarto)}>
-                      Selecionar quarto
+                    <button
+                      onClick={() => setQuartoSelecionado(quarto)}
+                      style={{
+                        background:
+                          quartoSelecionado?.id === quarto.id
+                            ? "#1a5276"
+                            : undefined,
+                      }}
+                    >
+                      {quartoSelecionado?.id === quarto.id
+                        ? "✓ Selecionado"
+                        : "Selecionar quarto"}
                     </button>
                   </div>
                 </div>
