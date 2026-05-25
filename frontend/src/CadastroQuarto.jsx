@@ -504,4 +504,3 @@ const styles = {
   },
 };
 
-export default CadastroQuarto;
