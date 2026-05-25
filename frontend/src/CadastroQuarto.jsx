@@ -503,3 +503,5 @@ const styles = {
     borderRadius: "6px",
   },
 };
+
+export default CadastroQuarto;
