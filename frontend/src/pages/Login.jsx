@@ -1,25 +1,32 @@
 import "../App.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 import logo from "../assets/logo.jpg";
-import { Link } from "react-router-dom";
 import AlertMessage from "../components/AlertMessage";
 
 function Login() {
-  const [form, setForm] = useState({
-    email: "",
-    senha: "",
-  });
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [form, setForm] = useState({ email: "", senha: "" });
   const [alerta, setAlerta] = useState(null);
+
+  // Exibe mensagem vinda do cadastro
+  useEffect(() => {
+    if (location.state?.mensagem) {
+      setAlerta({
+        type: "success",
+        title: "Cadastro concluído!",
+        message: location.state.mensagem,
+      });
+    }
+  }, [location.state]);
 
   function handleChange(e) {
     const { name, value } = e.target;
-
-    setForm({
-      ...form,
-      [name]: value,
-    });
+    setForm({ ...form, [name]: value });
     setAlerta(null);
   }
 
@@ -29,39 +36,26 @@ function Login() {
 
     fetch("http://localhost:8080/usuarios/login", {
       method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        email: form.email,
-        senha: form.senha,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: form.email, senha: form.senha }),
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erro ao fazer login");
-        }
-
+        if (!response.ok) throw new Error("Erro ao fazer login");
         return response.json();
       })
       .then((data) => {
-        console.log("Login realizado:", data);
+        // Salva o usuário no localStorage para a Home reconhecer
+        localStorage.setItem("usuario", JSON.stringify(data));
 
-        setAlerta({
-          type: "success",
-          title: "Login realizado",
-          message: "Bem-vindo de volta.",
-        });
+        // Redireciona para a Home já logado
+        navigate("/");
       })
       .catch((error) => {
         console.error(error);
-
         setAlerta({
           type: "error",
-          title: "Nao foi possivel entrar",
-          message: "Confira seu email e senha e tente novamente.",
+          title: "Não foi possível entrar",
+          message: "Confira seu e-mail e senha e tente novamente.",
         });
       });
   }
@@ -89,7 +83,6 @@ function Login() {
             <form onSubmit={handleSubmit} className="form">
               <div className="form-group">
                 <label>E-mail</label>
-
                 <input
                   type="email"
                   name="email"
@@ -102,7 +95,6 @@ function Login() {
 
               <div className="form-group">
                 <label>Senha</label>
-
                 <input
                   type="password"
                   name="senha"
