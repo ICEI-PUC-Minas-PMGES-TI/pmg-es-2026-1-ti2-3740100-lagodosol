@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.jpg";
+import AlertMessage from "../components/AlertMessage";
 import "./ReservaQuarto.css";
 
 function ReservaQuarto() {
@@ -55,10 +56,12 @@ function ReservaQuarto() {
 
   const [quartoSelecionado, setQuartoSelecionado] = useState(null);
   const [carregando, setCarregando] = useState(false);
+  const [alerta, setAlerta] = useState(null);
 
   function handleChange(e) {
     const { name, value } = e.target;
     setDadosReserva((prev) => ({ ...prev, [name]: value }));
+    setAlerta(null);
   }
 
   function calcularDiarias() {
@@ -85,6 +88,7 @@ function ReservaQuarto() {
     if (!podeFinalizar) return;
 
     setCarregando(true);
+    setAlerta(null);
 
     try {
       const response = await fetch("http://localhost:8080/reservas", {
@@ -103,15 +107,27 @@ function ReservaQuarto() {
       });
 
       if (!response.ok) {
-        alert("Erro ao realizar reserva. Tente novamente.");
+        setAlerta({
+          type: "error",
+          title: "Erro ao realizar reserva",
+          message: "Tente novamente em alguns instantes.",
+        });
         return;
       }
 
-      alert("Reserva realizada com sucesso!");
-      navigate("/pagamento");
+      setAlerta({
+        type: "success",
+        title: "Reserva realizada com sucesso",
+        message: "Voce sera redirecionado para o pagamento.",
+      });
+      setTimeout(() => navigate("/pagamento"), 1200);
     } catch (error) {
       console.error("Erro:", error);
-      alert("Falha na comunicação com o servidor. Verifique se o backend está rodando.");
+      setAlerta({
+        type: "error",
+        title: "Falha na comunicacao",
+        message: "Verifique se o backend esta rodando e tente novamente.",
+      });
     } finally {
       setCarregando(false);
     }
@@ -127,6 +143,13 @@ function ReservaQuarto() {
         <div className="reserva-grid">
           <div className="card-reserva form-card">
             <h2>Dados da Reserva</h2>
+
+            <AlertMessage
+              type={alerta?.type}
+              title={alerta?.title}
+              message={alerta?.message}
+              onClose={() => setAlerta(null)}
+            />
 
             <div className="form-row">
               <div className="form-group">
@@ -266,7 +289,10 @@ function ReservaQuarto() {
                     </strong>
 
                     <button
-                      onClick={() => setQuartoSelecionado(quarto)}
+                      onClick={() => {
+                        setQuartoSelecionado(quarto);
+                        setAlerta(null);
+                      }}
                       style={{
                         background:
                           quartoSelecionado?.id === quarto.id

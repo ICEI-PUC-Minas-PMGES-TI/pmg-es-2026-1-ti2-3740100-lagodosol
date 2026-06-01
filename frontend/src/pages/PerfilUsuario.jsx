@@ -1,8 +1,10 @@
 import { useState } from "react";
+import AlertMessage from "../components/AlertMessage";
 import "./PerfilUsuario.css";
 
 function PerfilUsuario() {
   const [editando, setEditando] = useState(false);
+  const [alerta, setAlerta] = useState(null);
 
   const [usuario, setUsuario] = useState({
     nome: "Arthur Vieira Lopes",
@@ -24,6 +26,7 @@ function PerfilUsuario() {
       ...usuario,
       [e.target.name]: e.target.value,
     });
+    setAlerta(null);
   }
 
   function handleSenhaChange(e) {
@@ -31,20 +34,33 @@ function PerfilUsuario() {
       ...senhaForm,
       [e.target.name]: e.target.value,
     });
+    setAlerta(null);
   }
 
   function salvarPerfil() {
-    alert("Perfil atualizado com sucesso!");
+    setAlerta({
+      type: "success",
+      title: "Perfil atualizado",
+      message: "Suas informacoes foram salvas com sucesso.",
+    });
     setEditando(false);
   }
 
   function salvarSenha() {
     if (senhaForm.novaSenha !== senhaForm.confirmarNovaSenha) {
-      alert("As senhas não coincidem!");
+      setAlerta({
+        type: "error",
+        title: "Senhas diferentes",
+        message: "Digite a mesma senha nos dois campos.",
+      });
       return;
     }
 
-    alert("Senha alterada com sucesso!");
+    setAlerta({
+      type: "success",
+      title: "Senha alterada",
+      message: "Sua nova senha foi salva com sucesso.",
+    });
 
     setSenhaForm({
       senhaAtual: "",
@@ -71,6 +87,13 @@ function PerfilUsuario() {
             </button>
           )}
         </div>
+
+        <AlertMessage
+          type={alerta?.type}
+          title={alerta?.title}
+          message={alerta?.message}
+          onClose={() => setAlerta(null)}
+        />
 
         <div className="perfil-info">
           <div className="info-item">

@@ -4,12 +4,14 @@ import { useState } from "react";
 
 import logo from "../assets/logo.jpg";
 import { Link } from "react-router-dom";
+import AlertMessage from "../components/AlertMessage";
 
 function Login() {
   const [form, setForm] = useState({
     email: "",
     senha: "",
   });
+  const [alerta, setAlerta] = useState(null);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -18,10 +20,12 @@ function Login() {
       ...form,
       [name]: value,
     });
+    setAlerta(null);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
+    setAlerta(null);
 
     fetch("http://localhost:8080/usuarios/login", {
       method: "POST",
@@ -45,12 +49,20 @@ function Login() {
       .then((data) => {
         console.log("Login realizado:", data);
 
-        alert("Login realizado com sucesso!");
+        setAlerta({
+          type: "success",
+          title: "Login realizado",
+          message: "Bem-vindo de volta.",
+        });
       })
       .catch((error) => {
         console.error(error);
 
-        alert("Email ou senha inválidos");
+        setAlerta({
+          type: "error",
+          title: "Nao foi possivel entrar",
+          message: "Confira seu email e senha e tente novamente.",
+        });
       });
   }
 
@@ -66,6 +78,13 @@ function Login() {
 
           <div className="cadastro-box">
             <h2>ENTRAR NA CONTA</h2>
+
+            <AlertMessage
+              type={alerta?.type}
+              title={alerta?.title}
+              message={alerta?.message}
+              onClose={() => setAlerta(null)}
+            />
 
             <form onSubmit={handleSubmit} className="form">
               <div className="form-group">

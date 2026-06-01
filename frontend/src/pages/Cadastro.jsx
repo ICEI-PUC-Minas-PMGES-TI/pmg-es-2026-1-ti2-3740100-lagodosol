@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import logo from "../assets/logo.jpg";
 import { Link } from "react-router-dom";
+import AlertMessage from "../components/AlertMessage";
 
 function CadastroUsuario() {
   const [form, setForm] = useState({
@@ -14,6 +15,7 @@ function CadastroUsuario() {
     senha: "",
     confirmarSenha: "",
   });
+  const [alerta, setAlerta] = useState(null);
 
   function formatCPF(value) {
     return value
@@ -35,13 +37,19 @@ function CadastroUsuario() {
       ...form,
       [name]: value,
     });
+    setAlerta(null);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
+    setAlerta(null);
 
     if (form.senha !== form.confirmarSenha) {
-      alert("As senhas não coincidem!");
+      setAlerta({
+        type: "error",
+        title: "Senhas diferentes",
+        message: "Digite a mesma senha nos dois campos.",
+      });
       return;
     }
 
@@ -70,7 +78,11 @@ function CadastroUsuario() {
       .then((data) => {
         console.log("Usuário cadastrado:", data);
 
-        alert("Cadastro realizado com sucesso!");
+        setAlerta({
+          type: "success",
+          title: "Cadastro realizado",
+          message: "Sua conta foi criada com sucesso.",
+        });
 
         setForm({
           nome: "",
@@ -84,7 +96,11 @@ function CadastroUsuario() {
       .catch((error) => {
         console.error(error);
 
-        alert("Erro ao cadastrar usuário");
+        setAlerta({
+          type: "error",
+          title: "Erro ao cadastrar",
+          message: "Nao foi possivel criar a conta. Tente novamente.",
+        });
       });
   }
 
@@ -100,6 +116,13 @@ function CadastroUsuario() {
 
           <div className="cadastro-box">
             <h2>CRIAR NOVA CONTA</h2>
+
+            <AlertMessage
+              type={alerta?.type}
+              title={alerta?.title}
+              message={alerta?.message}
+              onClose={() => setAlerta(null)}
+            />
 
             <form onSubmit={handleSubmit} className="form">
               <div className="form-group">

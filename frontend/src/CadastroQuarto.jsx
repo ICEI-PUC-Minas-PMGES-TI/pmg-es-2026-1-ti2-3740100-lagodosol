@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "./assets/logo.jpg";
+import AlertMessage from "./components/AlertMessage";
 
 export default function CadastroQuarto() {
   const [form, setForm] = useState({
@@ -13,6 +14,7 @@ export default function CadastroQuarto() {
 
   const [quartos, setQuartos] = useState([]);
   const [editandoId, setEditandoId] = useState(null);
+  const [alerta, setAlerta] = useState(null);
 
   // =========================
   // BUSCAR QUARTOS
@@ -28,7 +30,26 @@ export default function CadastroQuarto() {
   }
 
   useEffect(() => {
-    buscarQuartos();
+    let cancelado = false;
+
+    async function carregarQuartos() {
+      try {
+        const response = await fetch("http://localhost:8080/quartos");
+        const data = await response.json();
+
+        if (!cancelado) {
+          setQuartos(data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar quartos:", error);
+      }
+    }
+
+    carregarQuartos();
+
+    return () => {
+      cancelado = true;
+    };
   }, []);
 
   // =========================
@@ -39,12 +60,14 @@ export default function CadastroQuarto() {
       ...form,
       [e.target.name]: e.target.value,
     });
+    setAlerta(null);
   }
 
   function handleImagensChange(e) {
     const files = Array.from(e.target.files);
 
     if (files.length === 0) return;
+    setAlerta(null);
 
     const promises = files.map((file) => {
       return new Promise((resolve) => {
@@ -71,6 +94,7 @@ export default function CadastroQuarto() {
   // =========================
   async function handleSubmit(e) {
     e.preventDefault();
+    setAlerta(null);
 
     try {
       const url = editandoId
@@ -88,15 +112,21 @@ export default function CadastroQuarto() {
       });
 
       if (!response.ok) {
-        alert("Erro ao salvar quarto.");
+        setAlerta({
+          type: "error",
+          title: "Erro ao salvar quarto",
+          message: "Revise os dados informados e tente novamente.",
+        });
         return;
       }
 
-      alert(
-        editandoId
-          ? "Quarto atualizado com sucesso!"
-          : "Quarto cadastrado com sucesso!"
-      );
+      setAlerta({
+        type: "success",
+        title: editandoId ? "Quarto atualizado" : "Quarto cadastrado",
+        message: editandoId
+          ? "As alteracoes do quarto foram salvas."
+          : "O novo quarto foi cadastrado com sucesso.",
+      });
 
       setForm({
         numero: "",
@@ -111,7 +141,11 @@ export default function CadastroQuarto() {
       buscarQuartos();
     } catch (error) {
       console.error("Erro:", error);
-      alert("Erro ao conectar com o servidor.");
+      setAlerta({
+        type: "error",
+        title: "Erro de conexao",
+        message: "Nao foi possivel conectar com o servidor.",
+      });
     }
   }
 
@@ -134,15 +168,28 @@ export default function CadastroQuarto() {
       );
 
       if (!response.ok) {
-        alert("Erro ao excluir quarto.");
+        setAlerta({
+          type: "error",
+          title: "Erro ao excluir quarto",
+          message: "Tente novamente em alguns instantes.",
+        });
         return;
       }
 
-      alert("Quarto excluído com sucesso!");
+      setAlerta({
+        type: "success",
+        title: "Quarto excluido",
+        message: "O quarto foi removido com sucesso.",
+      });
 
       buscarQuartos();
     } catch (error) {
       console.error("Erro ao excluir:", error);
+      setAlerta({
+        type: "error",
+        title: "Erro de conexao",
+        message: "Nao foi possivel conectar com o servidor.",
+      });
     }
   }
 
@@ -186,6 +233,13 @@ export default function CadastroQuarto() {
               ? "EDITAR QUARTO"
               : "CADASTRO DE QUARTO"}
           </h2>
+
+          <AlertMessage
+            type={alerta?.type}
+            title={alerta?.title}
+            message={alerta?.message}
+            onClose={() => setAlerta(null)}
+          />
 
           <form onSubmit={handleSubmit}>
             <label style={styles.label}>
