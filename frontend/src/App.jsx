@@ -16,6 +16,7 @@ import PerfilUsuario from "./pages/PerfilUsuario";
 import Home from "./pages/Home";
 
 import "./App.css";
+import GestaoQuartos from "./GestaoQuartos";
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
           <Route path="/perfil" element={<PerfilUsuario />} />
 
           <Route path="/pagamento" element={<PagamentoQuarto />} />
+
+          <Route path="/quartos" element={<GestaoQuartos />} />
         </Routes>
       </main>
 
