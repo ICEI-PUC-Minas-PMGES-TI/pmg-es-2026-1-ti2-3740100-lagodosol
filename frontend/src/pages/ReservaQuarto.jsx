@@ -15,7 +15,7 @@ function ReservaQuarto() {
       cama: "1 cama de casal",
       pessoas: "2 pessoas",
       imagem:
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop",
+        "../assets/Standart2.jpg",
     },
     {
       id: 102,
@@ -24,7 +24,7 @@ function ReservaQuarto() {
       cama: "2 camas de solteiro",
       pessoas: "2 pessoas",
       imagem:
-        "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1200&auto=format&fit=crop",
+        "../assets/Standart1.jpg",
     },
     {
       id: 201,
@@ -33,7 +33,7 @@ function ReservaQuarto() {
       cama: "1 cama king",
       pessoas: "2 pessoas",
       imagem:
-        "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop",
+        "../assets/quarto-luxo.jpg",
     },
     {
       id: 301,
