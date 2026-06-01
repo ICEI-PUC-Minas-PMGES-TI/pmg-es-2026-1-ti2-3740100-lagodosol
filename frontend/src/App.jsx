@@ -1,16 +1,18 @@
-import { BrowserRouter,  Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Footer from "./components/Footer";
 
 import GestaoClientes from "./GestaoClientes";
 import PagamentoQuarto from "./PagamentoQuarto";
-import CadastroQuarto from "./CadastroQuarto";
-
-import ReservaQuarto from "./pages/ReservaQuarto";
 
 import CadastroUsuario from "./pages/Cadastro";
 import Login from "./pages/Login";
-import GestaoQuartos from "./GestaoQuartos";
+
+import ReservaQuarto from "./pages/ReservaQuarto";
+
+import CadastroQuarto from "./CadastroQuarto";
+
+import PerfilUsuario from "./pages/PerfilUsuario";
 
 import "./App.css";
 
@@ -27,13 +29,13 @@ function App() {
 
           <Route path="/clientes" element={<GestaoClientes />} />
 
-          <Route path="/pagamento" element={<PagamentoQuarto />} />
-
           <Route path="/reserva" element={<ReservaQuarto />} />
 
-          <Route path="/quarto" element={<CadastroQuarto />} />
+          <Route path="/cadastro-quarto" element={<CadastroQuarto />} />
 
-          <Route path="/gestao-quartos" element={<GestaoQuartos />} />
+          <Route path="/perfil" element={<PerfilUsuario />} />
+
+          <Route path="/pagamento" element={<PagamentoQuarto />} />
         </Routes>
       </main>
 

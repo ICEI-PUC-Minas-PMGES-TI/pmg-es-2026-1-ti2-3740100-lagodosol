@@ -1,0 +1,179 @@
+/* PerfilUsuario.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.perfil-container {
+  min-height: 100vh;
+  background-color: #f5f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+}
+
+.perfil-card {
+  width: 100%;
+  max-width: 700px;
+  background: #ffffff;
+  padding: 35px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.perfil-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #2f2f2f, #4a4a4a);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.perfil-header h2 {
+  color: #333;
+  margin-bottom: 5px;
+  font-size: 24px;
+}
+
+.perfil-header p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.info-item {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.info-item span {
+  display: block;
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 6px;
+}
+
+.info-item strong {
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.info-item input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition:
+    border 0.2s,
+    box-shadow 0.2s;
+}
+
+.info-item input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+}
+
+.perfil-acoes {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.btn-editar,
+.btn-salvar {
+  flex: 1;
+  padding: 12px;
+  background: linear-gradient(90deg, #2f2f2f, #4a4a4a);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+}
+
+.btn-editar:hover,
+.btn-salvar:hover {
+  opacity: 0.9;
+}
+
+.btn-editar:active,
+.btn-salvar:active {
+  transform: scale(0.98);
+}
+
+.btn-cancelar {
+  flex: 1;
+  padding: 12px;
+  background: #e5e5e5;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+}
+
+.btn-cancelar:hover {
+  opacity: 0.9;
+}
+
+.btn-cancelar:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+  .perfil-card {
+    padding: 25px 20px;
+  }
+
+  .perfil-acoes {
+    flex-direction: column;
+  }
+
+  .avatar {
+    width: 90px;
+    height: 90px;
+    font-size: 34px;
+  }
+}
+
+.alterar-senha-box {
+  margin-top: 30px;
+  padding-top: 25px;
+}
+
+.alterar-senha-box h3 {
+  margin-bottom: 20px;
+  color: #333;
+}
