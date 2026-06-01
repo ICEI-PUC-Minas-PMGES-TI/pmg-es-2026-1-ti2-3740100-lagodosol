@@ -13,6 +13,7 @@ import ReservaQuarto from "./pages/ReservaQuarto";
 import CadastroQuarto from "./CadastroQuarto";
 
 import PerfilUsuario from "./pages/PerfilUsuario";
+import Home from "./pages/Home";
 
 import "./App.css";
 
@@ -21,7 +22,7 @@ function App() {
     <div className="app-container">
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<h1>Home</h1>} />
+          <Route path="/" element={<Home />} />
 
           <Route path="/cadastro" element={<CadastroUsuario />} />
 
