@@ -28,7 +28,8 @@ export default function GestaoQuartos() {
 
           <div className="gestao-topbar">
             <h2>GESTÃO DE QUARTOS</h2>
-            <button className="btn-novo" onClick={() => navigate("/quarto")}>
+            {/* Corrigido: agora aponta para /cadastro-quarto */}
+            <button className="btn-novo" onClick={() => navigate("/cadastro-quarto")}>
               + Novo Quarto
             </button>
           </div>

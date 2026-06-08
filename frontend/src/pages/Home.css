@@ -666,3 +666,21 @@
     font-size: 20px;
   }
 }
+
+/* ── LINK ADMIN NA NAVBAR ── */
+.home-nav-admin {
+  color: #c8a96e;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  transition: color 0.2s;
+  border: 1px solid #c8a96e;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.home-nav-admin:hover {
+  color: #fff;
+  background: #c8a96e;
+}

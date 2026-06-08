@@ -28,8 +28,7 @@ const QUARTOS_DESTAQUE = [
     nome: "Standard",
     descricao: "Conforto e praticidade para sua estadia",
     preco: 150,
-    imagem:
-      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=800&auto=format&fit=crop",
+    imagem: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=800&auto=format&fit=crop",
     icone: "🛏️",
   },
   {
@@ -37,8 +36,7 @@ const QUARTOS_DESTAQUE = [
     nome: "Luxo",
     descricao: "Sofisticação e requinte em cada detalhe",
     preco: 220,
-    imagem:
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=800&auto=format&fit=crop",
+    imagem: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=800&auto=format&fit=crop",
     icone: "✨",
   },
   {
@@ -46,33 +44,16 @@ const QUARTOS_DESTAQUE = [
     nome: "Suíte",
     descricao: "O máximo em exclusividade e elegância",
     preco: 300,
-    imagem:
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop",
+    imagem: "https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop",
     icone: "👑",
   },
 ];
 
 const DIFERENCIAIS = [
-  {
-    icone: "🌅",
-    titulo: "Vista para o Lago",
-    descricao: "Desperte com uma vista deslumbrante todas as manhãs.",
-  },
-  {
-    icone: "🍽️",
-    titulo: "Gastronomia Premium",
-    descricao: "Restaurante gourmet com pratos da culinária regional e internacional.",
-  },
-  {
-    icone: "🏊",
-    titulo: "Piscina Infinity",
-    descricao: "Piscina com borda infinita e área de lazer completa.",
-  },
-  {
-    icone: "💆",
-    titulo: "Spa & Bem-estar",
-    descricao: "Tratamentos exclusivos para relaxamento total do corpo e mente.",
-  },
+  { icone: "🌅", titulo: "Vista para o Lago", descricao: "Desperte com uma vista deslumbrante todas as manhãs." },
+  { icone: "🍽️", titulo: "Gastronomia Premium", descricao: "Restaurante gourmet com pratos da culinária regional e internacional." },
+  { icone: "🏊", titulo: "Piscina Infinity", descricao: "Piscina com borda infinita e área de lazer completa." },
+  { icone: "💆", titulo: "Spa & Bem-estar", descricao: "Tratamentos exclusivos para relaxamento total do corpo e mente." },
 ];
 
 export default function Home() {
@@ -81,10 +62,11 @@ export default function Home() {
   const [menuAberto, setMenuAberto] = useState(false);
   const intervalRef = useRef(null);
 
-  // Simula estado de login — integre com seu contexto/localStorage real
   const usuarioLogado = localStorage.getItem("usuario")
     ? JSON.parse(localStorage.getItem("usuario"))
     : null;
+
+  const isAdmin = usuarioLogado?.role === "admin";
 
   function iniciarCarrossel() {
     intervalRef.current = setInterval(() => {
@@ -143,6 +125,11 @@ export default function Home() {
             <a href="#acomodacoes">Acomodações</a>
             <a href="#diferenciais">Diferenciais</a>
             <a href="#contato">Contato</a>
+            {isAdmin && (
+              <Link to="/quartos" className="home-nav-admin">
+                🔧 Quartos
+              </Link>
+            )}
           </nav>
 
           <div className="home-nav-acoes">
@@ -160,12 +147,17 @@ export default function Home() {
                 {menuAberto && (
                   <div className="home-perfil-menu">
                     <p className="home-perfil-nome">{usuarioLogado.nome}</p>
-                    <Link to="/perfil" onClick={() => setMenuAberto(false)}>
-                      Meu Perfil
-                    </Link>
-                    <Link to="/reserva" onClick={() => setMenuAberto(false)}>
-                      Minhas Reservas
-                    </Link>
+                    {isAdmin ? (
+                      <>
+                        <Link to="/quartos" onClick={() => setMenuAberto(false)}>Gestão de Quartos</Link>
+                        <Link to="/clientes" onClick={() => setMenuAberto(false)}>Gestão de Clientes</Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/perfil" onClick={() => setMenuAberto(false)}>Meu Perfil</Link>
+                        <Link to="/reserva" onClick={() => setMenuAberto(false)}>Minhas Reservas</Link>
+                      </>
+                    )}
                     <button onClick={handleLogout}>Sair</button>
                   </div>
                 )}
@@ -202,12 +194,8 @@ export default function Home() {
           </button>
         </div>
 
-        <button className="home-carrossel-btn esquerda" onClick={fotoAnterior}>
-          ‹
-        </button>
-        <button className="home-carrossel-btn direita" onClick={proximaFoto}>
-          ›
-        </button>
+        <button className="home-carrossel-btn esquerda" onClick={fotoAnterior}>‹</button>
+        <button className="home-carrossel-btn direita" onClick={proximaFoto}>›</button>
 
         <div className="home-carrossel-dots">
           {FOTOS_CARROSSEL.map((_, index) => (
@@ -245,10 +233,7 @@ export default function Home() {
                     <span className="home-quarto-preco">
                       A partir de <strong>R$ {quarto.preco}</strong>/noite
                     </span>
-                    <button
-                      className="home-btn-reservar-card"
-                      onClick={handleReservar}
-                    >
+                    <button className="home-btn-reservar-card" onClick={handleReservar}>
                       Reservar
                     </button>
                   </div>
@@ -331,7 +316,11 @@ export default function Home() {
             <h4>Conta</h4>
             {usuarioLogado ? (
               <>
-                <Link to="/perfil">Meu Perfil</Link>
+                {isAdmin ? (
+                  <Link to="/quartos">Gestão de Quartos</Link>
+                ) : (
+                  <Link to="/perfil">Meu Perfil</Link>
+                )}
                 <Link to="/reserva">Reservas</Link>
               </>
             ) : (

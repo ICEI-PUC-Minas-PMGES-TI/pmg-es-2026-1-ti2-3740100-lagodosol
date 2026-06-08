@@ -6,6 +6,13 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "../assets/logo.jpg";
 import AlertMessage from "../components/AlertMessage";
 
+const ADMIN = {
+  email: "admin@gmail.com",
+  senha: "admin123",
+  nome: "Admin",
+  role: "admin",
+};
+
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,7 +20,6 @@ function Login() {
   const [form, setForm] = useState({ email: "", senha: "" });
   const [alerta, setAlerta] = useState(null);
 
-  // Exibe mensagem vinda do cadastro
   useEffect(() => {
     if (location.state?.mensagem) {
       setAlerta({
@@ -34,6 +40,14 @@ function Login() {
     e.preventDefault();
     setAlerta(null);
 
+    // Login fixo de admin (sem precisar do backend)
+    if (form.email === ADMIN.email && form.senha === ADMIN.senha) {
+      localStorage.setItem("usuario", JSON.stringify(ADMIN));
+      navigate("/");
+      return;
+    }
+
+    // Login normal pelo backend
     fetch("http://localhost:8080/usuarios/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -44,10 +58,7 @@ function Login() {
         return response.json();
       })
       .then((data) => {
-        // Salva o usuário no localStorage para a Home reconhecer
         localStorage.setItem("usuario", JSON.stringify(data));
-
-        // Redireciona para a Home já logado
         navigate("/");
       })
       .catch((error) => {
