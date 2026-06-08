@@ -41,7 +41,7 @@ function PerfilUsuario() {
     setAlerta({
       type: "success",
       title: "Perfil atualizado",
-      message: "Suas informacoes foram salvas com sucesso.",
+      message: "Suas informações foram salvas com sucesso.",
     });
     setEditando(false);
   }

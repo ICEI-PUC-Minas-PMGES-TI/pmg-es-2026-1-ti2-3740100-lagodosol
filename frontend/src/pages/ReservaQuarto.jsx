@@ -118,15 +118,15 @@ function ReservaQuarto() {
       setAlerta({
         type: "success",
         title: "Reserva realizada com sucesso",
-        message: "Voce sera redirecionado para o pagamento.",
+        message: "Você será redirecionado para o pagamento.",
       });
       setTimeout(() => navigate("/pagamento"), 1200);
     } catch (error) {
       console.error("Erro:", error);
       setAlerta({
         type: "error",
-        title: "Falha na comunicacao",
-        message: "Verifique se o backend esta rodando e tente novamente.",
+        title: "Falha na comunicação",
+        message: "Verifique se o backend está rodando e tente novamente.",
       });
     } finally {
       setCarregando(false);

@@ -124,7 +124,7 @@ export default function CadastroQuarto() {
         type: "success",
         title: editandoId ? "Quarto atualizado" : "Quarto cadastrado",
         message: editandoId
-          ? "As alteracoes do quarto foram salvas."
+          ? "As alterações do quarto foram salvas."
           : "O novo quarto foi cadastrado com sucesso.",
       });
 
@@ -143,8 +143,8 @@ export default function CadastroQuarto() {
       console.error("Erro:", error);
       setAlerta({
         type: "error",
-        title: "Erro de conexao",
-        message: "Nao foi possivel conectar com o servidor.",
+        title: "Erro de conexão",
+        message: "Não foi possível conectar com o servidor.",
       });
     }
   }
@@ -178,7 +178,7 @@ export default function CadastroQuarto() {
 
       setAlerta({
         type: "success",
-        title: "Quarto excluido",
+        title: "Quarto excluído",
         message: "O quarto foi removido com sucesso.",
       });
 
@@ -187,8 +187,8 @@ export default function CadastroQuarto() {
       console.error("Erro ao excluir:", error);
       setAlerta({
         type: "error",
-        title: "Erro de conexao",
-        message: "Nao foi possivel conectar com o servidor.",
+        title: "Erro de conexão",
+        message: "Não foi possível conectar com o servidor.",
       });
     }
   }
@@ -268,12 +268,17 @@ export default function CadastroQuarto() {
               style={styles.input}
             />
 
-            {form.imagens && (
-              <img
-                src={form.imagens}
-                alt="Prévia do quarto"
-                style={styles.previewImagem}
-              />
+            {form.imagens.length > 0 && (
+              <div style={styles.previewGrid}>
+                {form.imagens.map((imagem, index) => (
+                  <img
+                    key={index}
+                    src={imagem}
+                    alt={`Prévia ${index + 1} do quarto`}
+                    style={styles.previewImagem}
+                  />
+                ))}
+              </div>
             )}
 
             <label style={styles.label}>
@@ -341,51 +346,53 @@ export default function CadastroQuarto() {
           ) : (
             quartos.map((quarto) => (
               <div key={quarto.id} style={styles.quartoCard}>
-                {quarto.imagens && quarto.imagens.length > 0 && (
-                  <img
-                    src={quarto.imagens[0]}
-                    alt={`Capa do quarto ${quarto.numero}`}
-                    style={styles.imagemQuarto}
-                  />
-                )}
-                {quarto.imagens && quarto.imagens.length > 1 && (
-                  <div style={styles.galeria}>
-                    {quarto.imagens.slice(1).map((imagem, index) => (
+                <div style={styles.quartoConteudo}>
+                  <div style={styles.imagemArea}>
+                    {quarto.imagens && quarto.imagens.length > 0 ? (
                       <img
-                        key={index}
-                        src={imagem}
-                        alt={`Foto ${index + 2} do quarto`}
-                        style={styles.miniatura}
+                        src={quarto.imagens[0]}
+                        alt={`Capa do quarto ${quarto.numero}`}
+                        style={styles.imagemQuarto}
                       />
-                    ))}
+                    ) : quarto.imagem ? (
+                      <img
+                        src={quarto.imagem}
+                        alt={`Quarto ${quarto.numero}`}
+                        style={styles.imagemQuarto}
+                      />
+                    ) : (
+                      <div style={styles.semImagem}>Sem imagem</div>
+                    )}
                   </div>
-                )}
-                {quarto.imagem && (
-                  <img
-                    src={quarto.imagem}
-                    alt={`Quarto ${quarto.numero}`}
-                    style={styles.imagemQuarto}
-                  />
-                )}
-                <p>
-                  <strong>Número:</strong>{" "}
-                  {quarto.numero}
-                </p>
 
-                <p>
-                  <strong>Tipo:</strong>{" "}
-                  {quarto.tipo}
-                </p>
+                  <div style={styles.quartoDetalhes}>
+                    <div style={styles.quartoTopo}>
+                      <strong style={styles.quartoNumero}>Quarto {quarto.numero}</strong>
+                      <span style={styles.tipoBadge}>{quarto.tipo}</span>
+                    </div>
 
-                <p>
-                  <strong>Capacidade:</strong>{" "}
-                  {quarto.capacidade}
-                </p>
+                    <p style={styles.quartoInfoLinha}>
+                      <strong>Capacidade:</strong> {quarto.capacidade} pessoa(s)
+                    </p>
 
-                <p>
-                  <strong>Preço:</strong> R${" "}
-                  {quarto.preco}
-                </p>
+                    <p style={styles.quartoInfoLinha}>
+                      <strong>Diária:</strong> R$ {quarto.preco}
+                    </p>
+
+                    {quarto.imagens && quarto.imagens.length > 1 && (
+                      <div style={styles.galeria}>
+                        {quarto.imagens.slice(1).map((imagem, index) => (
+                          <img
+                            key={index}
+                            src={imagem}
+                            alt={`Foto ${index + 2} do quarto`}
+                            style={styles.miniatura}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
 
                 <div style={styles.botoesArea}>
                   <button
@@ -494,10 +501,64 @@ const styles = {
 
   quartoCard: {
     background: "#fff",
-    padding: "20px",
+    padding: "18px",
     borderRadius: "10px",
     marginBottom: "20px",
     boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+  },
+
+  quartoConteudo: {
+    display: "grid",
+    gridTemplateColumns: "220px 1fr",
+    gap: "18px",
+    alignItems: "start",
+  },
+
+  imagemArea: {
+    width: "100%",
+  },
+
+  semImagem: {
+    width: "100%",
+    height: "160px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "#eef2f7",
+    color: "#64748b",
+    borderRadius: "8px",
+    fontWeight: "bold",
+  },
+
+  quartoDetalhes: {
+    minWidth: 0,
+  },
+
+  quartoTopo: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "12px",
+    marginBottom: "14px",
+  },
+
+  quartoNumero: {
+    color: "#173f46",
+    fontSize: "18px",
+  },
+
+  tipoBadge: {
+    padding: "6px 10px",
+    background: "#e7f5f4",
+    color: "#176b67",
+    borderRadius: "999px",
+    fontSize: "13px",
+    fontWeight: "bold",
+  },
+
+  quartoInfoLinha: {
+    margin: "0 0 8px",
+    color: "#475569",
   },
 
   botoesArea: {
@@ -527,20 +588,26 @@ const styles = {
     cursor: "pointer",
     fontWeight: "bold",
   },
+
+  previewGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+    gap: "10px",
+    marginBottom: "18px",
+  },
+
   previewImagem: {
     width: "100%",
-    height: "180px",
+    height: "120px",
     objectFit: "cover",
     borderRadius: "8px",
-    marginBottom: "18px",
   },
 
   imagemQuarto: {
     width: "100%",
-    height: "220px",
+    height: "160px",
     objectFit: "cover",
     borderRadius: "8px",
-    marginBottom: "15px",
   },
 
   galeria: {
