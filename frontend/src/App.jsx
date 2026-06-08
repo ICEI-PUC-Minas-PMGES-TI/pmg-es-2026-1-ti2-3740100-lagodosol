@@ -18,6 +18,8 @@ import Home from "./pages/Home";
 import "./App.css";
 import GestaoQuartos from "./GestaoQuartos";
 
+import MinhasReservas from "./MinhasReservas";
+
 function App() {
   return (
     <div className="app-container">
@@ -40,6 +42,8 @@ function App() {
           <Route path="/pagamento" element={<PagamentoQuarto />} />
 
           <Route path="/quartos" element={<GestaoQuartos />} />
+
+          <Route path="/minhas-reservas" element={<MinhasReservas />} />
         </Routes>
       </main>
 

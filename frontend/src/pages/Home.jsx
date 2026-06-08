@@ -28,7 +28,8 @@ const QUARTOS_DESTAQUE = [
     nome: "Standard",
     descricao: "Conforto e praticidade para sua estadia",
     preco: 150,
-    imagem: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=800&auto=format&fit=crop",
+    imagem:
+      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=800&auto=format&fit=crop",
     icone: "🛏️",
   },
   {
@@ -36,7 +37,8 @@ const QUARTOS_DESTAQUE = [
     nome: "Luxo",
     descricao: "Sofisticação e requinte em cada detalhe",
     preco: 220,
-    imagem: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=800&auto=format&fit=crop",
+    imagem:
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=800&auto=format&fit=crop",
     icone: "✨",
   },
   {
@@ -44,16 +46,35 @@ const QUARTOS_DESTAQUE = [
     nome: "Suíte",
     descricao: "O máximo em exclusividade e elegância",
     preco: 300,
-    imagem: "https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop",
+    imagem:
+      "https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop",
     icone: "👑",
   },
 ];
 
 const DIFERENCIAIS = [
-  { icone: "🌅", titulo: "Vista para o Lago", descricao: "Desperte com uma vista deslumbrante todas as manhãs." },
-  { icone: "🍽️", titulo: "Gastronomia Premium", descricao: "Restaurante gourmet com pratos da culinária regional e internacional." },
-  { icone: "🏊", titulo: "Piscina Infinity", descricao: "Piscina com borda infinita e área de lazer completa." },
-  { icone: "💆", titulo: "Spa & Bem-estar", descricao: "Tratamentos exclusivos para relaxamento total do corpo e mente." },
+  {
+    icone: "🌅",
+    titulo: "Vista para o Lago",
+    descricao: "Desperte com uma vista deslumbrante todas as manhãs.",
+  },
+  {
+    icone: "🍽️",
+    titulo: "Gastronomia Premium",
+    descricao:
+      "Restaurante gourmet com pratos da culinária regional e internacional.",
+  },
+  {
+    icone: "🏊",
+    titulo: "Piscina Infinity",
+    descricao: "Piscina com borda infinita e área de lazer completa.",
+  },
+  {
+    icone: "💆",
+    titulo: "Spa & Bem-estar",
+    descricao:
+      "Tratamentos exclusivos para relaxamento total do corpo e mente.",
+  },
 ];
 
 export default function Home() {
@@ -93,7 +114,9 @@ export default function Home() {
 
   function fotoAnterior() {
     clearInterval(intervalRef.current);
-    setFotoAtual((prev) => (prev - 1 + FOTOS_CARROSSEL.length) % FOTOS_CARROSSEL.length);
+    setFotoAtual(
+      (prev) => (prev - 1 + FOTOS_CARROSSEL.length) % FOTOS_CARROSSEL.length,
+    );
     iniciarCarrossel();
   }
 
@@ -113,7 +136,6 @@ export default function Home() {
 
   return (
     <div className="home-wrapper">
-
       {/* ── NAVBAR ── */}
       <header className="home-navbar">
         <div className="home-navbar-inner">
@@ -149,13 +171,30 @@ export default function Home() {
                     <p className="home-perfil-nome">{usuarioLogado.nome}</p>
                     {isAdmin ? (
                       <>
-                        <Link to="/quartos" onClick={() => setMenuAberto(false)}>Gestão de Quartos</Link>
-                        <Link to="/clientes" onClick={() => setMenuAberto(false)}>Gestão de Clientes</Link>
+                        <Link
+                          to="/quartos"
+                          onClick={() => setMenuAberto(false)}
+                        >
+                          Gestão de Quartos
+                        </Link>
+                        <Link
+                          to="/clientes"
+                          onClick={() => setMenuAberto(false)}
+                        >
+                          Gestão de Clientes
+                        </Link>
                       </>
                     ) : (
                       <>
-                        <Link to="/perfil" onClick={() => setMenuAberto(false)}>Meu Perfil</Link>
-                        <Link to="/reserva" onClick={() => setMenuAberto(false)}>Minhas Reservas</Link>
+                        <Link to="/perfil" onClick={() => setMenuAberto(false)}>
+                          Meu Perfil
+                        </Link>
+                        <Link
+                          to="/reserva"
+                          onClick={() => setMenuAberto(false)}
+                        >
+                          Minhas Reservas
+                        </Link>
                       </>
                     )}
                     <button onClick={handleLogout}>Sair</button>
@@ -194,8 +233,12 @@ export default function Home() {
           </button>
         </div>
 
-        <button className="home-carrossel-btn esquerda" onClick={fotoAnterior}>‹</button>
-        <button className="home-carrossel-btn direita" onClick={proximaFoto}>›</button>
+        <button className="home-carrossel-btn esquerda" onClick={fotoAnterior}>
+          ‹
+        </button>
+        <button className="home-carrossel-btn direita" onClick={proximaFoto}>
+          ›
+        </button>
 
         <div className="home-carrossel-dots">
           {FOTOS_CARROSSEL.map((_, index) => (
@@ -214,7 +257,8 @@ export default function Home() {
           <p className="home-section-tag">Nossas Acomodações</p>
           <h2 className="home-section-titulo">Escolha o seu conforto</h2>
           <p className="home-section-subtitulo">
-            Quartos cuidadosamente projetados para proporcionar uma estadia perfeita
+            Quartos cuidadosamente projetados para proporcionar uma estadia
+            perfeita
           </p>
 
           <div className="home-quartos-grid">
@@ -233,7 +277,10 @@ export default function Home() {
                     <span className="home-quarto-preco">
                       A partir de <strong>R$ {quarto.preco}</strong>/noite
                     </span>
-                    <button className="home-btn-reservar-card" onClick={handleReservar}>
+                    <button
+                      className="home-btn-reservar-card"
+                      onClick={handleReservar}
+                    >
                       Reservar
                     </button>
                   </div>
@@ -248,7 +295,10 @@ export default function Home() {
       <section className="home-banner-cta">
         <div className="home-banner-inner">
           <h2>Sua próxima experiência começa aqui</h2>
-          <p>Reserve agora e garanta as melhores tarifas com café da manhã incluso</p>
+          <p>
+            Reserve agora e garanta as melhores tarifas com café da manhã
+            incluso
+          </p>
           <button className="home-btn-cta" onClick={handleReservar}>
             Ver Disponibilidade
           </button>
@@ -330,9 +380,6 @@ export default function Home() {
               </>
             )}
           </div>
-        </div>
-        <div className="home-footer-rodape">
-          <p>©2022 Hotel Lago do Sol | CNPJ: 37.790.093/0001-05</p>
         </div>
       </footer>
     </div>
