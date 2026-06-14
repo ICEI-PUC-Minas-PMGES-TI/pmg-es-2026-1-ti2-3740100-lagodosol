@@ -2,6 +2,8 @@ import { useState } from "react";
 import "./PagamentoQuarto.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { Link } from "react-router-dom";
+import logo from "./assets/logo.png";
 
 function PagamentoQuarto() {
   // Dados simulados da reserva
@@ -38,6 +40,18 @@ function PagamentoQuarto() {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErro("");
   }
+
+  const [menuAberto, setMenuAberto] = useState(false);
+
+const usuarioLogado = localStorage.getItem("usuario")
+  ? JSON.parse(localStorage.getItem("usuario"))
+  : null;
+
+function handleLogout() {
+  localStorage.removeItem("usuario");
+  setMenuAberto(false);
+  window.location.reload();
+}
 
   function formatarCartao(valor) {
     return valor
@@ -156,7 +170,56 @@ function PagamentoQuarto() {
 
   return (
     <div className="pagamento-wrapper">
-      <Header />
+      <header className="home-navbar">
+  <div className="home-navbar-inner">
+    <Link to="/" className="home-logo">
+      <img src={logo} alt="Hotel Lago do Sol" />
+    </Link>
+
+    <nav className="home-nav">
+  <a href="/#acomodacoes">Acomodações</a>
+  <a href="/#diferenciais">Diferenciais</a>
+  <a href="/#contato">Contato</a>
+</nav>
+
+    <div className="home-nav-acoes">
+      {usuarioLogado ? (
+        <div className="home-perfil-wrapper">
+          <button
+            className="home-perfil-btn"
+            onClick={() => setMenuAberto(!menuAberto)}
+            title={usuarioLogado.nome}
+          >
+            <span className="home-avatar">
+              {usuarioLogado.nome?.charAt(0).toUpperCase() || "U"}
+            </span>
+          </button>
+
+          {menuAberto && (
+            <div className="home-perfil-menu">
+              <p className="home-perfil-nome">{usuarioLogado.nome}</p>
+
+              <Link
+                to="/perfil"
+                onClick={() => setMenuAberto(false)}
+              >
+                Meu Perfil
+              </Link>
+
+              <button onClick={handleLogout}>
+                Sair
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <Link to="/login" className="home-btn-login">
+          Entrar
+        </Link>
+      )}
+    </div>
+  </div>
+</header>
 
       <main className="pagamento-container">
         <div className="pagamento-grid">
