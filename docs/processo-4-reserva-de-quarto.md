@@ -1,6 +1,7 @@
 ### 3.3.4 Processo 4 – processo de reserva de quarto
 
-![alt text](modelagem-reserva-quarto.png)
+<img width="2411" height="930" alt="image" src="https://github.com/user-attachments/assets/57f98377-24a9-4bb6-a80f-3703daf5b996" />
+
 
 ## Informar dados da reserva  
 Tela inicial onde o hóspede informa os dados básicos da estadia.
