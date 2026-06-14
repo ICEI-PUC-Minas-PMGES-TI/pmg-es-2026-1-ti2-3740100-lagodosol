@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Home.css";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 
 const FOTOS_CARROSSEL = [
   {

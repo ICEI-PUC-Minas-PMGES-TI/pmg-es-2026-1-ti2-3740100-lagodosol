@@ -382,7 +382,7 @@ function PagamentoQuarto() {
         </div>
       </main>
 
-      <Footer />
+
     </div>
   );
 }

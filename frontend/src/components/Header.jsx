@@ -1,12 +1,12 @@
 import "./Header.css";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 
 export default function Header() {
   return (
     <header className="header">
       <div className="header-container">
         <div className="logo">
-          <img src={logo} alt="Logo" />
+         
         </div>
 
         <nav className="nav">

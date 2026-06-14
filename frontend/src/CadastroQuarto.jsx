@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "./assets/logo.jpg";
+import logo from "./assets/logo.png";
 import AlertMessage from "./components/AlertMessage";
 
 export default function CadastroQuarto() {

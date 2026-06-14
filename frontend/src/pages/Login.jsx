@@ -3,7 +3,7 @@ import "../App.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 import AlertMessage from "../components/AlertMessage";
 
 const ADMIN = {
