@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import AlertMessage from "../components/AlertMessage";
 import "./ReservaQuarto.css";
+import Quarto1 from "../assets/Quarto1.jpg";
+import Quarto2 from "../assets/Quarto2.jpg";
+import Quarto3 from "../assets/Quarto3.jpg";
+import Quarto4 from "../assets/Quarto4.jpg";
 
 function ReservaQuarto() {
   const navigate = useNavigate();
@@ -14,8 +18,7 @@ function ReservaQuarto() {
       preco: 150,
       cama: "1 cama de casal",
       pessoas: "2 pessoas",
-      imagem:
-        "../assets/Standart2.jpg",
+      imagem: Quarto1,
     },
     {
       id: 102,
@@ -23,8 +26,7 @@ function ReservaQuarto() {
       preco: 150,
       cama: "2 camas de solteiro",
       pessoas: "2 pessoas",
-      imagem:
-        "../assets/Standart1.jpg",
+      imagem: Quarto2,
     },
     {
       id: 201,
@@ -32,8 +34,7 @@ function ReservaQuarto() {
       preco: 220,
       cama: "1 cama king",
       pessoas: "2 pessoas",
-      imagem:
-        "../assets/quarto-luxo.jpg",
+      imagem: Quarto3,
     },
     {
       id: 301,
@@ -41,8 +42,7 @@ function ReservaQuarto() {
       preco: 300,
       cama: "1 cama king",
       pessoas: "2 pessoas",
-      imagem:
-        "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=1200&auto=format&fit=crop",
+      imagem: Quarto4,
     },
   ];
 
