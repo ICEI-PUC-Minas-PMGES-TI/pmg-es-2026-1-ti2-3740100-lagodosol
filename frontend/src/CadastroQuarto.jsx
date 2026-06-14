@@ -214,210 +214,153 @@ export default function CadastroQuarto() {
   }
 
   return (
-    <div style={styles.page}>
-      <main style={styles.main}>
-        <header style={styles.header}>
-          <div style={styles.headerContainer}>
-            <img
-              src={logo}
-              alt="Logo Lago do Sol"
-              style={styles.logoImg}
-            />
-          </div>
-        </header>
+  <div style={styles.page}>
+    <header style={styles.hero}>
+      <img src={logo} alt="Lago do Sol" style={styles.heroLogo} />
 
-        {/* FORMULÁRIO */}
-        <section style={styles.card}>
-          <h2 style={styles.title}>
-            {editandoId
-              ? "EDITAR QUARTO"
-              : "CADASTRO DE QUARTO"}
-          </h2>
+      <div>
+        <h1 style={styles.heroTitle}>Gestão de Quartos</h1>
+        <p style={styles.heroSubtitle}>
+          Cadastre, edite e organize as acomodações do hotel.
+        </p>
+      </div>
+    </header>
 
-          <AlertMessage
-            type={alerta?.type}
-            title={alerta?.title}
-            message={alerta?.message}
-            onClose={() => setAlerta(null)}
+
+    <div style={styles.dashboard}>
+      <section style={styles.formCard}>
+        <h2>
+          {editandoId ? "Editar Quarto" : "Novo Quarto"}
+        </h2>
+
+        <AlertMessage
+          type={alerta?.type}
+          title={alerta?.title}
+          message={alerta?.message}
+          onClose={() => setAlerta(null)}
+        />
+
+        <form onSubmit={handleSubmit}>
+          <input
+            style={styles.input}
+            name="numero"
+            placeholder="Número do quarto"
+            value={form.numero}
+            onChange={handleChange}
           />
 
-          <form onSubmit={handleSubmit}>
-            <label style={styles.label}>
-              Número do quarto
-            </label>
+          <select
+            style={styles.input}
+            name="tipo"
+            value={form.tipo}
+            onChange={handleChange}
+          >
+            <option value="">Tipo do quarto</option>
+            <option value="Standard">Standard</option>
+            <option value="Luxo">Luxo</option>
+            <option value="Suite">Suíte</option>
+          </select>
 
-            <input
-              type="text"
-              name="numero"
-              placeholder="Ex: 101"
-              value={form.numero}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
+          <input
+            style={styles.input}
+            type="number"
+            name="capacidade"
+            placeholder="Capacidade"
+            value={form.capacidade}
+            onChange={handleChange}
+          />
 
-            <label style={styles.label}>
-              Imagens do quarto
-            </label>
+          <input
+            style={styles.input}
+            type="number"
+            name="preco"
+            placeholder="Preço da diária"
+            value={form.preco}
+            onChange={handleChange}
+          />
 
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImagensChange}
-              style={styles.input}
-            />
+          <input
+            style={styles.input}
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImagensChange}
+          />
 
-            {form.imagens.length > 0 && (
-              <div style={styles.previewGrid}>
-                {form.imagens.map((imagem, index) => (
-                  <img
-                    key={index}
-                    src={imagem}
-                    alt={`Prévia ${index + 1} do quarto`}
-                    style={styles.previewImagem}
-                  />
-                ))}
-              </div>
-            )}
-
-            <label style={styles.label}>
-              Tipo do quarto
-            </label>
-
-            <input
-              type="text"
-              name="tipo"
-              placeholder="Ex: Luxo, Standard, Suíte"
-              value={form.tipo}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
-
-            <label style={styles.label}>
-              Capacidade
-            </label>
-
-            <input
-              type="number"
-              name="capacidade"
-              placeholder="Ex: 2"
-              value={form.capacidade}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
-
-            <label style={styles.label}>
-              Preço da diária
-            </label>
-
-            <input
-              type="number"
-              name="preco"
-              placeholder="Ex: 350"
-              value={form.preco}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
-
-            <button type="submit" style={styles.button}>
-              {editandoId
-                ? "Salvar Alterações"
-                : "Cadastrar Quarto"}
-            </button>
-
-            <Link to="/" style={styles.link}>
-              Voltar para Home
-            </Link>
-          </form>
-        </section>
-
-        {/* LISTA DE QUARTOS */}
-        <section style={styles.listaSection}>
-          <h2 style={styles.listaTitulo}>
-            QUARTOS CADASTRADOS
-          </h2>
-
-          {quartos.length === 0 ? (
-            <p>Nenhum quarto cadastrado.</p>
-          ) : (
-            quartos.map((quarto) => (
-              <div key={quarto.id} style={styles.quartoCard}>
-                <div style={styles.quartoConteudo}>
-                  <div style={styles.imagemArea}>
-                    {quarto.imagens && quarto.imagens.length > 0 ? (
-                      <img
-                        src={quarto.imagens[0]}
-                        alt={`Capa do quarto ${quarto.numero}`}
-                        style={styles.imagemQuarto}
-                      />
-                    ) : quarto.imagem ? (
-                      <img
-                        src={quarto.imagem}
-                        alt={`Quarto ${quarto.numero}`}
-                        style={styles.imagemQuarto}
-                      />
-                    ) : (
-                      <div style={styles.semImagem}>Sem imagem</div>
-                    )}
-                  </div>
-
-                  <div style={styles.quartoDetalhes}>
-                    <div style={styles.quartoTopo}>
-                      <strong style={styles.quartoNumero}>Quarto {quarto.numero}</strong>
-                      <span style={styles.tipoBadge}>{quarto.tipo}</span>
-                    </div>
-
-                    <p style={styles.quartoInfoLinha}>
-                      <strong>Capacidade:</strong> {quarto.capacidade} pessoa(s)
-                    </p>
-
-                    <p style={styles.quartoInfoLinha}>
-                      <strong>Diária:</strong> R$ {quarto.preco}
-                    </p>
-
-                    {quarto.imagens && quarto.imagens.length > 1 && (
-                      <div style={styles.galeria}>
-                        {quarto.imagens.slice(1).map((imagem, index) => (
-                          <img
-                            key={index}
-                            src={imagem}
-                            alt={`Foto ${index + 2} do quarto`}
-                            style={styles.miniatura}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div style={styles.botoesArea}>
-                  <button
-                    style={styles.editarBtn}
-                    onClick={() => editarQuarto(quarto)}
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    style={styles.excluirBtn}
-                    onClick={() =>
-                      excluirQuarto(quarto.id)
-                    }
-                  >
-                    Excluir
-                  </button>
-                </div>
-              </div>
-            ))
+          {form.imagens.length > 0 && (
+            <div style={styles.previewGrid}>
+              {form.imagens.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt=""
+                  style={styles.preview}
+                />
+              ))}
+            </div>
           )}
-        </section>
-      </main>
+
+          <button style={styles.saveBtn}>
+            {editandoId
+              ? "Salvar Alterações"
+              : "Cadastrar Quarto"}
+          </button>
+        </form>
+      </section>
+
+      <section style={styles.listSection}>
+        <h2>Quartos Cadastrados</h2>
+
+        {quartos.map((quarto) => (
+          <div key={quarto.id} style={styles.roomCard}>
+            <img
+              src={
+                quarto.imagens?.[0] ||
+                "https://via.placeholder.com/300x200"
+              }
+              alt=""
+              style={styles.roomImage}
+            />
+
+            <div style={styles.roomInfo}>
+              <div style={styles.roomHeader}>
+                <h3>
+                  {quarto.tipo} #{quarto.numero}
+                </h3>
+
+                <span style={styles.badge}>
+                  {quarto.capacidade} hóspedes
+                </span>
+              </div>
+
+              <p style={styles.price}>
+                R$ {quarto.preco}/noite
+              </p>
+
+              <div style={styles.actions}>
+                <button
+                  style={styles.editBtn}
+                  onClick={() => editarQuarto(quarto)}
+                >
+                  Editar
+                </button>
+
+                <button
+                  style={styles.deleteBtn}
+                  onClick={() =>
+                    excluirQuarto(quarto.id)
+                  }
+                >
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </section>
     </div>
-  );
+  </div>
+);
 }
 
 const styles = {
@@ -623,5 +566,111 @@ const styles = {
     objectFit: "cover",
     borderRadius: "6px",
   },
+
+  hero: {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "20px",
+  marginBottom: "30px",
+},
+
+heroLogo: {
+  width: "80px",
+},
+
+heroTitle: {
+  margin: 0,
+  color: "#173f46",
+},
+
+heroSubtitle: {
+  color: "#64748b",
+},
+
+
+
+dashboard: {
+  width: "100%",
+  maxWidth: "1200px",
+  margin: "0 auto",
+},
+
+formCard: {
+  background: "#fff",
+  padding: "25px",
+  borderRadius: "16px",
+  boxShadow: "0 8px 20px rgba(0,0,0,.08)",
+  height: "fit-content",
+},
+
+listSection: {
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
+},
+
+roomCard: {
+  background: "#fff",
+  borderRadius: "16px",
+  overflow: "hidden",
+  display: "grid",
+  gridTemplateColumns: "280px 1fr",
+  boxShadow: "0 8px 20px rgba(0,0,0,.08)",
+},
+
+roomImage: {
+  width: "100%",
+  height: "220px",
+  objectFit: "cover",
+},
+
+roomInfo: {
+  padding: "20px",
+},
+
+roomHeader: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+},
+
+badge: {
+  background: "#e8f7f4",
+  color: "#0f766e",
+  padding: "6px 12px",
+  borderRadius: "999px",
+  fontSize: "13px",
+},
+
+price: {
+  fontSize: "22px",
+  fontWeight: "bold",
+  color: "#173f46",
+},
+
+actions: {
+  display: "flex",
+  gap: "10px",
+  marginTop: "20px",
+},
+
+saveBtn: {
+  width: "100%",
+  padding: "14px",
+  border: "none",
+  borderRadius: "10px",
+  background: "#173f46",
+  color: "#fff",
+  fontWeight: "bold",
+  cursor: "pointer",
+},
+
+preview: {
+  width: "100%",
+  height: "120px",
+  objectFit: "cover",
+  borderRadius: "8px",
+},
 };
 

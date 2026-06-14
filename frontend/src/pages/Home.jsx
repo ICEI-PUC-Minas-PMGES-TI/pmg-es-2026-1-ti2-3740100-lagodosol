@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Home.css";
 import logo from "../assets/logo.png";
+import suiteImg from "../assets/suite.png";
+import luxoImg from "../assets/luxo.png";
+import standardImg from "../assets/standard.png";
 
 const FOTOS_CARROSSEL = [
   {
@@ -28,8 +31,7 @@ const QUARTOS_DESTAQUE = [
     nome: "Standard",
     descricao: "Conforto e praticidade para sua estadia",
     preco: 150,
-    imagem:
-      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=800&auto=format&fit=crop",
+    imagem: standardImg,
     icone: "🛏️",
   },
   {
@@ -37,19 +39,17 @@ const QUARTOS_DESTAQUE = [
     nome: "Luxo",
     descricao: "Sofisticação e requinte em cada detalhe",
     preco: 220,
-    imagem:
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=800&auto=format&fit=crop",
+    imagem: luxoImg,
     icone: "✨",
   },
   {
-    id: 3,
-    nome: "Suíte",
-    descricao: "O máximo em exclusividade e elegância",
-    preco: 300,
-    imagem:
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800&auto=format&fit=crop",
-    icone: "👑",
-  },
+  id: 3,
+  nome: "Suíte",
+  descricao: "O máximo em exclusividade e elegância",
+  preco: 300,
+  imagem: suiteImg,
+  icone: "👑",
+},
 ];
 
 const DIFERENCIAIS = [
