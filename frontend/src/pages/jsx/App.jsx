@@ -1,21 +1,21 @@
 import { Routes, Route } from "react-router-dom";
 
-import Footer from "./components/Footer";
+import Footer from "./Footer";
 
 import GestaoClientes from "./GestaoClientes";
 import PagamentoQuarto from "./PagamentoQuarto";
 
-import CadastroUsuario from "./pages/Cadastro";
-import Login from "./pages/Login";
+import CadastroUsuario from "./Cadastro";
+import Login from "./Login";
 
-import ReservaQuarto from "./pages/ReservaQuarto";
+import ReservaQuarto from "./ReservaQuarto";
 
 import CadastroQuarto from "./CadastroQuarto";
 
-import PerfilUsuario from "./pages/PerfilUsuario";
-import Home from "./pages/Home";
+import PerfilUsuario from "./PerfilUsuario";
+import Home from "./Home";
 
-import "./App.css";
+import "../style/App.css";
 import GestaoQuartos from "./GestaoQuartos";
 
 import MinhasReservas from "./MinhasReservas";

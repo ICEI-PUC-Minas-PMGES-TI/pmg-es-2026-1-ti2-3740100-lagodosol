@@ -1,10 +1,10 @@
-import "../App.css";
+import "../style/App.css";
 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-import logo from "../assets/logo.png";
-import AlertMessage from "../components/AlertMessage";
+import logo from "../../assets/logo.png";
+import AlertMessage from "./AlertMessage";
 
 function CadastroUsuario() {
   const navigate = useNavigate();

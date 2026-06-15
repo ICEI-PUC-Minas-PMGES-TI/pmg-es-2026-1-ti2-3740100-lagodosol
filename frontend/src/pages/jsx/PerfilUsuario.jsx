@@ -1,6 +1,6 @@
 import { useState } from "react";
-import AlertMessage from "../components/AlertMessage";
-import "./PerfilUsuario.css";
+import AlertMessage from "./AlertMessage";
+import "../style/PerfilUsuario.css";
 
 function PerfilUsuario() {
   const [editando, setEditando] = useState(false);

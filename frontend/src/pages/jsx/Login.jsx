@@ -1,10 +1,10 @@
-import "../App.css";
+import "../style/App.css";
 
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
-import logo from "../assets/logo.png";
-import AlertMessage from "../components/AlertMessage";
+import logo from "../../assets/logo.png";
+import AlertMessage from "./AlertMessage";
 
 const ADMIN = {
   email: "admin@gmail.com",

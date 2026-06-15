@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Footer.css";
+import "../style/Footer.css";
 
 export default function Footer() {
   const [aberto, setAberto] = useState(false);

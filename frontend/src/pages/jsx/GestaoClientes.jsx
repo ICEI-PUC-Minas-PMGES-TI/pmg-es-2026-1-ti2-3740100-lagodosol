@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "./GestaoClientes.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import "../style/GestaoClientes.css";
+import Header from "./Header";
+import Footer from "./Footer";
 
 function GestaoClientes() {
   const [clientes, setClientes] = useState([

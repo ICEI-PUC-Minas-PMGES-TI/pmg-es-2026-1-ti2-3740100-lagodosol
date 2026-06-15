@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AlertMessage from "./components/AlertMessage";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import "./GestaoQuartos.css";
+import AlertMessage from "./AlertMessage";
+import Footer from "./Footer";
+import Header from "./Header";
+import "../style/GestaoQuartos.css";
 
 const QUARTOS_MOCK = [
   { id: 1, numero: "101", tipo: "Standard", capacidade: 2, preco: 180 },

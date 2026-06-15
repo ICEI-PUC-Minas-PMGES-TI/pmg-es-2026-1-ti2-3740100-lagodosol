@@ -1,4 +1,4 @@
-import "./AlertMessage.css";
+import "../style/AlertMessage.css";
 
 function AlertMessage({ type = "info", title, message, onClose }) {
   if (!message) return null;

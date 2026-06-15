@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Home.css";
-import logo from "../assets/logo.png";
-import suiteImg from "../assets/suite.png";
-import luxoImg from "../assets/luxo.png";
-import standardImg from "../assets/standard.png";
+import "../style/Home.css";
+import logo from "../../assets/logo.png";
+import suiteImg from "../../assets/suite.png";
+import luxoImg from "../../assets/luxo.png";
+import standardImg from "../../assets/standard.png";
 
 const FOTOS_CARROSSEL = [
   {

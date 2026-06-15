@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
-import AlertMessage from "../components/AlertMessage";
-import "./ReservaQuarto.css";
-import Quarto1 from "../assets/Quarto1.jpg";
-import Quarto2 from "../assets/Quarto2.jpg";
-import Quarto3 from "../assets/Quarto3.jpg";
-import Quarto4 from "../assets/Quarto4.jpg";
+import logo from "../../assets/logo.png";
+import AlertMessage from "./AlertMessage";
+import "../style/ReservaQuarto.css";
+import Quarto1 from "../../assets/Quarto1.jpg";
+import Quarto2 from "../../assets/Quarto2.jpg";
+import Quarto3 from "../../assets/Quarto3.jpg";
+import Quarto4 from "../../assets/Quarto4.jpg";
 
 function ReservaQuarto() {
   const navigate = useNavigate();

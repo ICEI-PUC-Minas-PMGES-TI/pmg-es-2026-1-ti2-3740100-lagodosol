@@ -1,4 +1,4 @@
-import "./MinhasReservas.css";
+import "../style/MinhasReservas.css";
 
 function App() {
   const reservasAtivas = [

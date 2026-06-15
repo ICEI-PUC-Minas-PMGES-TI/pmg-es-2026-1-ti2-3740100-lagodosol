@@ -1,9 +1,9 @@
 import { useState } from "react";
-import "./PagamentoQuarto.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import "../style/PagamentoQuarto.css";
+import Header from "./Header";
+import Footer from "./Footer";
 import { Link } from "react-router-dom";
-import logo from "./assets/logo.png";
+import logo from "../../assets/logo.png";
 
 function PagamentoQuarto() {
   // Dados simulados da reserva
