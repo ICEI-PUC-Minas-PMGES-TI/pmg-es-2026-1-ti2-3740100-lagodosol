@@ -43,15 +43,15 @@ function PagamentoQuarto() {
 
   const [menuAberto, setMenuAberto] = useState(false);
 
-const usuarioLogado = localStorage.getItem("usuario")
-  ? JSON.parse(localStorage.getItem("usuario"))
-  : null;
+  const usuarioLogado = localStorage.getItem("usuario")
+    ? JSON.parse(localStorage.getItem("usuario"))
+    : null;
 
-function handleLogout() {
-  localStorage.removeItem("usuario");
-  setMenuAberto(false);
-  window.location.reload();
-}
+  function handleLogout() {
+    localStorage.removeItem("usuario");
+    setMenuAberto(false);
+    window.location.reload();
+  }
 
   function formatarCartao(valor) {
     return valor
@@ -96,7 +96,7 @@ function handleLogout() {
 
     try {
       // Fazendo a requisição para o Node.js
-      const resposta = await fetch("http://localhost:8080/pagamentos", {
+      const resposta = await fetch("http://localhost:8081/pagamentos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -171,55 +171,50 @@ function handleLogout() {
   return (
     <div className="pagamento-wrapper">
       <header className="home-navbar">
-  <div className="home-navbar-inner">
-    <Link to="/" className="home-logo">
-      <img src={logo} alt="Hotel Lago do Sol" />
-    </Link>
+        <div className="home-navbar-inner">
+          <Link to="/" className="home-logo">
+            <img src={logo} alt="Hotel Lago do Sol" />
+          </Link>
 
-    <nav className="home-nav">
-  <a href="/#acomodacoes">Acomodações</a>
-  <a href="/#diferenciais">Diferenciais</a>
-  <a href="/#contato">Contato</a>
-</nav>
+          <nav className="home-nav">
+            <a href="/#acomodacoes">Acomodações</a>
+            <a href="/#diferenciais">Diferenciais</a>
+            <a href="/#contato">Contato</a>
+          </nav>
 
-    <div className="home-nav-acoes">
-      {usuarioLogado ? (
-        <div className="home-perfil-wrapper">
-          <button
-            className="home-perfil-btn"
-            onClick={() => setMenuAberto(!menuAberto)}
-            title={usuarioLogado.nome}
-          >
-            <span className="home-avatar">
-              {usuarioLogado.nome?.charAt(0).toUpperCase() || "U"}
-            </span>
-          </button>
+          <div className="home-nav-acoes">
+            {usuarioLogado ? (
+              <div className="home-perfil-wrapper">
+                <button
+                  className="home-perfil-btn"
+                  onClick={() => setMenuAberto(!menuAberto)}
+                  title={usuarioLogado.nome}
+                >
+                  <span className="home-avatar">
+                    {usuarioLogado.nome?.charAt(0).toUpperCase() || "U"}
+                  </span>
+                </button>
 
-          {menuAberto && (
-            <div className="home-perfil-menu">
-              <p className="home-perfil-nome">{usuarioLogado.nome}</p>
+                {menuAberto && (
+                  <div className="home-perfil-menu">
+                    <p className="home-perfil-nome">{usuarioLogado.nome}</p>
 
-              <Link
-                to="/perfil"
-                onClick={() => setMenuAberto(false)}
-              >
-                Meu Perfil
+                    <Link to="/perfil" onClick={() => setMenuAberto(false)}>
+                      Meu Perfil
+                    </Link>
+
+                    <button onClick={handleLogout}>Sair</button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to="/login" className="home-btn-login">
+                Entrar
               </Link>
-
-              <button onClick={handleLogout}>
-                Sair
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      ) : (
-        <Link to="/login" className="home-btn-login">
-          Entrar
-        </Link>
-      )}
-    </div>
-  </div>
-</header>
+      </header>
 
       <main className="pagamento-container">
         <div className="pagamento-grid">
@@ -444,8 +439,6 @@ function handleLogout() {
           </div>
         </div>
       </main>
-
-
     </div>
   );
 }

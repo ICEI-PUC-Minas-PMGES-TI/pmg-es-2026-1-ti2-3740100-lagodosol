@@ -91,7 +91,7 @@ function ReservaQuarto() {
     setAlerta(null);
 
     try {
-      const response = await fetch("http://localhost:8080/reservas", {
+      const response = await fetch("http://localhost:8081/reservas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -241,7 +241,9 @@ function ReservaQuarto() {
             <div className="resumo-item">
               <span>Quarto</span>
               <strong>
-                {quartoSelecionado ? quartoSelecionado.nome : "Nenhum selecionado"}
+                {quartoSelecionado
+                  ? quartoSelecionado.nome
+                  : "Nenhum selecionado"}
               </strong>
             </div>
 

@@ -48,7 +48,7 @@ function Login() {
     }
 
     // Login normal pelo backend
-    fetch("http://localhost:8080/usuarios/login", {
+    fetch("http://localhost:8081/usuarios/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: form.email, senha: form.senha }),
