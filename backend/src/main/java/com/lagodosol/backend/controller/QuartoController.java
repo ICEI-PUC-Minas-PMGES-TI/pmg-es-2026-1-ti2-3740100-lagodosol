@@ -27,4 +27,22 @@ public class QuartoController {
     public Quarto cadastrar(@RequestBody Quarto quarto) {
         return repository.save(quarto);
     }
+
+    @PutMapping("/{id}")
+    public Quarto atualizar(@PathVariable Long id, @RequestBody Quarto dados) {
+        Quarto quarto = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Quarto não encontrado"));
+
+        quarto.setNumero(dados.getNumero());
+        quarto.setTipo(dados.getTipo());
+        quarto.setCapacidade(dados.getCapacidade());
+        quarto.setPreco(dados.getPreco());
+
+        return repository.save(quarto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Long id) {
+        repository.deleteById(id);
+    }
 }

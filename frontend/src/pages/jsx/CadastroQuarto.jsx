@@ -2,24 +2,23 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
+const API = "http://localhost:8081";
+
 export default function CadastroQuarto() {
   const [form, setForm] = useState({
     numero: "",
     tipo: "",
     capacidade: "",
     preco: "",
-    imagens: [],
   });
 
   const [quartos, setQuartos] = useState([]);
   const [editandoId, setEditandoId] = useState(null);
+  const [mensagem, setMensagem] = useState(null);
 
-  // =========================
-  // BUSCAR QUARTOS
-  // =========================
   async function buscarQuartos() {
     try {
-      const response = await fetch("http://localhost:8081/quartos");
+      const response = await fetch(`${API}/quartos`);
       const data = await response.json();
       setQuartos(data);
     } catch (error) {
@@ -28,161 +27,92 @@ export default function CadastroQuarto() {
   }
 
   useEffect(() => {
-    let componenteAtivo = true;
-
-    fetch("http://localhost:8081/quartos")
-      .then((response) => response.json())
-      .then((data) => {
-        if (componenteAtivo) {
-          setQuartos(data);
-        }
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar quartos:", error);
-      });
-
-    return () => {
-      componenteAtivo = false;
-    };
+    buscarQuartos();
   }, []);
 
-  // =========================
-  // ALTERAR INPUTS
-  // =========================
   function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setMensagem(null);
   }
 
-  function handleImagensChange(e) {
-    const files = Array.from(e.target.files);
-
-    if (files.length === 0) return;
-
-    const promises = files.map((file) => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-          resolve(reader.result);
-        };
-
-        reader.readAsDataURL(file);
-      });
-    });
-
-    Promise.all(promises).then((imagensBase64) => {
-      setForm({
-        ...form,
-        imagens: imagensBase64,
-      });
-    });
-  }
-
-  // =========================
-  // CADASTRAR OU EDITAR
-  // =========================
   async function handleSubmit(e) {
     e.preventDefault();
+    setMensagem(null);
 
     try {
       const url = editandoId
-        ? `http://localhost:8080/quartos/${editandoId}`
-        : "http://localhost:8080/quartos";
+        ? `${API}/quartos/${editandoId}`
+        : `${API}/quartos`;
 
       const metodo = editandoId ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method: metodo,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          numero: form.numero,
+          tipo: form.tipo,
+          capacidade: Number(form.capacidade),
+          preco: Number(form.preco),
+        }),
       });
 
       if (!response.ok) {
-        alert("Erro ao salvar quarto.");
+        setMensagem({ tipo: "erro", texto: "Erro ao salvar quarto. Tente novamente." });
         return;
       }
 
-      alert(
-        editandoId
+      setMensagem({
+        tipo: "sucesso",
+        texto: editandoId
           ? "Quarto atualizado com sucesso!"
           : "Quarto cadastrado com sucesso!",
-      );
-
-      setForm({
-        numero: "",
-        tipo: "",
-        capacidade: "",
-        preco: "",
-        imagens: [],
       });
 
+      setForm({ numero: "", tipo: "", capacidade: "", preco: "" });
       setEditandoId(null);
-
       buscarQuartos();
     } catch (error) {
       console.error("Erro:", error);
-      alert("Erro ao conectar com o servidor.");
+      setMensagem({ tipo: "erro", texto: "Não foi possível conectar com o servidor." });
     }
   }
 
-  // =========================
-  // EXCLUIR
-  // =========================
   async function excluirQuarto(id) {
-    const confirmar = window.confirm("Deseja realmente excluir este quarto?");
-
-    if (!confirmar) return;
+    if (!window.confirm("Deseja realmente excluir este quarto?")) return;
 
     try {
-      const response = await fetch(`http://localhost:8080/quartos/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(`${API}/quartos/${id}`, { method: "DELETE" });
 
       if (!response.ok) {
-        alert("Erro ao excluir quarto.");
+        setMensagem({ tipo: "erro", texto: "Erro ao excluir quarto." });
         return;
       }
 
-      alert("Quarto excluído com sucesso!");
-
+      setMensagem({ tipo: "sucesso", texto: "Quarto excluído com sucesso!" });
       buscarQuartos();
     } catch (error) {
       console.error("Erro ao excluir:", error);
+      setMensagem({ tipo: "erro", texto: "Não foi possível conectar com o servidor." });
     }
   }
 
-  // =========================
-  // EDITAR
-  // =========================
   function editarQuarto(quarto) {
     setForm({
       numero: quarto.numero,
       tipo: quarto.tipo,
       capacidade: quarto.capacidade,
       preco: quarto.preco,
-      imagens: quarto.imagens || [],
     });
-
     setEditandoId(quarto.id);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
     <div style={styles.page}>
       <main style={styles.main}>
         <header style={styles.header}>
-          <div style={styles.headerContainer}>
-            <img src={logo} alt="Logo Lago do Sol" style={styles.logoImg} />
-          </div>
+          <img src={logo} alt="Logo Lago do Sol" style={styles.logoImg} />
         </header>
 
         {/* FORMULÁRIO */}
@@ -191,9 +121,19 @@ export default function CadastroQuarto() {
             {editandoId ? "EDITAR QUARTO" : "CADASTRO DE QUARTO"}
           </h2>
 
+          {mensagem && (
+            <div style={{
+              ...styles.alerta,
+              background: mensagem.tipo === "sucesso" ? "#d4edda" : "#f8d7da",
+              color: mensagem.tipo === "sucesso" ? "#155724" : "#721c24",
+              borderColor: mensagem.tipo === "sucesso" ? "#c3e6cb" : "#f5c6cb",
+            }}>
+              {mensagem.texto}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit}>
             <label style={styles.label}>Número do quarto</label>
-
             <input
               type="text"
               name="numero"
@@ -204,26 +144,7 @@ export default function CadastroQuarto() {
               style={styles.input}
             />
 
-            <label style={styles.label}>Imagens do quarto</label>
-
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImagensChange}
-              style={styles.input}
-            />
-
-            {form.imagens && (
-              <img
-                src={form.imagens}
-                alt="Prévia do quarto"
-                style={styles.previewImagem}
-              />
-            )}
-
             <label style={styles.label}>Tipo do quarto</label>
-
             <input
               type="text"
               name="tipo"
@@ -235,7 +156,6 @@ export default function CadastroQuarto() {
             />
 
             <label style={styles.label}>Capacidade</label>
-
             <input
               type="number"
               name="capacidade"
@@ -246,8 +166,7 @@ export default function CadastroQuarto() {
               style={styles.input}
             />
 
-            <label style={styles.label}>Preço da diária</label>
-
+            <label style={styles.label}>Preço da diária (R$)</label>
             <input
               type="number"
               name="preco"
@@ -262,8 +181,18 @@ export default function CadastroQuarto() {
               {editandoId ? "Salvar Alterações" : "Cadastrar Quarto"}
             </button>
 
-            <Link to="/" style={styles.link}>
-              Voltar para Home
+            {editandoId && (
+              <button
+                type="button"
+                onClick={() => { setEditandoId(null); setForm({ numero: "", tipo: "", capacidade: "", preco: "" }); }}
+                style={{ ...styles.button, background: "#888", marginTop: "10px" }}
+              >
+                Cancelar Edição
+              </button>
+            )}
+
+            <Link to="/quartos" style={styles.link}>
+              Voltar para Gestão de Quartos
             </Link>
           </form>
         </section>
@@ -273,64 +202,20 @@ export default function CadastroQuarto() {
           <h2 style={styles.listaTitulo}>QUARTOS CADASTRADOS</h2>
 
           {quartos.length === 0 ? (
-            <p>Nenhum quarto cadastrado.</p>
+            <p style={{ textAlign: "center", color: "#888" }}>Nenhum quarto cadastrado.</p>
           ) : (
             quartos.map((quarto) => (
               <div key={quarto.id} style={styles.quartoCard}>
-                {quarto.imagens && quarto.imagens.length > 0 && (
-                  <img
-                    src={quarto.imagens[0]}
-                    alt={`Capa do quarto ${quarto.numero}`}
-                    style={styles.imagemQuarto}
-                  />
-                )}
-                {quarto.imagens && quarto.imagens.length > 1 && (
-                  <div style={styles.galeria}>
-                    {quarto.imagens.slice(1).map((imagem, index) => (
-                      <img
-                        key={index}
-                        src={imagem}
-                        alt={`Foto ${index + 2} do quarto`}
-                        style={styles.miniatura}
-                      />
-                    ))}
-                  </div>
-                )}
-                {quarto.imagem && (
-                  <img
-                    src={quarto.imagem}
-                    alt={`Quarto ${quarto.numero}`}
-                    style={styles.imagemQuarto}
-                  />
-                )}
-                <p>
-                  <strong>Número:</strong> {quarto.numero}
-                </p>
-
-                <p>
-                  <strong>Tipo:</strong> {quarto.tipo}
-                </p>
-
-                <p>
-                  <strong>Capacidade:</strong> {quarto.capacidade}
-                </p>
-
-                <p>
-                  <strong>Preço:</strong> R$ {quarto.preco}
-                </p>
+                <p><strong>Número:</strong> {quarto.numero}</p>
+                <p><strong>Tipo:</strong> {quarto.tipo}</p>
+                <p><strong>Capacidade:</strong> {quarto.capacidade} pessoa(s)</p>
+                <p><strong>Preço:</strong> R$ {quarto.preco}</p>
 
                 <div style={styles.botoesArea}>
-                  <button
-                    style={styles.editarBtn}
-                    onClick={() => editarQuarto(quarto)}
-                  >
+                  <button style={styles.editarBtn} onClick={() => editarQuarto(quarto)}>
                     Editar
                   </button>
-
-                  <button
-                    style={styles.excluirBtn}
-                    onClick={() => excluirQuarto(quarto.id)}
-                  >
+                  <button style={styles.excluirBtn} onClick={() => excluirQuarto(quarto.id)}>
                     Excluir
                   </button>
                 </div>
@@ -344,146 +229,21 @@ export default function CadastroQuarto() {
 }
 
 const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#f5f6f8",
-    fontFamily: "Arial, sans-serif",
-    paddingBottom: "40px",
-  },
-
-  main: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "30px 20px",
-  },
-
-  logoImg: {
-    width: "150px",
-    marginBottom: "20px",
-  },
-
-  card: {
-    width: "100%",
-    maxWidth: "450px",
-    background: "#fff",
-    padding: "30px",
-    borderRadius: "12px",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-    marginBottom: "35px",
-  },
-
-  title: {
-    textAlign: "center",
-    marginBottom: "25px",
-  },
-
-  label: {
-    display: "block",
-    marginBottom: "8px",
-    fontWeight: "bold",
-  },
-
-  input: {
-    width: "100%",
-    padding: "12px",
-    marginBottom: "18px",
-    borderRadius: "6px",
-    border: "1px solid #ccc",
-    boxSizing: "border-box",
-  },
-
-  button: {
-    width: "100%",
-    padding: "12px",
-    background: "#333",
-    color: "#fff",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
-
-  link: {
-    display: "block",
-    marginTop: "15px",
-    textAlign: "center",
-    textDecoration: "none",
-    color: "#333",
-  },
-
-  listaSection: {
-    width: "100%",
-    maxWidth: "900px",
-  },
-
-  listaTitulo: {
-    textAlign: "center",
-    marginBottom: "25px",
-  },
-
-  quartoCard: {
-    background: "#fff",
-    padding: "20px",
-    borderRadius: "10px",
-    marginBottom: "20px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-  },
-
-  botoesArea: {
-    display: "flex",
-    gap: "10px",
-    marginTop: "15px",
-  },
-
-  editarBtn: {
-    flex: 1,
-    padding: "10px",
-    border: "none",
-    borderRadius: "6px",
-    background: "#f0ad4e",
-    color: "#fff",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
-
-  excluirBtn: {
-    flex: 1,
-    padding: "10px",
-    border: "none",
-    borderRadius: "6px",
-    background: "#d9534f",
-    color: "#fff",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
-  previewImagem: {
-    width: "100%",
-    height: "180px",
-    objectFit: "cover",
-    borderRadius: "8px",
-    marginBottom: "18px",
-  },
-
-  imagemQuarto: {
-    width: "100%",
-    height: "220px",
-    objectFit: "cover",
-    borderRadius: "8px",
-    marginBottom: "15px",
-  },
-
-  galeria: {
-    display: "flex",
-    gap: "8px",
-    flexWrap: "wrap",
-    marginBottom: "15px",
-  },
-
-  miniatura: {
-    width: "80px",
-    height: "60px",
-    objectFit: "cover",
-    borderRadius: "6px",
-  },
+  page: { minHeight: "100vh", background: "#f5f6f8", fontFamily: "Arial, sans-serif", paddingBottom: "40px" },
+  main: { display: "flex", flexDirection: "column", alignItems: "center", padding: "30px 20px" },
+  header: { marginBottom: "10px" },
+  logoImg: { width: "150px", marginBottom: "20px" },
+  card: { width: "100%", maxWidth: "450px", background: "#fff", padding: "30px", borderRadius: "12px", boxShadow: "0 10px 25px rgba(0,0,0,0.08)", marginBottom: "35px" },
+  title: { textAlign: "center", marginBottom: "25px" },
+  alerta: { padding: "12px", borderRadius: "6px", border: "1px solid", marginBottom: "18px", fontSize: "14px" },
+  label: { display: "block", marginBottom: "8px", fontWeight: "bold" },
+  input: { width: "100%", padding: "12px", marginBottom: "18px", borderRadius: "6px", border: "1px solid #ccc", boxSizing: "border-box" },
+  button: { width: "100%", padding: "12px", background: "#0d5c63", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: "bold" },
+  link: { display: "block", marginTop: "15px", textAlign: "center", textDecoration: "none", color: "#555" },
+  listaSection: { width: "100%", maxWidth: "900px" },
+  listaTitulo: { textAlign: "center", marginBottom: "25px" },
+  quartoCard: { background: "#fff", padding: "20px", borderRadius: "10px", marginBottom: "20px", boxShadow: "0 4px 12px rgba(0,0,0,0.08)" },
+  botoesArea: { display: "flex", gap: "10px", marginTop: "15px" },
+  editarBtn: { flex: 1, padding: "10px", border: "none", borderRadius: "6px", background: "#f0ad4e", color: "#fff", cursor: "pointer", fontWeight: "bold" },
+  excluirBtn: { flex: 1, padding: "10px", border: "none", borderRadius: "6px", background: "#d9534f", color: "#fff", cursor: "pointer", fontWeight: "bold" },
 };
