@@ -1,51 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import AlertMessage from "./AlertMessage";
 import "../style/ReservaQuarto.css";
-import Quarto1 from "../../assets/Quarto1.jpg";
-import Quarto2 from "../../assets/Quarto2.jpg";
-import Quarto3 from "../../assets/Quarto3.jpg";
-import Quarto4 from "../../assets/Quarto4.jpg";
+
+const API = "http://localhost:8081";
 
 function ReservaQuarto() {
   const navigate = useNavigate();
 
-  const quartos = [
-    {
-      id: 101,
-      nome: "101 - Standard",
-      preco: 150,
-      cama: "1 cama de casal",
-      pessoas: "2 pessoas",
-      imagem: Quarto1,
-    },
-    {
-      id: 102,
-      nome: "102 - Standard",
-      preco: 150,
-      cama: "2 camas de solteiro",
-      pessoas: "2 pessoas",
-      imagem: Quarto2,
-    },
-    {
-      id: 201,
-      nome: "201 - Luxo",
-      preco: 220,
-      cama: "1 cama king",
-      pessoas: "2 pessoas",
-      imagem: Quarto3,
-    },
-    {
-      id: 301,
-      nome: "301 - Suíte",
-      preco: 300,
-      cama: "1 cama king",
-      pessoas: "2 pessoas",
-      imagem: Quarto4,
-    },
-  ];
-
+  const [quartosDB, setQuartosDB] = useState([]);
   const [dadosReserva, setDadosReserva] = useState({
     checkIn: "",
     checkOut: "",
@@ -53,15 +17,31 @@ function ReservaQuarto() {
     tipo: "",
     observacoes: "",
   });
-
   const [quartoSelecionado, setQuartoSelecionado] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const [alerta, setAlerta] = useState(null);
+
+  // Carrega quartos do banco
+  useEffect(() => {
+    fetch(`${API}/quartos`)
+      .then((r) => r.json())
+      .then((data) => setQuartosDB(data))
+      .catch((err) => console.error("Erro ao buscar quartos:", err));
+  }, []);
+
+  // Filtra quartos pelo tipo selecionado
+  const quartosFiltrados = dadosReserva.tipo
+    ? quartosDB.filter((q) =>
+        q.tipo?.toLowerCase().includes(dadosReserva.tipo.toLowerCase())
+      )
+    : quartosDB;
 
   function handleChange(e) {
     const { name, value } = e.target;
     setDadosReserva((prev) => ({ ...prev, [name]: value }));
     setAlerta(null);
+    // Se mudar o tipo, limpa quarto selecionado se ele não bater com o filtro
+    if (name === "tipo") setQuartoSelecionado(null);
   }
 
   function calcularDiarias() {
@@ -74,29 +54,25 @@ function ReservaQuarto() {
   }
 
   const diarias = calcularDiarias();
-  const valorTotal =
-    quartoSelecionado && diarias > 0 ? diarias * quartoSelecionado.preco : 0;
-
+  const valorTotal = quartoSelecionado && diarias > 0 ? diarias * quartoSelecionado.preco : 0;
   const isDataValida =
     dadosReserva.checkIn &&
     dadosReserva.checkOut &&
     new Date(dadosReserva.checkOut) > new Date(dadosReserva.checkIn);
-
   const podeFinalizar = isDataValida && quartoSelecionado;
 
   async function handleFinalizar() {
     if (!podeFinalizar) return;
-
     setCarregando(true);
     setAlerta(null);
 
     try {
-      const response = await fetch("http://localhost:8081/reservas", {
+      const response = await fetch(`${API}/reservas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           quartoId: quartoSelecionado.id,
-          nomeQuarto: quartoSelecionado.nome,
+          nomeQuarto: `${quartoSelecionado.numero} - ${quartoSelecionado.tipo}`,
           checkIn: dadosReserva.checkIn,
           checkOut: dadosReserva.checkOut,
           hospedes: dadosReserva.hospedes,
@@ -107,27 +83,15 @@ function ReservaQuarto() {
       });
 
       if (!response.ok) {
-        setAlerta({
-          type: "error",
-          title: "Erro ao realizar reserva",
-          message: "Tente novamente em alguns instantes.",
-        });
+        setAlerta({ type: "error", title: "Erro ao realizar reserva", message: "Tente novamente em alguns instantes." });
         return;
       }
 
-      setAlerta({
-        type: "success",
-        title: "Reserva realizada com sucesso",
-        message: "Você será redirecionado para o pagamento.",
-      });
+      setAlerta({ type: "success", title: "Reserva realizada com sucesso", message: "Você será redirecionado para o pagamento." });
       setTimeout(() => navigate("/pagamento"), 1200);
     } catch (error) {
       console.error("Erro:", error);
-      setAlerta({
-        type: "error",
-        title: "Falha na comunicação",
-        message: "Verifique se o backend está rodando e tente novamente.",
-      });
+      setAlerta({ type: "error", title: "Falha na comunicação", message: "Verifique se o backend está rodando e tente novamente." });
     } finally {
       setCarregando(false);
     }
@@ -141,6 +105,7 @@ function ReservaQuarto() {
 
       <main className="reserva-container">
         <div className="reserva-grid">
+          {/* FORMULÁRIO */}
           <div className="card-reserva form-card">
             <h2>Dados da Reserva</h2>
 
@@ -154,49 +119,28 @@ function ReservaQuarto() {
             <div className="form-row">
               <div className="form-group">
                 <label>Check-in</label>
-                <input
-                  type="date"
-                  name="checkIn"
-                  value={dadosReserva.checkIn}
-                  onChange={handleChange}
-                />
+                <input type="date" name="checkIn" value={dadosReserva.checkIn} onChange={handleChange} />
               </div>
-
               <div className="form-group">
                 <label>Check-out</label>
-                <input
-                  type="date"
-                  name="checkOut"
-                  value={dadosReserva.checkOut}
-                  onChange={handleChange}
-                  min={dadosReserva.checkIn || undefined}
-                />
+                <input type="date" name="checkOut" value={dadosReserva.checkOut} onChange={handleChange} min={dadosReserva.checkIn || undefined} />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label>Número de hóspedes</label>
-                <select
-                  name="hospedes"
-                  value={dadosReserva.hospedes}
-                  onChange={handleChange}
-                >
+                <select name="hospedes" value={dadosReserva.hospedes} onChange={handleChange}>
                   <option>1 hóspede</option>
                   <option>2 hóspedes</option>
                   <option>3 hóspedes</option>
                   <option>4 hóspedes</option>
                 </select>
               </div>
-
               <div className="form-group">
-                <label>Tipo de hospedagem</label>
-                <select
-                  name="tipo"
-                  value={dadosReserva.tipo}
-                  onChange={handleChange}
-                >
-                  <option value="">Selecione o tipo</option>
+                <label>Filtrar por tipo</label>
+                <select name="tipo" value={dadosReserva.tipo} onChange={handleChange}>
+                  <option value="">Todos os tipos</option>
                   <option>Standard</option>
                   <option>Luxo</option>
                   <option>Suíte</option>
@@ -215,6 +159,7 @@ function ReservaQuarto() {
             </div>
           </div>
 
+          {/* RESUMO */}
           <div className="card-reserva resumo-card">
             <h2>Resumo da Reserva</h2>
 
@@ -222,31 +167,22 @@ function ReservaQuarto() {
               <span>Check-in</span>
               <strong>{dadosReserva.checkIn || "Não informado"}</strong>
             </div>
-
             <div className="resumo-item">
               <span>Check-out</span>
               <strong>{dadosReserva.checkOut || "Não informado"}</strong>
             </div>
-
             <div className="resumo-item">
               <span>Diárias</span>
               <strong>{diarias}</strong>
             </div>
-
             <div className="resumo-item">
               <span>Hóspedes</span>
               <strong>{dadosReserva.hospedes}</strong>
             </div>
-
             <div className="resumo-item">
               <span>Quarto</span>
-              <strong>
-                {quartoSelecionado
-                  ? quartoSelecionado.nome
-                  : "Nenhum selecionado"}
-              </strong>
+              <strong>{quartoSelecionado ? `${quartoSelecionado.numero} - ${quartoSelecionado.tipo}` : "Nenhum selecionado"}</strong>
             </div>
-
             <div className="resumo-total">
               <span>Valor Total</span>
               <strong>R$ {valorTotal.toFixed(2).replace(".", ",")}</strong>
@@ -263,54 +199,58 @@ function ReservaQuarto() {
           </div>
         </div>
 
+        {/* QUARTOS */}
         <div className="quartos-section">
-          <h2>Quartos Disponíveis</h2>
+          <h2>
+            Quartos Disponíveis
+            {dadosReserva.tipo && (
+              <span style={{ fontSize: "14px", fontWeight: "normal", marginLeft: "10px", color: "#666" }}>
+                — filtrando por: <strong>{dadosReserva.tipo}</strong>
+                {" "}({quartosFiltrados.length} encontrado{quartosFiltrados.length !== 1 ? "s" : ""})
+              </span>
+            )}
+          </h2>
 
-          <div className="quartos-grid">
-            {quartos.map((quarto) => (
-              <div
-                className="quarto-card"
-                key={quarto.id}
-                style={{
-                  border:
-                    quartoSelecionado?.id === quarto.id
-                      ? "2px solid #1a5276"
-                      : "2px solid transparent",
-                }}
-              >
-                <img src={quarto.imagem} alt={quarto.nome} />
+          {quartosFiltrados.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#888", padding: "40px 0" }}>
+              Nenhum quarto encontrado para o tipo "{dadosReserva.tipo}".
+            </p>
+          ) : (
+            <div className="quartos-grid">
+              {quartosFiltrados.map((quarto) => (
+                <div
+                  className="quarto-card"
+                  key={quarto.id}
+                  style={{
+                    border: quartoSelecionado?.id === quarto.id ? "2px solid #1a5276" : "2px solid transparent",
+                  }}
+                >
+                  {quarto.imagemBase64 ? (
+                    <img src={quarto.imagemBase64} alt={`Quarto ${quarto.numero}`} />
+                  ) : (
+                    <div style={{ height: "160px", background: "#e8e8e8", display: "flex", alignItems: "center", justifyContent: "center", color: "#aaa", fontSize: "14px" }}>
+                      Sem imagem
+                    </div>
+                  )}
 
-                <div className="quarto-info">
-                  <h3>{quarto.nome}</h3>
-                  <p>{quarto.cama}</p>
-                  <p>{quarto.pessoas}</p>
+                  <div className="quarto-info">
+                    <h3>Quarto {quarto.numero} — {quarto.tipo}</h3>
+                    <p>Capacidade: {quarto.capacidade} pessoa(s)</p>
 
-                  <div className="quarto-footer">
-                    <strong>
-                      R$ {quarto.preco.toFixed(2).replace(".", ",")}
-                    </strong>
-
-                    <button
-                      onClick={() => {
-                        setQuartoSelecionado(quarto);
-                        setAlerta(null);
-                      }}
-                      style={{
-                        background:
-                          quartoSelecionado?.id === quarto.id
-                            ? "#1a5276"
-                            : undefined,
-                      }}
-                    >
-                      {quartoSelecionado?.id === quarto.id
-                        ? "✓ Selecionado"
-                        : "Selecionar quarto"}
-                    </button>
+                    <div className="quarto-footer">
+                      <strong>R$ {Number(quarto.preco).toFixed(2).replace(".", ",")}/noite</strong>
+                      <button
+                        onClick={() => { setQuartoSelecionado(quarto); setAlerta(null); }}
+                        style={{ background: quartoSelecionado?.id === quarto.id ? "#1a5276" : undefined }}
+                      >
+                        {quartoSelecionado?.id === quarto.id ? "✓ Selecionado" : "Selecionar quarto"}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

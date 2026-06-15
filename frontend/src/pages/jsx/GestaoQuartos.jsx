@@ -1,49 +1,63 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AlertMessage from "./AlertMessage";
 import Footer from "./Footer";
 import Header from "./Header";
 import "../style/GestaoQuartos.css";
 
-const QUARTOS_MOCK = [
-  { id: 1, numero: "101", tipo: "Standard", capacidade: 2, preco: 180 },
-  { id: 2, numero: "202", tipo: "Luxo", capacidade: 3, preco: 320 },
-  { id: 3, numero: "302", tipo: "Suíte", capacidade: 4, preco: 520 },
-];
+const API = "http://localhost:8081";
 
 export default function GestaoQuartos() {
   const navigate = useNavigate();
-  const [quartos, setQuartos] = useState(QUARTOS_MOCK);
+  const [quartos, setQuartos] = useState([]);
   const [alerta, setAlerta] = useState(null);
+
+  async function buscarQuartos() {
+    try {
+      const response = await fetch(`${API}/quartos`);
+      const data = await response.json();
+      setQuartos(data);
+    } catch (error) {
+      console.error("Erro ao buscar quartos:", error);
+      setAlerta({ type: "error", title: "Erro", message: "Não foi possível carregar os quartos." });
+    }
+  }
+
+  useEffect(() => {
+    buscarQuartos();
+  }, []);
 
   const totalQuartos = quartos.length;
   const capacidadeTotal = useMemo(
-    () => quartos.reduce((total, quarto) => total + Number(quarto.capacidade || 0), 0),
-    [quartos],
+    () => quartos.reduce((total, q) => total + Number(q.capacidade || 0), 0),
+    [quartos]
   );
   const diariaMedia = useMemo(() => {
     if (quartos.length === 0) return 0;
-    const total = quartos.reduce((soma, quarto) => soma + Number(quarto.preco || 0), 0);
-    return total / quartos.length;
+    return quartos.reduce((soma, q) => soma + Number(q.preco || 0), 0) / quartos.length;
   }, [quartos]);
 
   function formatarMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
+    return Number(valor || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   }
 
-  function excluir(id) {
+  async function excluir(id) {
     if (!window.confirm("Deseja realmente excluir este quarto?")) return;
 
-    const quarto = quartos.find((item) => item.id === id);
-    setQuartos((prev) => prev.filter((item) => item.id !== id));
-    setAlerta({
-      type: "success",
-      title: "Quarto removido",
-      message: `O quarto ${quarto?.numero || ""} saiu da lista desta sessão.`,
-    });
+    try {
+      const response = await fetch(`${API}/quartos/${id}`, { method: "DELETE" });
+
+      if (!response.ok) {
+        setAlerta({ type: "error", title: "Erro", message: "Não foi possível excluir o quarto." });
+        return;
+      }
+
+      setAlerta({ type: "success", title: "Quarto removido", message: "O quarto foi excluído com sucesso." });
+      buscarQuartos();
+    } catch (error) {
+      console.error("Erro ao excluir:", error);
+      setAlerta({ type: "error", title: "Erro", message: "Não foi possível conectar com o servidor." });
+    }
   }
 
   return (
@@ -57,7 +71,6 @@ export default function GestaoQuartos() {
               <span className="gestao-eyebrow">Administração</span>
               <h2>Gestão de Quartos</h2>
             </div>
-
             <button className="btn-novo" onClick={() => navigate("/cadastro-quarto")}>
               Novo Quarto
             </button>

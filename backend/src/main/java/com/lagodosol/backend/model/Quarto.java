@@ -14,39 +14,23 @@ public class Quarto {
     private Integer capacidade;
     private Double preco;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(columnDefinition = "LONGTEXT")
+    private String imagemBase64;
 
-    public String getNumero() {
-        return numero;
-    }
+    public Long getId() { return id; }
 
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
 
-    public String getTipo() {
-        return tipo;
-    }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+    public Integer getCapacidade() { return capacidade; }
+    public void setCapacidade(Integer capacidade) { this.capacidade = capacidade; }
 
-    public Integer getCapacidade() {
-        return capacidade;
-    }
+    public Double getPreco() { return preco; }
+    public void setPreco(Double preco) { this.preco = preco; }
 
-    public void setCapacidade(Integer capacidade) {
-        this.capacidade = capacidade;
-    }
-
-    public Double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
+    public String getImagemBase64() { return imagemBase64; }
+    public void setImagemBase64(String imagemBase64) { this.imagemBase64 = imagemBase64; }
 }
