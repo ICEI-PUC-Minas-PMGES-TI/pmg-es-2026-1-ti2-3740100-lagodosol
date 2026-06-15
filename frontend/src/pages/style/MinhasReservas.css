@@ -79,3 +79,65 @@
 .cancel-button:hover {
   background-color: #a51f1f;
 }
+
+.error-message {
+  background: #ffe6e6;
+  color: #b00020;
+  border: 1px solid #f5c2c2;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.loading-text,
+.empty-message {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.rating-card {
+  margin: 18px 0 10px;
+  padding: 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fafafa;
+}
+
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.star {
+  font-size: 1.7rem;
+  color: #cccccc;
+  cursor: default;
+  transition: color 0.2s ease;
+}
+
+.star.clickable {
+  cursor: pointer;
+}
+
+.star.clickable:hover,
+.star.clickable:hover ~ .star {
+  color: #ffb300;
+}
+
+.star.filled {
+  color: #ffc107;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #333;
+}
+
+.rating-help,
+.saving-text {
+  color: #555;
+  font-size: 0.95rem;
+}

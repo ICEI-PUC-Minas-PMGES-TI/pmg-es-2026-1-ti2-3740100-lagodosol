@@ -1,32 +1,96 @@
+import { useEffect, useState } from "react";
 import "../style/MinhasReservas.css";
 
-function App() {
-  const reservasAtivas = [
-    {
-      id: 1,
-      quarto: "Suíte Master",
-      checkIn: "15/08/2026",
-      checkOut: "18/08/2026",
-      status: "Confirmada",
-    },
-    {
-      id: 2,
-      quarto: "Quarto Luxo",
-      checkIn: "20/08/2026",
-      checkOut: "25/08/2026",
-      status: "Confirmada",
-    },
-  ];
+function MinhasReservas() {
+  const [reservas, setReservas] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(null);
+  const [avaliando, setAvaliando] = useState(null);
 
-  const reservasConcluidas = [
-    {
-      id: 3,
-      quarto: "Quarto Standard",
-      checkIn: "10/05/2026",
-      checkOut: "12/05/2026",
-      status: "Concluída",
-    },
-  ];
+  useEffect(() => {
+    async function carregarReservas() {
+      try {
+        const response = await fetch("http://localhost:8081/reservas");
+        if (!response.ok) {
+          throw new Error("Falha ao carregar reservas.");
+        }
+
+        const data = await response.json();
+        setReservas(data);
+      } catch (error) {
+        setErro(error.message);
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarReservas();
+  }, []);
+
+  function isReservaConcluida(reserva) {
+    if (!reserva.checkOut) {
+      return false;
+    }
+
+    const dataCheckOut = new Date(reserva.checkOut);
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    dataCheckOut.setHours(0, 0, 0, 0);
+
+    return dataCheckOut < hoje;
+  }
+
+  async function avaliarReserva(id, estrelas) {
+    setAvaliando(id);
+    try {
+      const reserva = reservas.find((item) => item.id === id);
+      if (!reserva) {
+        throw new Error("Reserva não encontrada.");
+      }
+
+      const payload = {
+        avaliacao: estrelas,
+      };
+
+      const response = await fetch(`http://localhost:8081/reservas/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Não foi possível salvar a avaliação.");
+      }
+
+      const reservaAtualizada = await response.json();
+      setReservas((prev) =>
+        prev.map((item) => (item.id === id ? reservaAtualizada : item))
+      );
+    } catch (error) {
+      setErro(error.message);
+    } finally {
+      setAvaliando(null);
+    }
+  }
+
+  function renderStars(rating = 0, onRate) {
+    return [1, 2, 3, 4, 5].map((value) => (
+      <span
+        key={value}
+        className={`star ${value <= rating ? "filled" : ""} ${
+          onRate ? "clickable" : ""
+        }`}
+        onClick={() => onRate && onRate(value)}
+      >
+        {value <= rating ? "★" : "☆"}
+      </span>
+    ));
+  }
+
+  const reservasAtivas = reservas.filter((reserva) => !isReservaConcluida(reserva));
+  const reservasConcluidas = reservas.filter(isReservaConcluida);
 
   return (
     <div className="page">
@@ -34,57 +98,97 @@ function App() {
         <div className="container">
           <h1 className="title">Minhas Reservas</h1>
 
-          <h2 className="section-title">Reservas Ativas</h2>
+          {erro && <div className="error-message">{erro}</div>}
 
-          {reservasAtivas.map((reserva) => (
-            <div key={reserva.id} className="card">
-              <h3>{reserva.quarto}</h3>
+          {carregando ? (
+            <p className="loading-text">Carregando reservas...</p>
+          ) : (
+            <>
+              <h2 className="section-title">Reservas Ativas</h2>
 
-              <p>
-                <strong>Check-in:</strong> {reserva.checkIn}
-              </p>
+              {reservasAtivas.length === 0 ? (
+                <p className="empty-message">Nenhuma reserva ativa encontrada.</p>
+              ) : (
+                reservasAtivas.map((reserva) => (
+                  <div key={reserva.id} className="card">
+                    <h3>{reserva.nomeQuarto || "Reserva"}</h3>
 
-              <p>
-                <strong>Check-out:</strong> {reserva.checkOut}
-              </p>
+                    <p>
+                      <strong>Check-in:</strong> {reserva.checkIn || "--"}
+                    </p>
 
-              <p>
-                <strong>Status:</strong> {reserva.status}
-              </p>
+                    <p>
+                      <strong>Check-out:</strong> {reserva.checkOut || "--"}
+                    </p>
 
-              <div className="button-container">
-                <button className="button">Ver Detalhes</button>
+                    <p>
+                      <strong>Tipo:</strong> {reserva.tipo || "--"}
+                    </p>
 
-                <button className="cancel-button">Cancelar Reserva</button>
-              </div>
-            </div>
-          ))}
+                    <div className="button-container">
+                      <button className="button">Ver Detalhes</button>
+                    </div>
+                  </div>
+                ))
+              )}
 
-          <h2 className="section-title">Histórico de Reservas</h2>
+              <h2 className="section-title">Histórico de Reservas</h2>
 
-          {reservasConcluidas.map((reserva) => (
-            <div key={reserva.id} className="card">
-              <h3>{reserva.quarto}</h3>
+              {reservasConcluidas.length === 0 ? (
+                <p className="empty-message">Nenhuma reserva concluída encontrada.</p>
+              ) : (
+                reservasConcluidas.map((reserva) => (
+                  <div key={reserva.id} className="card">
+                    <h3>{reserva.nomeQuarto || "Reserva"}</h3>
 
-              <p>
-                <strong>Check-in:</strong> {reserva.checkIn}
-              </p>
+                    <p>
+                      <strong>Check-in:</strong> {reserva.checkIn || "--"}
+                    </p>
 
-              <p>
-                <strong>Check-out:</strong> {reserva.checkOut}
-              </p>
+                    <p>
+                      <strong>Check-out:</strong> {reserva.checkOut || "--"}
+                    </p>
 
-              <p>
-                <strong>Status:</strong> {reserva.status}
-              </p>
+                    <div className="rating-card">
+                      <p>
+                        <strong>Avaliação da estadia:</strong>
+                      </p>
 
-              <button className="button">Ver Detalhes</button>
-            </div>
-          ))}
+                      <div className="rating-stars">
+                        {reserva.avaliacao ? (
+                          <>
+                            {renderStars(reserva.avaliacao)}
+                            <span className="rating-value">
+                              {reserva.avaliacao} de 5
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            {renderStars(reserva.avaliacao || 0, (value) =>
+                              avaliarReserva(reserva.id, value)
+                            )}
+                            <span className="rating-help">
+                              Clique nas estrelas para avaliar
+                            </span>
+                          </>
+                        )}
+                      </div>
+
+                      {avaliando === reserva.id && (
+                        <p className="saving-text">Salvando avaliação...</p>
+                      )}
+                    </div>
+
+                    <button className="button">Ver Detalhes</button>
+                  </div>
+                ))
+              )}
+            </>
+          )}
         </div>
       </main>
     </div>
   );
 }
 
-export default App;
+export default MinhasReservas;

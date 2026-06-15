@@ -18,6 +18,7 @@ public class Reserva {
     private String tipo;
     private String observacoes;
     private Double valorTotal;
+    private Integer avaliacao;
 
     public Long getId() {
         return id;
@@ -85,5 +86,13 @@ public class Reserva {
 
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public Integer getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(Integer avaliacao) {
+        this.avaliacao = avaliacao;
     }
 }

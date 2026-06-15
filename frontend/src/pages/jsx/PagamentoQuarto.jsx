@@ -4,7 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import QRCode from "qrcode.react";
+import { QRCodeCanvas as QRCode } from "qrcode.react";
 
 function PagamentoQuarto() {
   // Dados simulados da reserva
