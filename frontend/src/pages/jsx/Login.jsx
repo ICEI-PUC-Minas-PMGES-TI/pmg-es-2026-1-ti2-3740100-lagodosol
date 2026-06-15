@@ -1,6 +1,6 @@
 import "../style/App.css";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
 import logo from "../../assets/logo.png";
@@ -18,17 +18,15 @@ function Login() {
   const location = useLocation();
 
   const [form, setForm] = useState({ email: "", senha: "" });
-  const [alerta, setAlerta] = useState(null);
-
-  useEffect(() => {
-    if (location.state?.mensagem) {
-      setAlerta({
-        type: "success",
-        title: "Cadastro concluído!",
-        message: location.state.mensagem,
-      });
-    }
-  }, [location.state]);
+  const [alerta, setAlerta] = useState(() =>
+    location.state?.mensagem
+      ? {
+          type: "success",
+          title: "Cadastro concluido!",
+          message: location.state.mensagem,
+        }
+      : null,
+  );
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -65,7 +63,7 @@ function Login() {
         console.error(error);
         setAlerta({
           type: "error",
-          title: "Não foi possível entrar",
+          title: "Nao foi possivel entrar",
           message: "Confira seu e-mail e senha e tente novamente.",
         });
       });
@@ -120,13 +118,13 @@ function Login() {
               </button>
 
               <p className="login-link">
-                Não possui uma conta? <Link to="/cadastro">Cadastrar</Link>
+                Nao possui uma conta? <Link to="/cadastro">Cadastrar</Link>
               </p>
             </form>
 
             <div className="termos">
               <p>
-                Ao entrar, você concorda com nossos termos de uso e política de
+                Ao entrar, voce concorda com nossos termos de uso e politica de
                 privacidade.
               </p>
             </div>

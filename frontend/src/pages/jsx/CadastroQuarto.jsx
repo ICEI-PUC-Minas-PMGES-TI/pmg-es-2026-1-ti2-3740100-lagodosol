@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
@@ -28,7 +28,22 @@ export default function CadastroQuarto() {
   }
 
   useEffect(() => {
-    buscarQuartos();
+    let componenteAtivo = true;
+
+    fetch("http://localhost:8081/quartos")
+      .then((response) => response.json())
+      .then((data) => {
+        if (componenteAtivo) {
+          setQuartos(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar quartos:", error);
+      });
+
+    return () => {
+      componenteAtivo = false;
+    };
   }, []);
 
   // =========================
