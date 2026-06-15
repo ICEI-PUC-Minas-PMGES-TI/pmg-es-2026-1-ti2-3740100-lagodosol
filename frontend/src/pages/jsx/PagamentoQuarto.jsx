@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../style/PagamentoQuarto.css";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import QRCode from "qrcode.react";
 
 function PagamentoQuarto() {
   // Dados simulados da reserva
@@ -18,6 +19,24 @@ function PagamentoQuarto() {
       { item: "Estacionamento", valor: 30.0 },
     ],
   };
+
+  // Gerar ID de transação único
+  const [idTransacao, setIdTransacao] = useState("");
+  const qrRef = useRef();
+
+  useEffect(() => {
+    const id = `LAGO${Date.now()}${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    setIdTransacao(id);
+  }, []);
+
+  function downloadQRCode() {
+    const canvas = qrRef.current.querySelector("canvas");
+    const url = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `qr-pix-${idTransacao}.png`;
+    link.click();
+  }
 
   const subtotalDiarias = reserva.diarias * reserva.precoPorNoite;
   const subtotalExtras = reserva.extras.reduce((acc, e) => acc + e.valor, 0);
@@ -382,11 +401,36 @@ function PagamentoQuarto() {
             {metodoPagamento === "pix" && (
               <div className="form-pagamento pix-area">
                 <div className="pix-qrcode">
-                  <div className="qrcode-placeholder">
-                    <span>⚡</span>
-                    <p>QR Code PIX</p>
-                    <small>Escaneie com seu banco</small>
-                  </div>
+                  {idTransacao && (
+                    <div ref={qrRef}>
+                      <QRCode
+                        value={`LAGODOSOL|${idTransacao}|${total.toFixed(2)}|${reserva.quarto}`}
+                        size={200}
+                        level="H"
+                        includeMargin={true}
+                        bgColor="#FFFFFF"
+                        fgColor="#000000"
+                      />
+                    </div>
+                  )}
+                  <p style={{ marginTop: "12px", fontSize: "12px", color: "#666" }}>
+                    ID: {idTransacao}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={downloadQRCode}
+                    style={{
+                      marginTop: "8px",
+                      padding: "6px 12px",
+                      fontSize: "11px",
+                      backgroundColor: "#f0f0f0",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    📥 Baixar QR Code
+                  </button>
                 </div>
 
                 <p className="pix-ou">ou informe seu CPF para gerar o PIX</p>
