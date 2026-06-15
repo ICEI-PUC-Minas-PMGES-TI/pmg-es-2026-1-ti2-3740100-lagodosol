@@ -14,6 +14,7 @@ import CadastroQuarto from "./CadastroQuarto";
 
 import PerfilUsuario from "./PerfilUsuario";
 import Home from "./Home";
+import DashboardAdmin from "./DashboardAdmin";
 
 import "../style/App.css";
 import GestaoQuartos from "./GestaoQuartos";
@@ -38,6 +39,8 @@ function App() {
           <Route path="/cadastro-quarto" element={<CadastroQuarto />} />
 
           <Route path="/perfil" element={<PerfilUsuario />} />
+
+          <Route path="/dashboard" element={<DashboardAdmin />} />
 
           <Route path="/pagamento" element={<PagamentoQuarto />} />
 

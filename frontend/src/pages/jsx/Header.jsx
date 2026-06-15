@@ -1,20 +1,21 @@
+import { Link } from "react-router-dom";
 import "../style/Header.css";
 
 export default function Header() {
   return (
     <header className="header">
       <div className="header-container">
-        <div className="logo">
-         
-        </div>
+        <Link to="/" className="logo">
+          Lago do Sol
+        </Link>
 
-        <nav className="nav">
-          <a href="#">HOTEL</a>
-          <a href="#">ACOMODAÇÕES</a>
-          <a href="#">PACOTES</a>
-          <a href="#">GASTRONOMIA</a>
-          <a href="#">EVENTOS</a>
-          <a href="#">CORPORATIVO</a>
+        <nav className="nav" aria-label="Navegação principal">
+          <Link to="/">HOTEL</Link>
+          <Link to="/#acomodacoes">ACOMODAÇÕES</Link>
+          <Link to="/#diferenciais">PACOTES</Link>
+          <Link to="/#contato">GASTRONOMIA</Link>
+          <Link to="/#contato">EVENTOS</Link>
+          <Link to="/#contato">CORPORATIVO</Link>
         </nav>
       </div>
     </header>

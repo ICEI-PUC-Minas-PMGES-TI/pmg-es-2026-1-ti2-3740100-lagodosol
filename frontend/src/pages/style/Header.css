@@ -25,6 +25,8 @@ body {
   font-weight: bold;
   max-height: 100px;
   width: auto;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .nav {

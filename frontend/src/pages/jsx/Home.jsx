@@ -148,6 +148,11 @@ export default function Home() {
             <a href="#diferenciais">Diferenciais</a>
             <a href="#contato">Contato</a>
             {isAdmin && (
+              <Link to="/dashboard" className="home-nav-admin">
+                Dashboard
+              </Link>
+            )}
+            {isAdmin && (
               <Link to="/quartos" className="home-nav-admin">
                 🔧 Quartos
               </Link>
@@ -171,6 +176,12 @@ export default function Home() {
                     <p className="home-perfil-nome">{usuarioLogado.nome}</p>
                     {isAdmin ? (
                       <>
+                        <Link
+                          to="/dashboard"
+                          onClick={() => setMenuAberto(false)}
+                        >
+                          Dashboard
+                        </Link>
                         <Link
                           to="/quartos"
                           onClick={() => setMenuAberto(false)}

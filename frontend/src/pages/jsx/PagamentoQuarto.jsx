@@ -4,7 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import { QRCodeCanvas as QRCode } from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react";
 
 function PagamentoQuarto() {
   // Dados simulados da reserva
@@ -403,7 +403,7 @@ function PagamentoQuarto() {
                 <div className="pix-qrcode">
                   {idTransacao && (
                     <div ref={qrRef}>
-                      <QRCode
+                      <QRCodeCanvas
                         value={`LAGODOSOL|${idTransacao}|${total.toFixed(2)}|${reserva.quarto}`}
                         size={200}
                         level="H"
