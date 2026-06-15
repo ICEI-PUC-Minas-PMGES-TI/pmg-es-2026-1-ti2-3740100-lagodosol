@@ -20,7 +20,14 @@ public class UsuarioController {
 
     @PostMapping
     public Usuario cadastrar(@RequestBody Usuario usuario) {
-        return repository.save(usuario);
+        System.out.println("======== USUARIO RECEBIDO ========");
+    System.out.println("Nome: " + usuario.getNome());
+    System.out.println("CPF: " + usuario.getCpf());
+    System.out.println("Email: " + usuario.getEmail());
+    System.out.println("Senha: " + usuario.getSenha());
+    System.out.println("Nascimento: " + usuario.getDataNascimento());
+
+    return repository.save(usuario);
     }
 
     @GetMapping

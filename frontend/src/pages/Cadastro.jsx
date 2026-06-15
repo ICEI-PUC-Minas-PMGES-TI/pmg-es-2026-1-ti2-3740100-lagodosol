@@ -51,7 +51,7 @@ function CadastroUsuario() {
       return;
     }
 
-    fetch("http://localhost:8080/usuarios", {
+    fetch("http://localhost:8081/usuarios", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -70,7 +70,8 @@ function CadastroUsuario() {
         // Redireciona para o login com mensagem de sucesso via state
         navigate("/login", {
           state: {
-            mensagem: "Cadastro realizado com sucesso! Faça login para continuar.",
+            mensagem:
+              "Cadastro realizado com sucesso! Faça login para continuar.",
           },
         });
       })
