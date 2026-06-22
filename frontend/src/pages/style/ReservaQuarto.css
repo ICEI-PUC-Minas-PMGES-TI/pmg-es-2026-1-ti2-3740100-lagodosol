@@ -100,6 +100,29 @@
   margin-bottom: 24px;
 }
 
+.quartos-contador {
+  display: inline-block;
+  margin-left: 10px;
+  color: #666;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.quartos-aviso,
+.quartos-vazio {
+  padding: 18px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  color: #555;
+  text-align: center;
+}
+
+.quartos-aviso {
+  margin-bottom: 16px;
+  background: #f8fafc;
+}
+
 .quartos-grid {
   display: flex;
   flex-direction: row;
@@ -138,6 +161,16 @@
   width: 100%;
   height: 180px;
   object-fit: cover;
+}
+
+.quarto-sem-imagem {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8e8e8;
+  color: #777;
+  font-size: 14px;
 }
 
 .quarto-info {
@@ -210,5 +243,10 @@
 
   .form-row {
     flex-direction: column;
+  }
+
+  .quartos-contador {
+    display: block;
+    margin: 8px 0 0;
   }
 }

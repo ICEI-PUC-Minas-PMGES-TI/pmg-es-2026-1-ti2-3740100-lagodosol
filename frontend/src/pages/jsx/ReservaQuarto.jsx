@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import AlertMessage from "./AlertMessage";
@@ -6,10 +6,38 @@ import "../style/ReservaQuarto.css";
 
 const API = "http://localhost:8081";
 
+function dataSegura(valor) {
+  if (!valor) return null;
+  const data = new Date(`${valor}T12:00:00`);
+  return Number.isNaN(data.getTime()) ? null : data;
+}
+
+function reservaCancelada(reserva) {
+  const status = String(reserva.status || reserva.situacao || reserva.estado || "").toLowerCase();
+  return ["cancelada", "cancelado", "cancelled"].includes(status);
+}
+
+function reservasSobrepoem(checkIn, checkOut, reserva) {
+  const inicioSelecionado = dataSegura(checkIn);
+  const fimSelecionado = dataSegura(checkOut);
+  const inicioReserva = dataSegura(reserva.checkIn);
+  const fimReserva = dataSegura(reserva.checkOut);
+
+  if (!inicioSelecionado || !fimSelecionado || !inicioReserva || !fimReserva) return false;
+
+  return inicioSelecionado < fimReserva && fimSelecionado > inicioReserva;
+}
+
+function extrairNumeroHospedes(valor) {
+  const numero = Number.parseInt(String(valor).replace(/\D/g, ""), 10);
+  return Number.isFinite(numero) ? numero : 1;
+}
+
 function ReservaQuarto() {
   const navigate = useNavigate();
 
   const [quartosDB, setQuartosDB] = useState([]);
+  const [reservasDB, setReservasDB] = useState([]);
   const [dadosReserva, setDadosReserva] = useState({
     checkIn: "",
     checkOut: "",
@@ -19,50 +47,114 @@ function ReservaQuarto() {
   });
   const [quartoSelecionado, setQuartoSelecionado] = useState(null);
   const [carregando, setCarregando] = useState(false);
+  const [carregandoDados, setCarregandoDados] = useState(true);
   const [alerta, setAlerta] = useState(null);
 
-  // Carrega quartos do banco
   useEffect(() => {
-    fetch(`${API}/quartos`)
-      .then((r) => r.json())
-      .then((data) => setQuartosDB(data))
-      .catch((err) => console.error("Erro ao buscar quartos:", err));
+    async function carregarDados() {
+      setCarregandoDados(true);
+
+      try {
+        const [resQuartos, resReservas] = await Promise.all([
+          fetch(`${API}/quartos`),
+          fetch(`${API}/reservas`),
+        ]);
+
+        if (!resQuartos.ok || !resReservas.ok) {
+          throw new Error("Não foi possível carregar quartos e reservas.");
+        }
+
+        const [quartos, reservas] = await Promise.all([
+          resQuartos.json(),
+          resReservas.json(),
+        ]);
+
+        setQuartosDB(Array.isArray(quartos) ? quartos : []);
+        setReservasDB(Array.isArray(reservas) ? reservas : []);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+        setAlerta({
+          type: "error",
+          title: "Falha ao carregar dados",
+          message: "Verifique se o backend está rodando e tente novamente.",
+        });
+      } finally {
+        setCarregandoDados(false);
+      }
+    }
+
+    carregarDados();
   }, []);
 
-  // Filtra quartos pelo tipo selecionado
-  const quartosFiltrados = dadosReserva.tipo
-    ? quartosDB.filter((q) =>
-        q.tipo?.toLowerCase().includes(dadosReserva.tipo.toLowerCase())
-      )
-    : quartosDB;
+  const diarias = useMemo(() => {
+    const entrada = dataSegura(dadosReserva.checkIn);
+    const saida = dataSegura(dadosReserva.checkOut);
+    if (!entrada || !saida) return 0;
+
+    const diff = saida - entrada;
+    if (diff <= 0) return 0;
+    return diff / (1000 * 60 * 60 * 24);
+  }, [dadosReserva.checkIn, dadosReserva.checkOut]);
+
+  const isDataValida =
+    dadosReserva.checkIn &&
+    dadosReserva.checkOut &&
+    dataSegura(dadosReserva.checkOut) > dataSegura(dadosReserva.checkIn);
+
+  const quartosFiltrados = useMemo(() => {
+    const hospedes = extrairNumeroHospedes(dadosReserva.hospedes);
+
+    return quartosDB.filter((quarto) => {
+      const bateTipo = dadosReserva.tipo
+        ? quarto.tipo?.toLowerCase().includes(dadosReserva.tipo.toLowerCase())
+        : true;
+      const comportaHospedes = Number(quarto.capacidade || 0) >= hospedes;
+      const indisponivelNoPeriodo =
+        isDataValida &&
+        reservasDB.some(
+          (reserva) =>
+            !reservaCancelada(reserva) &&
+            reserva.quartoId === quarto.id &&
+            reservasSobrepoem(dadosReserva.checkIn, dadosReserva.checkOut, reserva),
+        );
+
+      return bateTipo && comportaHospedes && !indisponivelNoPeriodo;
+    });
+  }, [quartosDB, reservasDB, dadosReserva, isDataValida]);
+
+  const quartosIndisponiveis = useMemo(() => {
+    if (!isDataValida) return 0;
+    return quartosDB.length - quartosFiltrados.length;
+  }, [quartosDB.length, quartosFiltrados.length, isDataValida]);
+
+  const valorTotal = quartoSelecionado && diarias > 0 ? diarias * quartoSelecionado.preco : 0;
+  const podeFinalizar = isDataValida && quartoSelecionado;
+
+  useEffect(() => {
+    if (!quartoSelecionado) return;
+
+    const aindaDisponivel = quartosFiltrados.some((quarto) => quarto.id === quartoSelecionado.id);
+    if (!aindaDisponivel) {
+      setQuartoSelecionado(null);
+    }
+  }, [quartosFiltrados, quartoSelecionado]);
 
   function handleChange(e) {
     const { name, value } = e.target;
     setDadosReserva((prev) => ({ ...prev, [name]: value }));
     setAlerta(null);
-    // Se mudar o tipo, limpa quarto selecionado se ele não bater com o filtro
-    if (name === "tipo") setQuartoSelecionado(null);
   }
-
-  function calcularDiarias() {
-    if (!dadosReserva.checkIn || !dadosReserva.checkOut) return 0;
-    const entrada = new Date(dadosReserva.checkIn);
-    const saida = new Date(dadosReserva.checkOut);
-    const diff = saida - entrada;
-    if (diff <= 0) return 0;
-    return diff / (1000 * 60 * 60 * 24);
-  }
-
-  const diarias = calcularDiarias();
-  const valorTotal = quartoSelecionado && diarias > 0 ? diarias * quartoSelecionado.preco : 0;
-  const isDataValida =
-    dadosReserva.checkIn &&
-    dadosReserva.checkOut &&
-    new Date(dadosReserva.checkOut) > new Date(dadosReserva.checkIn);
-  const podeFinalizar = isDataValida && quartoSelecionado;
 
   async function handleFinalizar() {
-    if (!podeFinalizar) return;
+    if (!podeFinalizar) {
+      setAlerta({
+        type: "error",
+        title: "Reserva incompleta",
+        message: "Informe datas válidas e selecione um quarto disponível.",
+      });
+      return;
+    }
+
     setCarregando(true);
     setAlerta(null);
 
@@ -76,22 +168,34 @@ function ReservaQuarto() {
           checkIn: dadosReserva.checkIn,
           checkOut: dadosReserva.checkOut,
           hospedes: dadosReserva.hospedes,
-          tipo: dadosReserva.tipo,
+          tipo: quartoSelecionado.tipo,
           observacoes: dadosReserva.observacoes,
           valorTotal: valorTotal,
         }),
       });
 
       if (!response.ok) {
-        setAlerta({ type: "error", title: "Erro ao realizar reserva", message: "Tente novamente em alguns instantes." });
+        setAlerta({
+          type: "error",
+          title: "Erro ao realizar reserva",
+          message: "Tente novamente em alguns instantes.",
+        });
         return;
       }
 
-      setAlerta({ type: "success", title: "Reserva realizada com sucesso", message: "Você será redirecionado para o pagamento." });
+      setAlerta({
+        type: "success",
+        title: "Reserva realizada com sucesso",
+        message: "Você será redirecionado para o pagamento.",
+      });
       setTimeout(() => navigate("/pagamento"), 1200);
     } catch (error) {
       console.error("Erro:", error);
-      setAlerta({ type: "error", title: "Falha na comunicação", message: "Verifique se o backend está rodando e tente novamente." });
+      setAlerta({
+        type: "error",
+        title: "Falha na comunicação",
+        message: "Verifique se o backend está rodando e tente novamente.",
+      });
     } finally {
       setCarregando(false);
     }
@@ -105,7 +209,6 @@ function ReservaQuarto() {
 
       <main className="reserva-container">
         <div className="reserva-grid">
-          {/* FORMULÁRIO */}
           <div className="card-reserva form-card">
             <h2>Dados da Reserva</h2>
 
@@ -119,11 +222,22 @@ function ReservaQuarto() {
             <div className="form-row">
               <div className="form-group">
                 <label>Check-in</label>
-                <input type="date" name="checkIn" value={dadosReserva.checkIn} onChange={handleChange} />
+                <input
+                  type="date"
+                  name="checkIn"
+                  value={dadosReserva.checkIn}
+                  onChange={handleChange}
+                />
               </div>
               <div className="form-group">
                 <label>Check-out</label>
-                <input type="date" name="checkOut" value={dadosReserva.checkOut} onChange={handleChange} min={dadosReserva.checkIn || undefined} />
+                <input
+                  type="date"
+                  name="checkOut"
+                  value={dadosReserva.checkOut}
+                  onChange={handleChange}
+                  min={dadosReserva.checkIn || undefined}
+                />
               </div>
             </div>
 
@@ -159,7 +273,6 @@ function ReservaQuarto() {
             </div>
           </div>
 
-          {/* RESUMO */}
           <div className="card-reserva resumo-card">
             <h2>Resumo da Reserva</h2>
 
@@ -181,7 +294,11 @@ function ReservaQuarto() {
             </div>
             <div className="resumo-item">
               <span>Quarto</span>
-              <strong>{quartoSelecionado ? `${quartoSelecionado.numero} - ${quartoSelecionado.tipo}` : "Nenhum selecionado"}</strong>
+              <strong>
+                {quartoSelecionado
+                  ? `${quartoSelecionado.numero} - ${quartoSelecionado.tipo}`
+                  : "Nenhum selecionado"}
+              </strong>
             </div>
             <div className="resumo-total">
               <span>Valor Total</span>
@@ -199,21 +316,26 @@ function ReservaQuarto() {
           </div>
         </div>
 
-        {/* QUARTOS */}
         <div className="quartos-section">
           <h2>
-            Quartos Disponíveis
-            {dadosReserva.tipo && (
-              <span style={{ fontSize: "14px", fontWeight: "normal", marginLeft: "10px", color: "#666" }}>
-                — filtrando por: <strong>{dadosReserva.tipo}</strong>
-                {" "}({quartosFiltrados.length} encontrado{quartosFiltrados.length !== 1 ? "s" : ""})
-              </span>
-            )}
+            {isDataValida ? "Quartos Disponíveis" : "Quartos Cadastrados"}
+            <span className="quartos-contador">
+              {quartosFiltrados.length} encontrado{quartosFiltrados.length !== 1 ? "s" : ""}
+              {quartosIndisponiveis > 0 && `, ${quartosIndisponiveis} indisponível(is) no período`}
+            </span>
           </h2>
 
-          {quartosFiltrados.length === 0 ? (
-            <p style={{ textAlign: "center", color: "#888", padding: "40px 0" }}>
-              Nenhum quarto encontrado para o tipo "{dadosReserva.tipo}".
+          {carregandoDados ? (
+            <p className="quartos-vazio">Carregando quartos disponíveis...</p>
+          ) : !isDataValida ? (
+            <p className="quartos-aviso">
+              Informe check-in e check-out para verificar a disponibilidade real.
+            </p>
+          ) : null}
+
+          {!carregandoDados && quartosFiltrados.length === 0 ? (
+            <p className="quartos-vazio">
+              Nenhum quarto disponível para os filtros e período selecionados.
             </p>
           ) : (
             <div className="quartos-grid">
@@ -228,13 +350,13 @@ function ReservaQuarto() {
                   {quarto.imagemBase64 ? (
                     <img src={quarto.imagemBase64} alt={`Quarto ${quarto.numero}`} />
                   ) : (
-                    <div style={{ height: "160px", background: "#e8e8e8", display: "flex", alignItems: "center", justifyContent: "center", color: "#aaa", fontSize: "14px" }}>
+                    <div className="quarto-sem-imagem">
                       Sem imagem
                     </div>
                   )}
 
                   <div className="quarto-info">
-                    <h3>Quarto {quarto.numero} — {quarto.tipo}</h3>
+                    <h3>Quarto {quarto.numero} - {quarto.tipo}</h3>
                     <p>Capacidade: {quarto.capacidade} pessoa(s)</p>
 
                     <div className="quarto-footer">
@@ -243,7 +365,7 @@ function ReservaQuarto() {
                         onClick={() => { setQuartoSelecionado(quarto); setAlerta(null); }}
                         style={{ background: quartoSelecionado?.id === quarto.id ? "#1a5276" : undefined }}
                       >
-                        {quartoSelecionado?.id === quarto.id ? "✓ Selecionado" : "Selecionar quarto"}
+                        {quartoSelecionado?.id === quarto.id ? "Selecionado" : "Selecionar quarto"}
                       </button>
                     </div>
                   </div>

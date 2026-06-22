@@ -11,15 +11,30 @@ export default function GestaoQuartos() {
   const navigate = useNavigate();
   const [quartos, setQuartos] = useState([]);
   const [alerta, setAlerta] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [busca, setBusca] = useState("");
+  const [tipoFiltro, setTipoFiltro] = useState("");
 
   async function buscarQuartos() {
+    setCarregando(true);
+
     try {
       const response = await fetch(`${API}/quartos`);
+      if (!response.ok) {
+        throw new Error("Falha ao carregar quartos.");
+      }
+
       const data = await response.json();
-      setQuartos(data);
+      setQuartos(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Erro ao buscar quartos:", error);
-      setAlerta({ type: "error", title: "Erro", message: "Não foi possível carregar os quartos." });
+      setAlerta({
+        type: "error",
+        title: "Erro",
+        message: "Não foi possível carregar os quartos.",
+      });
+    } finally {
+      setCarregando(false);
     }
   }
 
@@ -36,9 +51,29 @@ export default function GestaoQuartos() {
     if (quartos.length === 0) return 0;
     return quartos.reduce((soma, q) => soma + Number(q.preco || 0), 0) / quartos.length;
   }, [quartos]);
+  const tipos = useMemo(
+    () => [...new Set(quartos.map((q) => q.tipo).filter(Boolean))].sort(),
+    [quartos]
+  );
+  const quartosFiltrados = useMemo(() => {
+    const termo = busca.trim().toLowerCase();
+
+    return quartos.filter((quarto) => {
+      const bateTipo = !tipoFiltro || quarto.tipo === tipoFiltro;
+      const bateBusca =
+        !termo ||
+        String(quarto.numero || "").toLowerCase().includes(termo) ||
+        String(quarto.tipo || "").toLowerCase().includes(termo);
+
+      return bateTipo && bateBusca;
+    });
+  }, [quartos, busca, tipoFiltro]);
 
   function formatarMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    return Number(valor || 0).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
   }
 
   async function excluir(id) {
@@ -48,15 +83,27 @@ export default function GestaoQuartos() {
       const response = await fetch(`${API}/quartos/${id}`, { method: "DELETE" });
 
       if (!response.ok) {
-        setAlerta({ type: "error", title: "Erro", message: "Não foi possível excluir o quarto." });
+        setAlerta({
+          type: "error",
+          title: "Erro",
+          message: "Não foi possível excluir o quarto.",
+        });
         return;
       }
 
-      setAlerta({ type: "success", title: "Quarto removido", message: "O quarto foi excluído com sucesso." });
+      setAlerta({
+        type: "success",
+        title: "Quarto removido",
+        message: "O quarto foi excluído com sucesso.",
+      });
       buscarQuartos();
     } catch (error) {
       console.error("Erro ao excluir:", error);
-      setAlerta({ type: "error", title: "Erro", message: "Não foi possível conectar com o servidor." });
+      setAlerta({
+        type: "error",
+        title: "Erro",
+        message: "Não foi possível conectar com o servidor.",
+      });
     }
   }
 
@@ -91,6 +138,30 @@ export default function GestaoQuartos() {
             </div>
           </div>
 
+          <div className="gestao-filtros">
+            <label>
+              <span>Buscar</span>
+              <input
+                type="search"
+                placeholder="Número ou tipo do quarto"
+                value={busca}
+                onChange={(event) => setBusca(event.target.value)}
+              />
+            </label>
+
+            <label>
+              <span>Tipo</span>
+              <select value={tipoFiltro} onChange={(event) => setTipoFiltro(event.target.value)}>
+                <option value="">Todos</option>
+                {tipos.map((tipo) => (
+                  <option key={tipo} value={tipo}>
+                    {tipo}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
           <AlertMessage
             type={alerta?.type}
             title={alerta?.title}
@@ -98,10 +169,20 @@ export default function GestaoQuartos() {
             onClose={() => setAlerta(null)}
           />
 
-          {quartos.length === 0 ? (
+          {carregando ? (
+            <div className="gestao-vazio">
+              <strong>Carregando quartos...</strong>
+              <p>Aguarde enquanto os dados são buscados no servidor.</p>
+            </div>
+          ) : quartos.length === 0 ? (
             <div className="gestao-vazio">
               <strong>Nenhum quarto cadastrado</strong>
               <p>Use o botão Novo Quarto para iniciar o cadastro.</p>
+            </div>
+          ) : quartosFiltrados.length === 0 ? (
+            <div className="gestao-vazio">
+              <strong>Nenhum quarto encontrado</strong>
+              <p>Ajuste a busca ou o filtro selecionado.</p>
             </div>
           ) : (
             <div className="gestao-lista">
@@ -112,10 +193,18 @@ export default function GestaoQuartos() {
                 <span>Ações</span>
               </div>
 
-              {quartos.map((quarto) => (
+              {quartosFiltrados.map((quarto) => (
                 <div key={quarto.id} className="gestao-quarto-card">
                   <div className="gestao-quarto-principal">
-                    <span className="gestao-quarto-numero">{quarto.numero}</span>
+                    {quarto.imagemBase64 ? (
+                      <img
+                        className="gestao-quarto-imagem"
+                        src={quarto.imagemBase64}
+                        alt={`Quarto ${quarto.numero}`}
+                      />
+                    ) : (
+                      <span className="gestao-quarto-numero">{quarto.numero}</span>
+                    )}
                     <div>
                       <strong>{quarto.tipo}</strong>
                       <p>Quarto {quarto.numero}</p>
