@@ -201,7 +201,7 @@ export default function Home() {
                           Meu Perfil
                         </Link>
                         <Link
-                          to="/reserva"
+                          to="/minhas-reservas"
                           onClick={() => setMenuAberto(false)}
                         >
                           Minhas Reservas

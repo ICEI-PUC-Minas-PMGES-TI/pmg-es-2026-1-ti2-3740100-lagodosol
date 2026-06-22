@@ -10,6 +10,7 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long usuarioId;
     private Long quartoId;
     private String nomeQuarto;
     private LocalDate checkIn;
@@ -19,9 +20,18 @@ public class Reserva {
     private String observacoes;
     private Double valorTotal;
     private Integer avaliacao;
+    private String status;
 
     public Long getId() {
         return id;
+    }
+
+    public Long getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public Long getQuartoId() {
@@ -94,5 +104,13 @@ public class Reserva {
 
     public void setAvaliacao(Integer avaliacao) {
         this.avaliacao = avaliacao;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

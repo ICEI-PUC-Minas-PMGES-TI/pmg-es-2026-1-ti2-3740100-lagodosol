@@ -3,6 +3,7 @@ package com.lagodosol.backend.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +20,24 @@ public class UsuarioController {
     private UsuarioRepository repository;
 
     @PostMapping
-    public Usuario cadastrar(@RequestBody Usuario usuario) {
-        System.out.println("======== USUARIO RECEBIDO ========");
-    System.out.println("Nome: " + usuario.getNome());
-    System.out.println("CPF: " + usuario.getCpf());
-    System.out.println("Email: " + usuario.getEmail());
-    System.out.println("Senha: " + usuario.getSenha());
-    System.out.println("Nascimento: " + usuario.getDataNascimento());
+    public ResponseEntity<?> cadastrar(@RequestBody Usuario usuario) {
 
-    return repository.save(usuario);
+        // Verifica se já existe um usuário com esse e-mail
+        if (repository.findByEmail(usuario.getEmail()).isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT) // 409
+                    .body("Este e-mail já está cadastrado.");
+        }
+
+        System.out.println("======== USUARIO RECEBIDO ========");
+        System.out.println("Nome: " + usuario.getNome());
+        System.out.println("CPF: " + usuario.getCpf());
+        System.out.println("Email: " + usuario.getEmail());
+        System.out.println("Senha: " + usuario.getSenha());
+        System.out.println("Nascimento: " + usuario.getDataNascimento());
+
+        Usuario salvo = repository.save(usuario);
+        return ResponseEntity.ok(salvo);
     }
 
     @GetMapping
@@ -71,6 +81,11 @@ public class UsuarioController {
         usuario.setSenha(dto.getNovaSenha());
 
         return repository.save(usuario);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletarUsuario(@PathVariable Long id) {
+        repository.deleteById(id);
     }
 
     @PostMapping("/login")

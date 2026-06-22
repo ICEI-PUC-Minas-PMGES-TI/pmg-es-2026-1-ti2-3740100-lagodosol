@@ -17,6 +17,7 @@ function CadastroUsuario() {
     confirmarSenha: "",
   });
   const [alerta, setAlerta] = useState(null);
+  const [enviando, setEnviando] = useState(false);
 
   function formatCPF(value) {
     return value
@@ -38,7 +39,7 @@ function CadastroUsuario() {
     setAlerta(null);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setAlerta(null);
 
@@ -51,38 +52,51 @@ function CadastroUsuario() {
       return;
     }
 
-    fetch("http://localhost:8081/usuarios", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nome: form.nome,
-        cpf: form.cpf,
-        dataNascimento: form.dataNascimento,
-        email: form.email,
-        senha: form.senha,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Erro ao cadastrar usuário");
-        return response.json();
-      })
-      .then(() => {
-        // Redireciona para o login com mensagem de sucesso via state
-        navigate("/login", {
-          state: {
-            mensagem:
-              "Cadastro realizado com sucesso! Faça login para continuar.",
-          },
-        });
-      })
-      .catch((error) => {
-        console.error(error);
+    setEnviando(true);
+
+    try {
+      const response = await fetch("http://localhost:8081/usuarios", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: form.nome,
+          cpf: form.cpf,
+          dataNascimento: form.dataNascimento,
+          email: form.email,
+          senha: form.senha,
+        }),
+      });
+
+      // E-mail já cadastrado
+      if (response.status === 409) {
         setAlerta({
           type: "error",
-          title: "Erro ao cadastrar",
-          message: "Não foi possível criar a conta. Tente novamente.",
+          title: "E-mail já cadastrado",
+          message: "Já existe uma conta com este e-mail. Faça login ou use outro e-mail.",
         });
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Erro ao cadastrar usuário");
+      }
+
+      // Sucesso → redireciona para o login com mensagem
+      navigate("/login", {
+        state: {
+          mensagem: "Cadastro realizado com sucesso! Faça login para continuar.",
+        },
       });
+    } catch (error) {
+      console.error(error);
+      setAlerta({
+        type: "error",
+        title: "Erro ao cadastrar",
+        message: "Não foi possível criar a conta. Tente novamente.",
+      });
+    } finally {
+      setEnviando(false);
+    }
   }
 
   return (
@@ -175,8 +189,8 @@ function CadastroUsuario() {
                 />
               </div>
 
-              <button type="submit" className="btn-cadastrar">
-                Cadastrar Conta
+              <button type="submit" className="btn-cadastrar" disabled={enviando}>
+                {enviando ? "Cadastrando..." : "Cadastrar Conta"}
               </button>
 
               <p className="login-link">

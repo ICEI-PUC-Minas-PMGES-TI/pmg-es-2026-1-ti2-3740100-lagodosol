@@ -12,6 +12,11 @@ function dataSegura(valor) {
   return Number.isNaN(data.getTime()) ? null : data;
 }
 
+function formatarData(valor) {
+  const data = dataSegura(valor);
+  return data ? data.toLocaleDateString("pt-BR") : "--";
+}
+
 function reservaCancelada(reserva) {
   const status = String(reserva.status || reserva.situacao || reserva.estado || "").toLowerCase();
   return ["cancelada", "cancelado", "cancelled"].includes(status);
@@ -35,6 +40,10 @@ function extrairNumeroHospedes(valor) {
 
 function ReservaQuarto() {
   const navigate = useNavigate();
+
+  const usuarioLogado = localStorage.getItem("usuario")
+    ? JSON.parse(localStorage.getItem("usuario"))
+    : null;
 
   const [quartosDB, setQuartosDB] = useState([]);
   const [reservasDB, setReservasDB] = useState([]);
@@ -127,6 +136,22 @@ function ReservaQuarto() {
     return quartosDB.length - quartosFiltrados.length;
   }, [quartosDB.length, quartosFiltrados.length, isDataValida]);
 
+  // Datas já reservadas do quarto atualmente selecionado (para mostrar ao usuário)
+  const datasOcupadasDoSelecionado = useMemo(() => {
+    if (!quartoSelecionado) return [];
+
+    return reservasDB
+      .filter(
+        (reserva) =>
+          !reservaCancelada(reserva) && reserva.quartoId === quartoSelecionado.id
+      )
+      .map((reserva) => ({
+        checkIn: reserva.checkIn,
+        checkOut: reserva.checkOut,
+      }))
+      .sort((a, b) => new Date(a.checkIn) - new Date(b.checkIn));
+  }, [quartoSelecionado, reservasDB]);
+
   const valorTotal = quartoSelecionado && diarias > 0 ? diarias * quartoSelecionado.preco : 0;
   const podeFinalizar = isDataValida && quartoSelecionado;
 
@@ -163,6 +188,7 @@ function ReservaQuarto() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          usuarioId: usuarioLogado?.id ?? null,
           quartoId: quartoSelecionado.id,
           nomeQuarto: `${quartoSelecionado.numero} - ${quartoSelecionado.tipo}`,
           checkIn: dadosReserva.checkIn,
@@ -182,6 +208,9 @@ function ReservaQuarto() {
         });
         return;
       }
+
+      const novaReserva = await response.json();
+      setReservasDB((prev) => [...prev, novaReserva]);
 
       setAlerta({
         type: "success",
@@ -208,6 +237,23 @@ function ReservaQuarto() {
       </div>
 
       <main className="reserva-container">
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          style={{
+            marginBottom: "16px",
+            padding: "8px 16px",
+            background: "#0d5c63",
+            color: "#fff",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontWeight: "600",
+          }}
+        >
+          ← Voltar para Home
+        </button>
+
         <div className="reserva-grid">
           <div className="card-reserva form-card">
             <h2>Dados da Reserva</h2>
@@ -300,6 +346,22 @@ function ReservaQuarto() {
                   : "Nenhum selecionado"}
               </strong>
             </div>
+
+            {/* ── Datas já ocupadas do quarto selecionado ── */}
+            {quartoSelecionado && datasOcupadasDoSelecionado.length > 0 && (
+              <div className="quarto-datas-ocupadas">
+                <strong>Períodos já reservados deste quarto:</strong>
+                <ul>
+                  {datasOcupadasDoSelecionado.map((periodo, index) => (
+                    <li key={index}>
+                      {formatarData(periodo.checkIn)} → {formatarData(periodo.checkOut)}
+                    </li>
+                  ))}
+                </ul>
+                <small>Escolha datas fora desses períodos.</small>
+              </div>
+            )}
+
             <div className="resumo-total">
               <span>Valor Total</span>
               <strong>R$ {valorTotal.toFixed(2).replace(".", ",")}</strong>
@@ -339,38 +401,50 @@ function ReservaQuarto() {
             </p>
           ) : (
             <div className="quartos-grid">
-              {quartosFiltrados.map((quarto) => (
-                <div
-                  className="quarto-card"
-                  key={quarto.id}
-                  style={{
-                    border: quartoSelecionado?.id === quarto.id ? "2px solid #1a5276" : "2px solid transparent",
-                  }}
-                >
-                  {quarto.imagemBase64 ? (
-                    <img src={quarto.imagemBase64} alt={`Quarto ${quarto.numero}`} />
-                  ) : (
-                    <div className="quarto-sem-imagem">
-                      Sem imagem
-                    </div>
-                  )}
+              {quartosFiltrados.map((quarto) => {
+                const reservasDoQuarto = reservasDB.filter(
+                  (r) => !reservaCancelada(r) && r.quartoId === quarto.id
+                );
 
-                  <div className="quarto-info">
-                    <h3>Quarto {quarto.numero} - {quarto.tipo}</h3>
-                    <p>Capacidade: {quarto.capacidade} pessoa(s)</p>
+                return (
+                  <div
+                    className="quarto-card"
+                    key={quarto.id}
+                    style={{
+                      border: quartoSelecionado?.id === quarto.id ? "2px solid #1a5276" : "2px solid transparent",
+                    }}
+                  >
+                    {quarto.imagemBase64 ? (
+                      <img src={quarto.imagemBase64} alt={`Quarto ${quarto.numero}`} />
+                    ) : (
+                      <div className="quarto-sem-imagem">
+                        Sem imagem
+                      </div>
+                    )}
 
-                    <div className="quarto-footer">
-                      <strong>R$ {Number(quarto.preco).toFixed(2).replace(".", ",")}/noite</strong>
-                      <button
-                        onClick={() => { setQuartoSelecionado(quarto); setAlerta(null); }}
-                        style={{ background: quartoSelecionado?.id === quarto.id ? "#1a5276" : undefined }}
-                      >
-                        {quartoSelecionado?.id === quarto.id ? "Selecionado" : "Selecionar quarto"}
-                      </button>
+                    <div className="quarto-info">
+                      <h3>Quarto {quarto.numero} - {quarto.tipo}</h3>
+                      <p>Capacidade: {quarto.capacidade} pessoa(s)</p>
+
+                      {reservasDoQuarto.length > 0 && (
+                        <p className="quarto-ocupado-aviso">
+                          {reservasDoQuarto.length} período(s) já reservado(s)
+                        </p>
+                      )}
+
+                      <div className="quarto-footer">
+                        <strong>R$ {Number(quarto.preco).toFixed(2).replace(".", ",")}/noite</strong>
+                        <button
+                          onClick={() => { setQuartoSelecionado(quarto); setAlerta(null); }}
+                          style={{ background: quartoSelecionado?.id === quarto.id ? "#1a5276" : undefined }}
+                        >
+                          {quartoSelecionado?.id === quarto.id ? "Selecionado" : "Selecionar quarto"}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

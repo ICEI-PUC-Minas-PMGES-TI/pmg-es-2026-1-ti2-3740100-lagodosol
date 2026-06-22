@@ -1,16 +1,32 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../style/MinhasReservas.css";
 
+const API = "http://localhost:8081";
+
 function MinhasReservas() {
+  const navigate = useNavigate();
   const [reservas, setReservas] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [avaliando, setAvaliando] = useState(null);
 
+  const usuarioLogado = localStorage.getItem("usuario")
+    ? JSON.parse(localStorage.getItem("usuario"))
+    : null;
+
   useEffect(() => {
     async function carregarReservas() {
+      if (!usuarioLogado?.id) {
+        setErro("Você precisa estar logado para ver suas reservas.");
+        setCarregando(false);
+        return;
+      }
+
       try {
-        const response = await fetch("http://localhost:8081/reservas");
+        const response = await fetch(
+          `${API}/reservas/usuario/${usuarioLogado.id}`
+        );
         if (!response.ok) {
           throw new Error("Falha ao carregar reservas.");
         }
@@ -40,6 +56,12 @@ function MinhasReservas() {
     return dataCheckOut < hoje;
   }
 
+  function formatarData(data) {
+    if (!data) return "--";
+    const d = new Date(`${data}T12:00:00`);
+    return Number.isNaN(d.getTime()) ? data : d.toLocaleDateString("pt-BR");
+  }
+
   async function avaliarReserva(id, estrelas) {
     setAvaliando(id);
     try {
@@ -52,7 +74,7 @@ function MinhasReservas() {
         avaliacao: estrelas,
       };
 
-      const response = await fetch(`http://localhost:8081/reservas/${id}`, {
+      const response = await fetch(`${API}/reservas/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +118,24 @@ function MinhasReservas() {
     <div className="page">
       <main className="main">
         <div className="container">
-          <h1 className="title">Minhas Reservas</h1>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h1 className="title">Minhas Reservas</h1>
+            <button
+              onClick={() => navigate("/")}
+              style={{
+                padding: "8px 16px",
+                background: "#0d5c63",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: "600",
+                height: "fit-content",
+              }}
+            >
+              ← Voltar para Home
+            </button>
+          </div>
 
           {erro && <div className="error-message">{erro}</div>}
 
@@ -114,20 +153,23 @@ function MinhasReservas() {
                     <h3>{reserva.nomeQuarto || "Reserva"}</h3>
 
                     <p>
-                      <strong>Check-in:</strong> {reserva.checkIn || "--"}
+                      <strong>Check-in:</strong> {formatarData(reserva.checkIn)}
                     </p>
 
                     <p>
-                      <strong>Check-out:</strong> {reserva.checkOut || "--"}
+                      <strong>Check-out:</strong> {formatarData(reserva.checkOut)}
                     </p>
 
                     <p>
                       <strong>Tipo:</strong> {reserva.tipo || "--"}
                     </p>
 
-                    <div className="button-container">
-                      <button className="button">Ver Detalhes</button>
-                    </div>
+                    <p>
+                      <strong>Valor Total:</strong>{" "}
+                      {reserva.valorTotal
+                        ? `R$ ${Number(reserva.valorTotal).toFixed(2).replace(".", ",")}`
+                        : "--"}
+                    </p>
                   </div>
                 ))
               )}
@@ -142,11 +184,11 @@ function MinhasReservas() {
                     <h3>{reserva.nomeQuarto || "Reserva"}</h3>
 
                     <p>
-                      <strong>Check-in:</strong> {reserva.checkIn || "--"}
+                      <strong>Check-in:</strong> {formatarData(reserva.checkIn)}
                     </p>
 
                     <p>
-                      <strong>Check-out:</strong> {reserva.checkOut || "--"}
+                      <strong>Check-out:</strong> {formatarData(reserva.checkOut)}
                     </p>
 
                     <div className="rating-card">
@@ -178,8 +220,6 @@ function MinhasReservas() {
                         <p className="saving-text">Salvando avaliação...</p>
                       )}
                     </div>
-
-                    <button className="button">Ver Detalhes</button>
                   </div>
                 ))
               )}

@@ -24,6 +24,13 @@ public class ReservaController {
         return repository.findAll();
     }
 
+    // Lista apenas as reservas de um usuário específico
+    // Uso: GET /reservas/usuario/{usuarioId}
+    @GetMapping("/usuario/{usuarioId}")
+    public List<Reserva> listarPorUsuario(@PathVariable Long usuarioId) {
+        return repository.findByUsuarioId(usuarioId);
+    }
+
     @PostMapping
     public Reserva criar(@RequestBody Reserva reserva) {
         return repository.save(reserva);
@@ -36,6 +43,9 @@ public class ReservaController {
 
         if (reservaAtualizada.getAvaliacao() != null) {
             reserva.setAvaliacao(reservaAtualizada.getAvaliacao());
+        }
+        if (reservaAtualizada.getStatus() != null) {
+            reserva.setStatus(reservaAtualizada.getStatus());
         }
 
         return repository.save(reserva);

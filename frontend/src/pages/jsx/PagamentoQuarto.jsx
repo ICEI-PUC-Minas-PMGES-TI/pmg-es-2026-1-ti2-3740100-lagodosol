@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import "../style/PagamentoQuarto.css";
 import Header from "./Header";
 import Footer from "./Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { QRCodeCanvas } from "qrcode.react";
 
 function PagamentoQuarto() {
+  const navigate = useNavigate();
+
   // Dados simulados da reserva
   const reserva = {
     quarto: "Suite Luxo - 302",
@@ -177,7 +179,7 @@ function PagamentoQuarto() {
                 {total.toFixed(2).replace(".", ",")}
               </span>
             </div>
-            <button className="btn-confirmar" onClick={() => setPago(false)}>
+            <button className="btn-confirmar" onClick={() => navigate("/")}>
               Voltar ao Início
             </button>
           </div>
