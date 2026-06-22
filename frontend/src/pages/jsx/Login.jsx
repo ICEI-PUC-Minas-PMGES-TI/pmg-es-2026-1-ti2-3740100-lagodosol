@@ -57,6 +57,7 @@ function Login() {
       })
       .then((data) => {
         localStorage.setItem("usuario", JSON.stringify(data));
+        localStorage.setItem("usuarioId", data.id);
         navigate("/");
       })
       .catch((error) => {

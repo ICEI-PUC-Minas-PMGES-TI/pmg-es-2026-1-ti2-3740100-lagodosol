@@ -1,19 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AlertMessage from "./AlertMessage";
 import "../style/PerfilUsuario.css";
+import Loading from "./Loading";
+import "../style/Loading.css";
 
 function PerfilUsuario() {
   const [editando, setEditando] = useState(false);
+  const [alterandoSenha, setAlterandoSenha] = useState(false);
   const [alerta, setAlerta] = useState(null);
 
-  const [usuario, setUsuario] = useState({
-    nome: "Arthur Vieira Lopes",
-    email: "arthur@email.com",
-    cpf: "123.456.789-00",
-    dataNascimento: "15/01/2004",
-  });
-
-  const [alterandoSenha, setAlterandoSenha] = useState(false);
+  const [usuario, setUsuario] = useState(null);
 
   const [senhaForm, setSenhaForm] = useState({
     senhaAtual: "",
@@ -21,11 +17,33 @@ function PerfilUsuario() {
     confirmarNovaSenha: "",
   });
 
+  useEffect(() => {
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuario"));
+    const usuarioId = usuarioLogado?.id;
+
+    if (!usuarioId) {
+      return;
+    }
+
+    fetch(`http://localhost:8081/usuarios/${usuarioId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao carregar usuário");
+        }
+        return response.json();
+      })
+      .then((data) => setUsuario(data))
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   function handleChange(e) {
     setUsuario({
       ...usuario,
       [e.target.name]: e.target.value,
     });
+
     setAlerta(null);
   }
 
@@ -34,19 +52,50 @@ function PerfilUsuario() {
       ...senhaForm,
       [e.target.name]: e.target.value,
     });
+
     setAlerta(null);
   }
 
-  function salvarPerfil() {
-    setAlerta({
-      type: "success",
-      title: "Perfil atualizado",
-      message: "Suas informações foram salvas com sucesso.",
-    });
-    setEditando(false);
+  async function salvarPerfil() {
+    try {
+      const usuarioId = JSON.parse(localStorage.getItem("usuario"))?.id;
+
+      const response = await fetch(
+        `http://localhost:8081/usuarios/${usuarioId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(usuario),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      const usuarioAtualizado = await response.json();
+
+      setUsuario(usuarioAtualizado);
+
+      setAlerta({
+        type: "success",
+        title: "Perfil atualizado",
+        message: "Suas informações foram salvas com sucesso.",
+      });
+
+      setEditando(false);
+    } catch {
+      setAlerta({
+        type: "error",
+        title: "Erro",
+        message: "Não foi possível atualizar o perfil.",
+      });
+    }
   }
 
-  function salvarSenha() {
+  async function salvarSenha() {
     if (senhaForm.novaSenha !== senhaForm.confirmarNovaSenha) {
       setAlerta({
         type: "error",
@@ -56,26 +105,64 @@ function PerfilUsuario() {
       return;
     }
 
-    setAlerta({
-      type: "success",
-      title: "Senha alterada",
-      message: "Sua nova senha foi salva com sucesso.",
-    });
+    try {
+      const usuarioId = localStorage.getItem("usuarioId");
 
-    setSenhaForm({
-      senhaAtual: "",
-      novaSenha: "",
-      confirmarNovaSenha: "",
-    });
+      const response = await fetch(
+        `http://localhost:8081/usuarios/${usuarioId}/senha`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            senhaAtual: senhaForm.senhaAtual,
+            novaSenha: senhaForm.novaSenha,
+          }),
+        },
+      );
 
-    setAlterandoSenha(false);
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      setAlerta({
+        type: "success",
+        title: "Senha alterada",
+        message: "Sua nova senha foi salva com sucesso.",
+      });
+
+      setSenhaForm({
+        senhaAtual: "",
+        novaSenha: "",
+        confirmarNovaSenha: "",
+      });
+
+      setAlterandoSenha(false);
+    } catch {
+      setAlerta({
+        type: "error",
+        title: "Erro",
+        message: "Não foi possível alterar a senha.",
+      });
+    }
+  }
+
+  const usuarioId = localStorage.getItem("usuarioId");
+
+  if (!usuarioId) {
+    return <div>Faça login para acessar seu perfil.</div>;
+  }
+
+  if (!usuario) {
+    return <Loading />;
   }
 
   return (
     <div className="perfil-container">
       <div className="perfil-card">
         <div className="perfil-header">
-          <div className="avatar">{usuario.nome.charAt(0)}</div>
+          <div className="avatar">{usuario.nome?.charAt(0)}</div>
 
           <h2>{usuario.nome}</h2>
 
@@ -103,7 +190,7 @@ function PerfilUsuario() {
               <input
                 type="text"
                 name="nome"
-                value={usuario.nome}
+                value={usuario.nome || ""}
                 onChange={handleChange}
               />
             ) : (
@@ -118,7 +205,7 @@ function PerfilUsuario() {
               <input
                 type="email"
                 name="email"
-                value={usuario.email}
+                value={usuario.email || ""}
                 onChange={handleChange}
               />
             ) : (
