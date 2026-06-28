@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import AlertMessage from "./AlertMessage";
 import "../style/PerfilUsuario.css";
 import Loading from "./Loading";
 import "../style/Loading.css";
 
 function PerfilUsuario() {
+  const navigate = useNavigate();
+
   const [editando, setEditando] = useState(false);
   const [alterandoSenha, setAlterandoSenha] = useState(false);
   const [alerta, setAlerta] = useState(null);
@@ -17,10 +20,10 @@ function PerfilUsuario() {
     confirmarNovaSenha: "",
   });
 
-  useEffect(() => {
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuario"));
-    const usuarioId = usuarioLogado?.id;
+  const usuarioLogado = JSON.parse(localStorage.getItem("usuario") || "null");
+  const usuarioId = usuarioLogado?.id;
 
+  useEffect(() => {
     if (!usuarioId) {
       return;
     }
@@ -58,8 +61,6 @@ function PerfilUsuario() {
 
   async function salvarPerfil() {
     try {
-      const usuarioId = JSON.parse(localStorage.getItem("usuario"))?.id;
-
       const response = await fetch(
         `http://localhost:8081/usuarios/${usuarioId}`,
         {
@@ -106,8 +107,6 @@ function PerfilUsuario() {
     }
 
     try {
-      const usuarioId = localStorage.getItem("usuarioId");
-
       const response = await fetch(
         `http://localhost:8081/usuarios/${usuarioId}/senha`,
         {
@@ -148,8 +147,6 @@ function PerfilUsuario() {
     }
   }
 
-  const usuarioId = localStorage.getItem("usuarioId");
-
   if (!usuarioId) {
     return <div>Faça login para acessar seu perfil.</div>;
   }
@@ -161,6 +158,14 @@ function PerfilUsuario() {
   return (
     <div className="perfil-container">
       <div className="perfil-card">
+        <button
+          type="button"
+          className="btn-voltar-perfil"
+          onClick={() => navigate("/")}
+        >
+          ← Voltar para Home
+        </button>
+
         <div className="perfil-header">
           <div className="avatar">{usuario.nome?.charAt(0)}</div>
 

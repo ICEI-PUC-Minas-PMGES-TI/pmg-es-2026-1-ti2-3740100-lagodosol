@@ -289,3 +289,152 @@
   display: inline-block;
   margin-bottom: 8px;
 }
+
+/* ── ADICIONE ESTAS REGRAS AO FINAL DO SEU ReservaQuarto.css ── */
+/* (substitui o bloco anterior de .quarto-datas-ocupadas / .quarto-ocupado-aviso, que não é mais usado) */
+
+.aviso-data-invalida {
+  color: #b00020;
+  background: #ffe6e6;
+  border: 1px solid #f5c2c2;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: -8px 0 14px;
+}
+
+.btn-consultar-datas {
+  display: inline-block;
+  width: 100%;
+  background: #f0efe9;
+  color: #555;
+  border: 1px solid #ddd;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+  text-align: center;
+}
+
+.btn-consultar-datas:hover {
+  background: #e4e2d8;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+.modal-header h3 {
+  font-size: 15px;
+  color: #1a1a1a;
+  margin: 0;
+  padding-right: 10px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  color: #888;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: #c0392b;
+}
+
+.modal-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-vazio {
+  color: #888;
+  text-align: center;
+  padding: 24px 0;
+  font-size: 14px;
+}
+
+.modal-lista-datas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-lista-datas li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff8e1;
+  border: 1px solid #ffe69c;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  color: #664d03;
+}
+
+.modal-data-icone {
+  font-size: 14px;
+}
+
+.modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid #eee;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.btn-fechar-modal {
+  background: #0d5c63;
+  color: #fff;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.btn-fechar-modal:hover {
+  background: #094a4f;
+}

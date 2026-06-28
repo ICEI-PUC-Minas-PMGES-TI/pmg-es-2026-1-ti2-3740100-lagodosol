@@ -17,6 +17,14 @@ function formatarData(valor) {
   return data ? data.toLocaleDateString("pt-BR") : "--";
 }
 
+function hojeISO() {
+  const hoje = new Date();
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  const dia = String(hoje.getDate()).padStart(2, "0");
+  return `${ano}-${mes}-${dia}`;
+}
+
 function reservaCancelada(reserva) {
   const status = String(reserva.status || reserva.situacao || reserva.estado || "").toLowerCase();
   return ["cancelada", "cancelado", "cancelled"].includes(status);
@@ -40,6 +48,7 @@ function extrairNumeroHospedes(valor) {
 
 function ReservaQuarto() {
   const navigate = useNavigate();
+  const hoje = hojeISO();
 
   const usuarioLogado = localStorage.getItem("usuario")
     ? JSON.parse(localStorage.getItem("usuario"))
@@ -58,6 +67,9 @@ function ReservaQuarto() {
   const [carregando, setCarregando] = useState(false);
   const [carregandoDados, setCarregandoDados] = useState(true);
   const [alerta, setAlerta] = useState(null);
+
+  // Controla o modal "Consultar datas reservadas"
+  const [modalQuarto, setModalQuarto] = useState(null);
 
   useEffect(() => {
     async function carregarDados() {
@@ -95,6 +107,15 @@ function ReservaQuarto() {
     carregarDados();
   }, []);
 
+  // Fecha o modal com a tecla Esc
+  useEffect(() => {
+    function handleEsc(e) {
+      if (e.key === "Escape") setModalQuarto(null);
+    }
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
   const diarias = useMemo(() => {
     const entrada = dataSegura(dadosReserva.checkIn);
     const saida = dataSegura(dadosReserva.checkOut);
@@ -105,9 +126,15 @@ function ReservaQuarto() {
     return diff / (1000 * 60 * 60 * 24);
   }, [dadosReserva.checkIn, dadosReserva.checkOut]);
 
+  const checkInNoPassado = useMemo(() => {
+    if (!dadosReserva.checkIn) return false;
+    return dadosReserva.checkIn < hoje;
+  }, [dadosReserva.checkIn, hoje]);
+
   const isDataValida =
     dadosReserva.checkIn &&
     dadosReserva.checkOut &&
+    !checkInNoPassado &&
     dataSegura(dadosReserva.checkOut) > dataSegura(dadosReserva.checkIn);
 
   const quartosFiltrados = useMemo(() => {
@@ -136,21 +163,21 @@ function ReservaQuarto() {
     return quartosDB.length - quartosFiltrados.length;
   }, [quartosDB.length, quartosFiltrados.length, isDataValida]);
 
-  // Datas já reservadas do quarto atualmente selecionado (para mostrar ao usuário)
-  const datasOcupadasDoSelecionado = useMemo(() => {
-    if (!quartoSelecionado) return [];
+  // Datas já reservadas do quarto que está aberto no modal
+  const datasOcupadasDoModal = useMemo(() => {
+    if (!modalQuarto) return [];
 
     return reservasDB
       .filter(
         (reserva) =>
-          !reservaCancelada(reserva) && reserva.quartoId === quartoSelecionado.id
+          !reservaCancelada(reserva) && reserva.quartoId === modalQuarto.id
       )
       .map((reserva) => ({
         checkIn: reserva.checkIn,
         checkOut: reserva.checkOut,
       }))
       .sort((a, b) => new Date(a.checkIn) - new Date(b.checkIn));
-  }, [quartoSelecionado, reservasDB]);
+  }, [modalQuarto, reservasDB]);
 
   const valorTotal = quartoSelecionado && diarias > 0 ? diarias * quartoSelecionado.preco : 0;
   const podeFinalizar = isDataValida && quartoSelecionado;
@@ -170,12 +197,24 @@ function ReservaQuarto() {
     setAlerta(null);
   }
 
+  // Quando o check-in muda, garante que o check-out não fique antes dele
+  function handleCheckInChange(e) {
+    const novoCheckIn = e.target.value;
+    setDadosReserva((prev) => ({
+      ...prev,
+      checkIn: novoCheckIn,
+      checkOut:
+        prev.checkOut && prev.checkOut <= novoCheckIn ? "" : prev.checkOut,
+    }));
+    setAlerta(null);
+  }
+
   async function handleFinalizar() {
     if (!podeFinalizar) {
       setAlerta({
         type: "error",
         title: "Reserva incompleta",
-        message: "Informe datas válidas e selecione um quarto disponível.",
+        message: "Informe datas válidas (não no passado) e selecione um quarto disponível.",
       });
       return;
     }
@@ -272,7 +311,8 @@ function ReservaQuarto() {
                   type="date"
                   name="checkIn"
                   value={dadosReserva.checkIn}
-                  onChange={handleChange}
+                  onChange={handleCheckInChange}
+                  min={hoje}
                 />
               </div>
               <div className="form-group">
@@ -282,10 +322,25 @@ function ReservaQuarto() {
                   name="checkOut"
                   value={dadosReserva.checkOut}
                   onChange={handleChange}
-                  min={dadosReserva.checkIn || undefined}
+                  min={
+                    dadosReserva.checkIn
+                      ? (() => {
+                          const proximoDia = new Date(`${dadosReserva.checkIn}T12:00:00`);
+                          proximoDia.setDate(proximoDia.getDate() + 1);
+                          return proximoDia.toISOString().slice(0, 10);
+                        })()
+                      : hoje
+                  }
+                  disabled={!dadosReserva.checkIn}
                 />
               </div>
             </div>
+
+            {checkInNoPassado && (
+              <p className="aviso-data-invalida">
+                A data de check-in não pode ser no passado.
+              </p>
+            )}
 
             <div className="form-row">
               <div className="form-group">
@@ -346,21 +401,6 @@ function ReservaQuarto() {
                   : "Nenhum selecionado"}
               </strong>
             </div>
-
-            {/* ── Datas já ocupadas do quarto selecionado ── */}
-            {quartoSelecionado && datasOcupadasDoSelecionado.length > 0 && (
-              <div className="quarto-datas-ocupadas">
-                <strong>Períodos já reservados deste quarto:</strong>
-                <ul>
-                  {datasOcupadasDoSelecionado.map((periodo, index) => (
-                    <li key={index}>
-                      {formatarData(periodo.checkIn)} → {formatarData(periodo.checkOut)}
-                    </li>
-                  ))}
-                </ul>
-                <small>Escolha datas fora desses períodos.</small>
-              </div>
-            )}
 
             <div className="resumo-total">
               <span>Valor Total</span>
@@ -426,11 +466,14 @@ function ReservaQuarto() {
                       <h3>Quarto {quarto.numero} - {quarto.tipo}</h3>
                       <p>Capacidade: {quarto.capacidade} pessoa(s)</p>
 
-                      {reservasDoQuarto.length > 0 && (
-                        <p className="quarto-ocupado-aviso">
-                          {reservasDoQuarto.length} período(s) já reservado(s)
-                        </p>
-                      )}
+                      <button
+                        type="button"
+                        className="btn-consultar-datas"
+                        onClick={() => setModalQuarto(quarto)}
+                      >
+                        📅 Consultar datas reservadas
+                        {reservasDoQuarto.length > 0 && ` (${reservasDoQuarto.length})`}
+                      </button>
 
                       <div className="quarto-footer">
                         <strong>R$ {Number(quarto.preco).toFixed(2).replace(".", ",")}/noite</strong>
@@ -449,6 +492,56 @@ function ReservaQuarto() {
           )}
         </div>
       </main>
+
+      {/* ── MODAL: Consultar datas reservadas ── */}
+      {modalQuarto && (
+        <div className="modal-overlay" onClick={() => setModalQuarto(null)}>
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>
+                Datas reservadas — Quarto {modalQuarto.numero} ({modalQuarto.tipo})
+              </h3>
+              <button
+                type="button"
+                className="modal-close"
+                onClick={() => setModalQuarto(null)}
+                aria-label="Fechar"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body">
+              {datasOcupadasDoModal.length === 0 ? (
+                <p className="modal-vazio">
+                  Este quarto não possui nenhuma reserva registrada.
+                </p>
+              ) : (
+                <ul className="modal-lista-datas">
+                  {datasOcupadasDoModal.map((periodo, index) => (
+                    <li key={index}>
+                      <span className="modal-data-icone">📌</span>
+                      <span>
+                        {formatarData(periodo.checkIn)} → {formatarData(periodo.checkOut)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn-fechar-modal"
+                onClick={() => setModalQuarto(null)}
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

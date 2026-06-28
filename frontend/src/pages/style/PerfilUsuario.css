@@ -1,4 +1,3 @@
-/* PerfilUsuario.css */
 
 * {
   margin: 0;
@@ -176,4 +175,24 @@
 .alterar-senha-box h3 {
   margin-bottom: 20px;
   color: #333;
+}
+
+.btn-voltar-perfil {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 8px 16px;
+  background: #0d5c63;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.btn-voltar-perfil:hover {
+  background: #094a4f;
 }
