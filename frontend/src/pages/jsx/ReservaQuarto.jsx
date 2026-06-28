@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import AlertMessage from "./AlertMessage";
+import DatePickerReserva from "./DatePickerReserva";
 import "../style/ReservaQuarto.css";
 
 const API = "http://localhost:8081";
@@ -25,6 +26,13 @@ function hojeISO() {
   return `${ano}-${mes}-${dia}`;
 }
 
+function isoDoDia(date) {
+  const ano = date.getFullYear();
+  const mes = String(date.getMonth() + 1).padStart(2, "0");
+  const dia = String(date.getDate()).padStart(2, "0");
+  return `${ano}-${mes}-${dia}`;
+}
+
 function reservaCancelada(reserva) {
   const status = String(reserva.status || reserva.situacao || reserva.estado || "").toLowerCase();
   return ["cancelada", "cancelado", "cancelled"].includes(status);
@@ -44,6 +52,30 @@ function reservasSobrepoem(checkIn, checkOut, reserva) {
 function extrairNumeroHospedes(valor) {
   const numero = Number.parseInt(String(valor).replace(/\D/g, ""), 10);
   return Number.isFinite(numero) ? numero : 1;
+}
+
+// Gera o conjunto de dias (ISO) ocupados por um quarto específico,
+// considerando todas as reservas ativas (não canceladas) dele.
+function gerarDiasOcupados(reservas, quartoId) {
+  const set = new Set();
+
+  reservas
+    .filter((r) => !reservaCancelada(r) && r.quartoId === quartoId)
+    .forEach((reserva) => {
+      const inicio = dataSegura(reserva.checkIn);
+      const fim = dataSegura(reserva.checkOut);
+      if (!inicio || !fim) return;
+
+      // Marca todos os dias entre checkIn (inclusive) e checkOut (exclusive)
+      // como ocupados — o dia do checkOut fica livre para outra entrada.
+      const cursor = new Date(inicio);
+      while (cursor < fim) {
+        set.add(isoDoDia(cursor));
+        cursor.setDate(cursor.getDate() + 1);
+      }
+    });
+
+  return set;
 }
 
 function ReservaQuarto() {
@@ -115,6 +147,12 @@ function ReservaQuarto() {
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
+
+  // Dias ocupados do quarto atualmente selecionado (para desabilitar no calendário)
+  const diasOcupadosSelecionado = useMemo(() => {
+    if (!quartoSelecionado) return new Set();
+    return gerarDiasOcupados(reservasDB, quartoSelecionado.id);
+  }, [quartoSelecionado, reservasDB]);
 
   const diarias = useMemo(() => {
     const entrada = dataSegura(dadosReserva.checkIn);
@@ -197,9 +235,9 @@ function ReservaQuarto() {
     setAlerta(null);
   }
 
-  // Quando o check-in muda, garante que o check-out não fique antes dele
-  function handleCheckInChange(e) {
-    const novoCheckIn = e.target.value;
+  // Quando o check-in muda pelo calendário, garante que o check-out
+  // não fique antes ou igual a ele
+  function handleCheckInChange(novoCheckIn) {
     setDadosReserva((prev) => ({
       ...prev,
       checkIn: novoCheckIn,
@@ -208,6 +246,19 @@ function ReservaQuarto() {
     }));
     setAlerta(null);
   }
+
+  function handleCheckOutChange(novoCheckOut) {
+    setDadosReserva((prev) => ({ ...prev, checkOut: novoCheckOut }));
+    setAlerta(null);
+  }
+
+  // Mínimo do check-out: o dia seguinte ao check-in
+  const minCheckOut = useMemo(() => {
+    if (!dadosReserva.checkIn) return hoje;
+    const proximoDia = dataSegura(dadosReserva.checkIn);
+    proximoDia.setDate(proximoDia.getDate() + 1);
+    return isoDoDia(proximoDia);
+  }, [dadosReserva.checkIn, hoje]);
 
   async function handleFinalizar() {
     if (!podeFinalizar) {
@@ -304,33 +355,34 @@ function ReservaQuarto() {
               onClose={() => setAlerta(null)}
             />
 
+            {quartoSelecionado && (
+              <p className="aviso-calendario-quarto">
+                Mostrando disponibilidade do quarto{" "}
+                <strong>{quartoSelecionado.numero} - {quartoSelecionado.tipo}</strong>.
+                Selecione um quarto abaixo para ver as datas livres antes de
+                escolher o período.
+              </p>
+            )}
+
             <div className="form-row">
               <div className="form-group">
-                <label>Check-in</label>
-                <input
-                  type="date"
-                  name="checkIn"
-                  value={dadosReserva.checkIn}
+                <DatePickerReserva
+                  label="Check-in"
+                  valueISO={dadosReserva.checkIn}
                   onChange={handleCheckInChange}
-                  min={hoje}
+                  minDateISO={hoje}
+                  disabledISOSet={diasOcupadosSelecionado}
+                  placeholder="Selecione o check-in"
                 />
               </div>
               <div className="form-group">
-                <label>Check-out</label>
-                <input
-                  type="date"
-                  name="checkOut"
-                  value={dadosReserva.checkOut}
-                  onChange={handleChange}
-                  min={
-                    dadosReserva.checkIn
-                      ? (() => {
-                          const proximoDia = new Date(`${dadosReserva.checkIn}T12:00:00`);
-                          proximoDia.setDate(proximoDia.getDate() + 1);
-                          return proximoDia.toISOString().slice(0, 10);
-                        })()
-                      : hoje
-                  }
+                <DatePickerReserva
+                  label="Check-out"
+                  valueISO={dadosReserva.checkOut}
+                  onChange={handleCheckOutChange}
+                  minDateISO={minCheckOut}
+                  disabledISOSet={diasOcupadosSelecionado}
+                  placeholder="Selecione o check-out"
                   disabled={!dadosReserva.checkIn}
                 />
               </div>
@@ -379,11 +431,11 @@ function ReservaQuarto() {
 
             <div className="resumo-item">
               <span>Check-in</span>
-              <strong>{dadosReserva.checkIn || "Não informado"}</strong>
+              <strong>{dadosReserva.checkIn ? formatarData(dadosReserva.checkIn) : "Não informado"}</strong>
             </div>
             <div className="resumo-item">
               <span>Check-out</span>
-              <strong>{dadosReserva.checkOut || "Não informado"}</strong>
+              <strong>{dadosReserva.checkOut ? formatarData(dadosReserva.checkOut) : "Não informado"}</strong>
             </div>
             <div className="resumo-item">
               <span>Diárias</span>
@@ -468,11 +520,10 @@ function ReservaQuarto() {
 
                       <button
                         type="button"
-                        className="btn-consultar-datas"
+                        className="link-consultar-datas"
                         onClick={() => setModalQuarto(quarto)}
                       >
-                        📅 Consultar datas reservadas
-                        {reservasDoQuarto.length > 0 && ` (${reservasDoQuarto.length})`}
+                        Ver datas reservadas{reservasDoQuarto.length > 0 && ` (${reservasDoQuarto.length})`}
                       </button>
 
                       <div className="quarto-footer">

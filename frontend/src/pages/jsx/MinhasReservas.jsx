@@ -62,6 +62,23 @@ function MinhasReservas() {
     return Number.isNaN(d.getTime()) ? data : d.toLocaleDateString("pt-BR");
   }
 
+  function formatarDataCurta(data) {
+    if (!data) return { dia: "--", mes: "" };
+    const d = new Date(`${data}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return { dia: "--", mes: "" };
+    const dia = d.getDate();
+    const mes = d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "");
+    return { dia, mes };
+  }
+
+  function calcularNoites(checkIn, checkOut) {
+    const inicio = new Date(`${checkIn}T12:00:00`);
+    const fim = new Date(`${checkOut}T12:00:00`);
+    if (Number.isNaN(inicio.getTime()) || Number.isNaN(fim.getTime())) return null;
+    const diff = (fim - inicio) / (1000 * 60 * 60 * 24);
+    return diff > 0 ? diff : null;
+  }
+
   async function avaliarReserva(id, estrelas) {
     setAvaliando(id);
     try {
@@ -114,25 +131,100 @@ function MinhasReservas() {
   const reservasAtivas = reservas.filter((reserva) => !isReservaConcluida(reserva));
   const reservasConcluidas = reservas.filter(isReservaConcluida);
 
+  function CardReserva({ reserva, concluida }) {
+    const entrada = formatarDataCurta(reserva.checkIn);
+    const saida = formatarDataCurta(reserva.checkOut);
+    const noites = calcularNoites(reserva.checkIn, reserva.checkOut);
+
+    return (
+      <div className={`reserva-card ${concluida ? "reserva-card-concluida" : ""}`}>
+        <div className="reserva-card-faixa" />
+
+        <div className="reserva-card-topo">
+          <div className="reserva-card-titulo">
+            <h3>{reserva.nomeQuarto || "Reserva"}</h3>
+            {reserva.tipo && <span className="reserva-card-tag">{reserva.tipo}</span>}
+          </div>
+
+          <span className={`reserva-card-status ${concluida ? "status-concluida" : "status-ativa"}`}>
+            {concluida ? "Concluída" : "Ativa"}
+          </span>
+        </div>
+
+        <div className="reserva-card-datas">
+          <div className="reserva-data-bloco">
+            <span className="reserva-data-label">Check-in</span>
+            <div className="reserva-data-caixa">
+              <strong>{entrada.dia}</strong>
+              <span>{entrada.mes}</span>
+            </div>
+          </div>
+
+          <div className="reserva-data-seta">
+            {noites !== null && (
+              <span className="reserva-noites-chip">
+                {noites} noite{noites !== 1 ? "s" : ""}
+              </span>
+            )}
+            <span className="reserva-seta-linha" />
+          </div>
+
+          <div className="reserva-data-bloco">
+            <span className="reserva-data-label">Check-out</span>
+            <div className="reserva-data-caixa">
+              <strong>{saida.dia}</strong>
+              <span>{saida.mes}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="reserva-card-rodape">
+          <span className="reserva-card-valor">
+            {reserva.valorTotal
+              ? `R$ ${Number(reserva.valorTotal).toFixed(2).replace(".", ",")}`
+              : "Valor não informado"}
+          </span>
+        </div>
+
+        {concluida && (
+          <div className="rating-card">
+            <p className="rating-titulo">Avaliação da estadia</p>
+
+            <div className="rating-stars">
+              {reserva.avaliacao ? (
+                <>
+                  {renderStars(reserva.avaliacao)}
+                  <span className="rating-value">{reserva.avaliacao} de 5</span>
+                </>
+              ) : (
+                <>
+                  {renderStars(reserva.avaliacao || 0, (value) =>
+                    avaliarReserva(reserva.id, value)
+                  )}
+                  <span className="rating-help">Clique nas estrelas para avaliar</span>
+                </>
+              )}
+            </div>
+
+            {avaliando === reserva.id && (
+              <p className="saving-text">Salvando avaliação...</p>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="page">
       <main className="main">
         <div className="container">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h1 className="title">Minhas Reservas</h1>
-            <button
-              onClick={() => navigate("/")}
-              style={{
-                padding: "8px 16px",
-                background: "#0d5c63",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: "600",
-                height: "fit-content",
-              }}
-            >
+          <div className="reservas-header">
+            <div>
+              <h1 className="title">Minhas Reservas</h1>
+              <p className="subtitle">Acompanhe suas estadias no Hotel Lago do Sol</p>
+            </div>
+            <button className="btn-voltar-reservas" onClick={() => navigate("/")}>
               ← Voltar para Home
             </button>
           </div>
@@ -148,30 +240,11 @@ function MinhasReservas() {
               {reservasAtivas.length === 0 ? (
                 <p className="empty-message">Nenhuma reserva ativa encontrada.</p>
               ) : (
-                reservasAtivas.map((reserva) => (
-                  <div key={reserva.id} className="card">
-                    <h3>{reserva.nomeQuarto || "Reserva"}</h3>
-
-                    <p>
-                      <strong>Check-in:</strong> {formatarData(reserva.checkIn)}
-                    </p>
-
-                    <p>
-                      <strong>Check-out:</strong> {formatarData(reserva.checkOut)}
-                    </p>
-
-                    <p>
-                      <strong>Tipo:</strong> {reserva.tipo || "--"}
-                    </p>
-
-                    <p>
-                      <strong>Valor Total:</strong>{" "}
-                      {reserva.valorTotal
-                        ? `R$ ${Number(reserva.valorTotal).toFixed(2).replace(".", ",")}`
-                        : "--"}
-                    </p>
-                  </div>
-                ))
+                <div className="reservas-grid">
+                  {reservasAtivas.map((reserva) => (
+                    <CardReserva key={reserva.id} reserva={reserva} concluida={false} />
+                  ))}
+                </div>
               )}
 
               <h2 className="section-title">Histórico de Reservas</h2>
@@ -179,49 +252,11 @@ function MinhasReservas() {
               {reservasConcluidas.length === 0 ? (
                 <p className="empty-message">Nenhuma reserva concluída encontrada.</p>
               ) : (
-                reservasConcluidas.map((reserva) => (
-                  <div key={reserva.id} className="card">
-                    <h3>{reserva.nomeQuarto || "Reserva"}</h3>
-
-                    <p>
-                      <strong>Check-in:</strong> {formatarData(reserva.checkIn)}
-                    </p>
-
-                    <p>
-                      <strong>Check-out:</strong> {formatarData(reserva.checkOut)}
-                    </p>
-
-                    <div className="rating-card">
-                      <p>
-                        <strong>Avaliação da estadia:</strong>
-                      </p>
-
-                      <div className="rating-stars">
-                        {reserva.avaliacao ? (
-                          <>
-                            {renderStars(reserva.avaliacao)}
-                            <span className="rating-value">
-                              {reserva.avaliacao} de 5
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            {renderStars(reserva.avaliacao || 0, (value) =>
-                              avaliarReserva(reserva.id, value)
-                            )}
-                            <span className="rating-help">
-                              Clique nas estrelas para avaliar
-                            </span>
-                          </>
-                        )}
-                      </div>
-
-                      {avaliando === reserva.id && (
-                        <p className="saving-text">Salvando avaliação...</p>
-                      )}
-                    </div>
-                  </div>
-                ))
+                <div className="reservas-grid">
+                  {reservasConcluidas.map((reserva) => (
+                    <CardReserva key={reserva.id} reserva={reserva} concluida={true} />
+                  ))}
+                </div>
               )}
             </>
           )}
