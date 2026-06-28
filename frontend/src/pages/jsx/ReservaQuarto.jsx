@@ -252,6 +252,11 @@ function ReservaQuarto() {
     setAlerta(null);
   }
 
+  function limparDatas() {
+    setDadosReserva((prev) => ({ ...prev, checkIn: "", checkOut: "" }));
+    setAlerta(null);
+  }
+
   // Mínimo do check-out: o dia seguinte ao check-in
   const minCheckOut = useMemo(() => {
     if (!dadosReserva.checkIn) return hoje;
@@ -307,7 +312,10 @@ function ReservaQuarto() {
         title: "Reserva realizada com sucesso",
         message: "Você será redirecionado para o pagamento.",
       });
-      setTimeout(() => navigate("/pagamento"), 1200);
+      setTimeout(
+        () => navigate("/pagamento", { state: { reservaId: novaReserva.id } }),
+        1200
+      );
     } catch (error) {
       console.error("Erro:", error);
       setAlerta({
@@ -392,6 +400,16 @@ function ReservaQuarto() {
               <p className="aviso-data-invalida">
                 A data de check-in não pode ser no passado.
               </p>
+            )}
+
+            {(dadosReserva.checkIn || dadosReserva.checkOut) && (
+              <button
+                type="button"
+                className="btn-limpar-datas"
+                onClick={limparDatas}
+              >
+                ✕ Limpar datas selecionadas
+              </button>
             )}
 
             <div className="form-row">
@@ -520,10 +538,14 @@ function ReservaQuarto() {
 
                       <button
                         type="button"
-                        className="link-consultar-datas"
+                        className="btn-consultar-datas-discreto"
                         onClick={() => setModalQuarto(quarto)}
                       >
-                        Ver datas reservadas{reservasDoQuarto.length > 0 && ` (${reservasDoQuarto.length})`}
+                        <span className="icone-calendario-mini">📅</span>
+                        Ver datas reservadas
+                        {reservasDoQuarto.length > 0 && (
+                          <span className="badge-contagem">{reservasDoQuarto.length}</span>
+                        )}
                       </button>
 
                       <div className="quarto-footer">

@@ -780,3 +780,58 @@
     transform: translateX(-50%);
   }
 }
+
+.btn-limpar-datas {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: -10px 0 14px;
+  padding: 2px 0;
+  transition: color 0.2s;
+}
+
+.btn-limpar-datas:hover {
+  color: #c0392b;
+}
+
+/* Botão "Ver datas reservadas" — discreto, com chip de contagem */
+.btn-consultar-datas-discreto {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f6f6f6;
+  border: 1px solid #e4e4e4;
+  color: #666;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-consultar-datas-discreto:hover {
+  background: #eee;
+  border-color: #ccc;
+}
+
+.icone-calendario-mini {
+  font-size: 11px;
+}
+
+.badge-contagem {
+  background: #4f46e5;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  line-height: 1.4;
+}

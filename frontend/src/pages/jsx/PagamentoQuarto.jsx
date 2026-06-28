@@ -2,12 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import "../style/PagamentoQuarto.css";
 import Header from "./Header";
 import Footer from "./Footer";
-import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/logo.png";
+import { useNavigate, useLocation } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
+
+const API = "http://localhost:8081";
 
 function PagamentoQuarto() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // ID da reserva recém-criada, recebido da tela de Reserva de Quarto
+  const reservaId = location.state?.reservaId ?? null;
 
   // Dados simulados da reserva
   const reserva = {
@@ -57,21 +62,15 @@ function PagamentoQuarto() {
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
 
+  // ── Avaliação da estadia (estrelas) ──
+  const [avaliacao, setAvaliacao] = useState(0);
+  const [avaliacaoEnviada, setAvaliacaoEnviada] = useState(false);
+  const [enviandoAvaliacao, setEnviandoAvaliacao] = useState(false);
+  const [erroAvaliacao, setErroAvaliacao] = useState("");
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErro("");
-  }
-
-  const [menuAberto, setMenuAberto] = useState(false);
-
-  const usuarioLogado = localStorage.getItem("usuario")
-    ? JSON.parse(localStorage.getItem("usuario"))
-    : null;
-
-  function handleLogout() {
-    localStorage.removeItem("usuario");
-    setMenuAberto(false);
-    window.location.reload();
   }
 
   function formatarCartao(valor) {
@@ -146,6 +145,40 @@ function PagamentoQuarto() {
     }
   }
 
+  // Envia a avaliação de estrelas para a reserva, para alimentar
+  // o indicador de satisfação no Dashboard do admin
+  async function enviarAvaliacao(estrelas) {
+    if (!reservaId) {
+      setErroAvaliacao(
+        "Não foi possível identificar a reserva para registrar a avaliação."
+      );
+      return;
+    }
+
+    setAvaliacao(estrelas);
+    setEnviandoAvaliacao(true);
+    setErroAvaliacao("");
+
+    try {
+      const response = await fetch(`${API}/reservas/${reservaId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avaliacao: estrelas }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Não foi possível salvar a avaliação.");
+      }
+
+      setAvaliacaoEnviada(true);
+    } catch (error) {
+      console.error("Erro ao salvar avaliação:", error);
+      setErroAvaliacao("Não foi possível salvar sua avaliação. Tente novamente.");
+    } finally {
+      setEnviandoAvaliacao(false);
+    }
+  }
+
   if (pago) {
     return (
       <div className="pagamento-wrapper">
@@ -179,6 +212,46 @@ function PagamentoQuarto() {
                 {total.toFixed(2).replace(".", ",")}
               </span>
             </div>
+
+            {/* ── Avaliação da estadia ── */}
+            <div className="avaliacao-pagamento">
+              <p className="avaliacao-titulo">Avalie sua experiência</p>
+
+              <div className="avaliacao-estrelas">
+                {[1, 2, 3, 4, 5].map((valor) => (
+                  <span
+                    key={valor}
+                    className={`avaliacao-star ${
+                      valor <= avaliacao ? "filled" : ""
+                    } ${avaliacaoEnviada ? "" : "clickable"}`}
+                    onClick={() => !avaliacaoEnviada && enviarAvaliacao(valor)}
+                  >
+                    {valor <= avaliacao ? "★" : "☆"}
+                  </span>
+                ))}
+              </div>
+
+              {enviandoAvaliacao && (
+                <p className="avaliacao-status">Salvando avaliação...</p>
+              )}
+
+              {avaliacaoEnviada && !enviandoAvaliacao && (
+                <p className="avaliacao-status avaliacao-sucesso">
+                  Obrigado pela sua avaliação!
+                </p>
+              )}
+
+              {erroAvaliacao && (
+                <p className="avaliacao-status avaliacao-erro">{erroAvaliacao}</p>
+              )}
+
+              {!reservaId && (
+                <p className="avaliacao-status avaliacao-erro">
+                  Avaliação indisponível para esta reserva.
+                </p>
+              )}
+            </div>
+
             <button className="btn-confirmar" onClick={() => navigate("/")}>
               Voltar ao Início
             </button>
@@ -191,51 +264,7 @@ function PagamentoQuarto() {
 
   return (
     <div className="pagamento-wrapper">
-      <header className="home-navbar">
-        <div className="home-navbar-inner">
-          <Link to="/" className="home-logo">
-            <img src={logo} alt="Hotel Lago do Sol" />
-          </Link>
-
-          <nav className="home-nav">
-            <a href="/#acomodacoes">Acomodações</a>
-            <a href="/#diferenciais">Diferenciais</a>
-            <a href="/#contato">Contato</a>
-          </nav>
-
-          <div className="home-nav-acoes">
-            {usuarioLogado ? (
-              <div className="home-perfil-wrapper">
-                <button
-                  className="home-perfil-btn"
-                  onClick={() => setMenuAberto(!menuAberto)}
-                  title={usuarioLogado.nome}
-                >
-                  <span className="home-avatar">
-                    {usuarioLogado.nome?.charAt(0).toUpperCase() || "U"}
-                  </span>
-                </button>
-
-                {menuAberto && (
-                  <div className="home-perfil-menu">
-                    <p className="home-perfil-nome">{usuarioLogado.nome}</p>
-
-                    <Link to="/perfil" onClick={() => setMenuAberto(false)}>
-                      Meu Perfil
-                    </Link>
-
-                    <button onClick={handleLogout}>Sair</button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link to="/login" className="home-btn-login">
-                Entrar
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="pagamento-container">
         <div className="pagamento-grid">
@@ -370,11 +399,11 @@ function PagamentoQuarto() {
                       onChange={(e) =>
                         setForm({
                           ...form,
-                          cvv: e.target.value.replace(/\D/g, "").slice(0, 4),
+                          cvv: e.target.value.replace(/\D/g, "").slice(0, 3),
                         })
                       }
                       className="input-pag"
-                      maxLength={4}
+                      maxLength={3}
                     />
                   </div>
                 </div>
@@ -485,6 +514,8 @@ function PagamentoQuarto() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../style/DashboardAdmin.css";
 
@@ -121,6 +122,7 @@ function Gauge({ valor, cor }) {
 }
 
 export default function DashboardAdmin() {
+  const navigate = useNavigate();
   const [quartos, setQuartos] = useState([]);
   const [reservas, setReservas] = useState([]);
   const [clientes, setClientes] = useState([]);
@@ -287,6 +289,14 @@ export default function DashboardAdmin() {
     
 
       <main className="dashboard-admin-container">
+        <button
+          type="button"
+          className="dashboard-btn-voltar"
+          onClick={() => navigate("/")}
+        >
+          ← Voltar para Home
+        </button>
+
         <section className="dashboard-hero">
           <div>
             <span className="dashboard-eyebrow">Painel administrativo</span>

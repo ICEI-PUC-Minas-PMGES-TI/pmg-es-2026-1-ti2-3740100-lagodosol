@@ -444,3 +444,24 @@
     text-align: left;
   }
 }
+
+.dashboard-btn-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  background: #fff;
+  color: #176b67;
+  border: 1.5px solid #176b67;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13.5px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dashboard-btn-voltar:hover {
+  background: #176b67;
+  color: #fff;
+}
