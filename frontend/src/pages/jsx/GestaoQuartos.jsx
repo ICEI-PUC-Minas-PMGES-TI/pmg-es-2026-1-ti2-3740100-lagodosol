@@ -109,12 +109,32 @@ export default function GestaoQuartos() {
 
   return (
     <div className="gestao-wrapper">
-      <Header />
+        
 
       <main className="gestao-container">
+        
         <div className="gestao-inner">
+          
           <div className="gestao-topbar">
+
+            <button
+              onClick={() => navigate("/")}
+              style={{
+                padding: "8px 16px",
+                background: "#0d5c63",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: "600",
+                height: "fit-content",
+              }}
+            >
+              ← Voltar para Home
+            </button>
+            
             <div>
+              
               <span className="gestao-eyebrow">Administração</span>
               <h2>Gestão de Quartos</h2>
             </div>
@@ -232,7 +252,7 @@ export default function GestaoQuartos() {
         </div>
       </main>
 
-      <Footer />
+ 
     </div>
   );
 }

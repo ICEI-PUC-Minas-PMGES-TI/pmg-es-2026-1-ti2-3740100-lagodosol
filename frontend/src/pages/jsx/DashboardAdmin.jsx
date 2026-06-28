@@ -284,7 +284,7 @@ export default function DashboardAdmin() {
 
   return (
     <div className="dashboard-admin-wrapper">
-      <Header />
+    
 
       <main className="dashboard-admin-container">
         <section className="dashboard-hero">
