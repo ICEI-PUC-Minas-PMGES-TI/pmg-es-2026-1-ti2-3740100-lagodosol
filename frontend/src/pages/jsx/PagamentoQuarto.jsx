@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "../style/PagamentoQuarto.css";
 import Header from "./Header";
-import Footer from "./Footer";
 import { useNavigate, useLocation } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 
@@ -257,7 +256,6 @@ function PagamentoQuarto() {
             </button>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -514,8 +512,6 @@ function PagamentoQuarto() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
