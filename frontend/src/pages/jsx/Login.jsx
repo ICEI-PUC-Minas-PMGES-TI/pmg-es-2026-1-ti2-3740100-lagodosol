@@ -46,11 +46,14 @@ function Login() {
     }
 
     // Login normal pelo backend
-    fetch("http://localhost:8081/usuarios/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: form.email, senha: form.senha }),
-    })
+    fetch(
+      "https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com/usuarios/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email, senha: form.senha }),
+      },
+    )
       .then((response) => {
         if (!response.ok) throw new Error("Erro ao fazer login");
         return response.json();

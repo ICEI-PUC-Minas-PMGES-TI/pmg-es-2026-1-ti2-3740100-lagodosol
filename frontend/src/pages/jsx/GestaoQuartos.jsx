@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import "../style/GestaoQuartos.css";
 
-const API = "http://localhost:8081";
+const API = "https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com";
 
 export default function GestaoQuartos() {
   const navigate = useNavigate();
@@ -45,15 +45,18 @@ export default function GestaoQuartos() {
   const totalQuartos = quartos.length;
   const capacidadeTotal = useMemo(
     () => quartos.reduce((total, q) => total + Number(q.capacidade || 0), 0),
-    [quartos]
+    [quartos],
   );
   const diariaMedia = useMemo(() => {
     if (quartos.length === 0) return 0;
-    return quartos.reduce((soma, q) => soma + Number(q.preco || 0), 0) / quartos.length;
+    return (
+      quartos.reduce((soma, q) => soma + Number(q.preco || 0), 0) /
+      quartos.length
+    );
   }, [quartos]);
   const tipos = useMemo(
     () => [...new Set(quartos.map((q) => q.tipo).filter(Boolean))].sort(),
-    [quartos]
+    [quartos],
   );
   const quartosFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
@@ -62,8 +65,12 @@ export default function GestaoQuartos() {
       const bateTipo = !tipoFiltro || quarto.tipo === tipoFiltro;
       const bateBusca =
         !termo ||
-        String(quarto.numero || "").toLowerCase().includes(termo) ||
-        String(quarto.tipo || "").toLowerCase().includes(termo);
+        String(quarto.numero || "")
+          .toLowerCase()
+          .includes(termo) ||
+        String(quarto.tipo || "")
+          .toLowerCase()
+          .includes(termo);
 
       return bateTipo && bateBusca;
     });
@@ -80,7 +87,9 @@ export default function GestaoQuartos() {
     if (!window.confirm("Deseja realmente excluir este quarto?")) return;
 
     try {
-      const response = await fetch(`${API}/quartos/${id}`, { method: "DELETE" });
+      const response = await fetch(`${API}/quartos/${id}`, {
+        method: "DELETE",
+      });
 
       if (!response.ok) {
         setAlerta({
@@ -109,14 +118,9 @@ export default function GestaoQuartos() {
 
   return (
     <div className="gestao-wrapper">
-        
-
       <main className="gestao-container">
-        
         <div className="gestao-inner">
-          
           <div className="gestao-topbar">
-
             <button
               onClick={() => navigate("/")}
               style={{
@@ -132,13 +136,15 @@ export default function GestaoQuartos() {
             >
               ← Voltar para Home
             </button>
-            
+
             <div>
-              
               <span className="gestao-eyebrow">Administração</span>
               <h2>Gestão de Quartos</h2>
             </div>
-            <button className="btn-novo" onClick={() => navigate("/cadastro-quarto")}>
+            <button
+              className="btn-novo"
+              onClick={() => navigate("/cadastro-quarto")}
+            >
               Novo Quarto
             </button>
           </div>
@@ -171,7 +177,10 @@ export default function GestaoQuartos() {
 
             <label>
               <span>Tipo</span>
-              <select value={tipoFiltro} onChange={(event) => setTipoFiltro(event.target.value)}>
+              <select
+                value={tipoFiltro}
+                onChange={(event) => setTipoFiltro(event.target.value)}
+              >
                 <option value="">Todos</option>
                 {tipos.map((tipo) => (
                   <option key={tipo} value={tipo}>
@@ -223,7 +232,9 @@ export default function GestaoQuartos() {
                         alt={`Quarto ${quarto.numero}`}
                       />
                     ) : (
-                      <span className="gestao-quarto-numero">{quarto.numero}</span>
+                      <span className="gestao-quarto-numero">
+                        {quarto.numero}
+                      </span>
                     )}
                     <div>
                       <strong>{quarto.tipo}</strong>
@@ -237,11 +248,16 @@ export default function GestaoQuartos() {
                   <div className="gestao-acoes">
                     <button
                       className="btn-editar"
-                      onClick={() => navigate(`/cadastro-quarto?id=${quarto.id}`)}
+                      onClick={() =>
+                        navigate(`/cadastro-quarto?id=${quarto.id}`)
+                      }
                     >
                       Editar
                     </button>
-                    <button className="btn-excluir" onClick={() => excluir(quarto.id)}>
+                    <button
+                      className="btn-excluir"
+                      onClick={() => excluir(quarto.id)}
+                    >
                       Excluir
                     </button>
                   </div>
@@ -251,8 +267,6 @@ export default function GestaoQuartos() {
           )}
         </div>
       </main>
-
- 
     </div>
   );
 }

@@ -4,7 +4,7 @@ import Header from "./Header";
 import { useNavigate, useLocation } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 
-const API = "http://localhost:8081";
+const API = "https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com";
 
 function PagamentoQuarto() {
   const navigate = useNavigate();
@@ -115,19 +115,22 @@ function PagamentoQuarto() {
 
     try {
       // Fazendo a requisição para o Node.js
-      const resposta = await fetch("http://localhost:8081/pagamentos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const resposta = await fetch(
+        "https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com/pagamentos",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            metodoPagamento: metodoPagamento,
+            parcelas: metodoPagamento === "cartao" ? parseInt(parcelas) : 1,
+            valorTotal: total,
+            nomeCartao: form.nomeCartao,
+            cpfPix: form.cpfPix,
+          }),
         },
-        body: JSON.stringify({
-          metodoPagamento: metodoPagamento,
-          parcelas: metodoPagamento === "cartao" ? parseInt(parcelas) : 1,
-          valorTotal: total,
-          nomeCartao: form.nomeCartao,
-          cpfPix: form.cpfPix,
-        }),
-      });
+      );
 
       if (resposta.ok) {
         setPago(true);
@@ -149,7 +152,7 @@ function PagamentoQuarto() {
   async function enviarAvaliacao(estrelas) {
     if (!reservaId) {
       setErroAvaliacao(
-        "Não foi possível identificar a reserva para registrar a avaliação."
+        "Não foi possível identificar a reserva para registrar a avaliação.",
       );
       return;
     }
@@ -172,7 +175,9 @@ function PagamentoQuarto() {
       setAvaliacaoEnviada(true);
     } catch (error) {
       console.error("Erro ao salvar avaliação:", error);
-      setErroAvaliacao("Não foi possível salvar sua avaliação. Tente novamente.");
+      setErroAvaliacao(
+        "Não foi possível salvar sua avaliação. Tente novamente.",
+      );
     } finally {
       setEnviandoAvaliacao(false);
     }
@@ -241,7 +246,9 @@ function PagamentoQuarto() {
               )}
 
               {erroAvaliacao && (
-                <p className="avaliacao-status avaliacao-erro">{erroAvaliacao}</p>
+                <p className="avaliacao-status avaliacao-erro">
+                  {erroAvaliacao}
+                </p>
               )}
 
               {!reservaId && (
@@ -442,7 +449,13 @@ function PagamentoQuarto() {
                       />
                     </div>
                   )}
-                  <p style={{ marginTop: "12px", fontSize: "12px", color: "#666" }}>
+                  <p
+                    style={{
+                      marginTop: "12px",
+                      fontSize: "12px",
+                      color: "#666",
+                    }}
+                  >
                     ID: {idTransacao}
                   </p>
                   <button

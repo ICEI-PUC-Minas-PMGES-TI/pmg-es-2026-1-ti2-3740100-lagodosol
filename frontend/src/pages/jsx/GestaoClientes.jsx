@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../style/GestaoClientes.css";
 
-const API = "http://localhost:8081";
+const API = "https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com";
 
 function GestaoClientes() {
   const navigate = useNavigate();
@@ -25,7 +25,9 @@ function GestaoClientes() {
       setClientes(data);
     } catch (error) {
       console.error(error);
-      setErro("Não foi possível carregar os clientes. Verifique se o backend está rodando.");
+      setErro(
+        "Não foi possível carregar os clientes. Verifique se o backend está rodando.",
+      );
     } finally {
       setCarregando(false);
     }
@@ -39,14 +41,16 @@ function GestaoClientes() {
     (cliente) =>
       cliente.nome?.toLowerCase().includes(busca.toLowerCase()) ||
       cliente.email?.toLowerCase().includes(busca.toLowerCase()) ||
-      cliente.cpf?.includes(busca)
+      cliente.cpf?.includes(busca),
   );
 
   async function excluirCliente(id) {
     if (!window.confirm("Deseja realmente excluir este cliente?")) return;
 
     try {
-      const response = await fetch(`${API}/usuarios/${id}`, { method: "DELETE" });
+      const response = await fetch(`${API}/usuarios/${id}`, {
+        method: "DELETE",
+      });
       if (!response.ok) throw new Error("Erro ao excluir cliente.");
 
       setClientes((prev) => prev.filter((c) => c.id !== id));
@@ -78,7 +82,7 @@ function GestaoClientes() {
 
       const clienteAtualizado = await response.json();
       setClientes((prev) =>
-        prev.map((c) => (c.id === id ? { ...c, ...clienteAtualizado } : c))
+        prev.map((c) => (c.id === id ? { ...c, ...clienteAtualizado } : c)),
       );
       cancelarEdicao();
     } catch (error) {
@@ -90,7 +94,14 @@ function GestaoClientes() {
   return (
     <div className="gestao-container">
       <div className="card-clientes">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "16px",
+          }}
+        >
           <h2 style={{ margin: 0 }}>Gestão de Clientes</h2>
           <button
             onClick={() => navigate("/")}
@@ -116,9 +127,7 @@ function GestaoClientes() {
           className="input-busca"
         />
 
-        {erro && (
-          <p style={{ color: "#c0392b", margin: "12px 0" }}>{erro}</p>
-        )}
+        {erro && <p style={{ color: "#c0392b", margin: "12px 0" }}>{erro}</p>}
 
         {carregando ? (
           <p style={{ textAlign: "center", padding: "20px", color: "#888" }}>
@@ -145,7 +154,12 @@ function GestaoClientes() {
                           <input
                             type="text"
                             value={formEdicao.nome}
-                            onChange={(e) => setFormEdicao({ ...formEdicao, nome: e.target.value })}
+                            onChange={(e) =>
+                              setFormEdicao({
+                                ...formEdicao,
+                                nome: e.target.value,
+                              })
+                            }
                             style={{ width: "100%", padding: "6px" }}
                           />
                         </td>
@@ -153,16 +167,27 @@ function GestaoClientes() {
                           <input
                             type="email"
                             value={formEdicao.email}
-                            onChange={(e) => setFormEdicao({ ...formEdicao, email: e.target.value })}
+                            onChange={(e) =>
+                              setFormEdicao({
+                                ...formEdicao,
+                                email: e.target.value,
+                              })
+                            }
                             style={{ width: "100%", padding: "6px" }}
                           />
                         </td>
                         <td>{cliente.cpf}</td>
                         <td className="acoes">
-                          <button className="btn-editar" onClick={() => salvarEdicao(cliente.id)}>
+                          <button
+                            className="btn-editar"
+                            onClick={() => salvarEdicao(cliente.id)}
+                          >
                             Salvar
                           </button>
-                          <button className="btn-excluir" onClick={cancelarEdicao}>
+                          <button
+                            className="btn-excluir"
+                            onClick={cancelarEdicao}
+                          >
                             Cancelar
                           </button>
                         </td>
@@ -173,7 +198,10 @@ function GestaoClientes() {
                         <td>{cliente.email}</td>
                         <td>{cliente.cpf}</td>
                         <td className="acoes">
-                          <button className="btn-editar" onClick={() => iniciarEdicao(cliente)}>
+                          <button
+                            className="btn-editar"
+                            onClick={() => iniciarEdicao(cliente)}
+                          >
                             Editar
                           </button>
                           <button

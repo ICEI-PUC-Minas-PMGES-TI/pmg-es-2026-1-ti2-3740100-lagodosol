@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../style/DashboardAdmin.css";
 
-const API = "http://localhost:8081";
+const API = "https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com";
 
 const CORES = {
   ocupacao: "#176b67",
@@ -21,7 +21,20 @@ const METAS = {
   satisfacao: 4.2,
 };
 
-const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+const MESES = [
+  "Jan",
+  "Fev",
+  "Mar",
+  "Abr",
+  "Mai",
+  "Jun",
+  "Jul",
+  "Ago",
+  "Set",
+  "Out",
+  "Nov",
+  "Dez",
+];
 
 function dataSegura(valor) {
   if (!valor) return null;
@@ -42,7 +55,9 @@ function reservaEstaNoMes(reserva, ano, mes) {
 }
 
 function reservaCancelada(reserva) {
-  const status = String(reserva.status || reserva.situacao || reserva.estado || "").toLowerCase();
+  const status = String(
+    reserva.status || reserva.situacao || reserva.estado || "",
+  ).toLowerCase();
   return ["cancelada", "cancelado", "cancelled"].includes(status);
 }
 
@@ -61,9 +76,15 @@ function formatarValor(indicador) {
 
 function calcularHistorico({ quartos, reservas, clientes, anoAtual }) {
   return MESES.map((mes, indice) => {
-    const reservasDoMes = reservas.filter((reserva) => reservaEstaNoMes(reserva, anoAtual, indice));
-    const reservasValidas = reservasDoMes.filter((reserva) => !reservaCancelada(reserva));
-    const quartosOcupados = new Set(reservasValidas.map((reserva) => reserva.quartoId).filter(Boolean)).size;
+    const reservasDoMes = reservas.filter((reserva) =>
+      reservaEstaNoMes(reserva, anoAtual, indice),
+    );
+    const reservasValidas = reservasDoMes.filter(
+      (reserva) => !reservaCancelada(reserva),
+    );
+    const quartosOcupados = new Set(
+      reservasValidas.map((reserva) => reserva.quartoId).filter(Boolean),
+    ).size;
     const avaliacoes = reservasDoMes
       .map((reserva) => Number(reserva.avaliacao))
       .filter((avaliacao) => Number.isFinite(avaliacao) && avaliacao > 0);
@@ -71,12 +92,23 @@ function calcularHistorico({ quartos, reservas, clientes, anoAtual }) {
 
     return {
       mes,
-      ocupacao: quartos.length ? arredondar((quartosOcupados / quartos.length) * 100) : 0,
-      cancelamento: reservasDoMes.length ? arredondar((canceladas / reservasDoMes.length) * 100) : 0,
-      mediaClientes: clientes.length ? arredondar(reservasDoMes.length / clientes.length) : 0,
-      recorrencia: clientes.length ? arredondar(reservasValidas.length / clientes.length) : 0,
+      ocupacao: quartos.length
+        ? arredondar((quartosOcupados / quartos.length) * 100)
+        : 0,
+      cancelamento: reservasDoMes.length
+        ? arredondar((canceladas / reservasDoMes.length) * 100)
+        : 0,
+      mediaClientes: clientes.length
+        ? arredondar(reservasDoMes.length / clientes.length)
+        : 0,
+      recorrencia: clientes.length
+        ? arredondar(reservasValidas.length / clientes.length)
+        : 0,
       satisfacao: avaliacoes.length
-        ? arredondar(avaliacoes.reduce((soma, nota) => soma + nota, 0) / avaliacoes.length)
+        ? arredondar(
+            avaliacoes.reduce((soma, nota) => soma + nota, 0) /
+              avaliacoes.length,
+          )
         : 0,
     };
   });
@@ -97,8 +129,18 @@ function LinhaGrafico({ dados, cor }) {
     .join(" ");
 
   return (
-    <svg className="dashboard-linha-svg" viewBox="0 0 100 80" preserveAspectRatio="none">
-      <polyline points={pontos} fill="none" stroke={cor} strokeWidth="4" strokeLinecap="round" />
+    <svg
+      className="dashboard-linha-svg"
+      viewBox="0 0 100 80"
+      preserveAspectRatio="none"
+    >
+      <polyline
+        points={pontos}
+        fill="none"
+        stroke={cor}
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
       {valores.map((valor, index) => {
         const x = (index / divisor) * 100;
         const y = 72 - ((valor - min) / faixa) * 56;
@@ -112,7 +154,10 @@ function Gauge({ valor, cor }) {
   const percentual = Math.min(Math.max(Number(valor) || 0, 0), 100);
 
   return (
-    <div className="dashboard-gauge" style={{ "--valor": `${percentual}%`, "--cor": cor }}>
+    <div
+      className="dashboard-gauge"
+      style={{ "--valor": `${percentual}%`, "--cor": cor }}
+    >
       <div className="dashboard-gauge-centro">
         <strong>{formatarNumero(percentual)}%</strong>
         <span>ocupação</span>
@@ -142,7 +187,9 @@ export default function DashboardAdmin() {
         ]);
 
         if (!resQuartos.ok || !resReservas.ok || !resClientes.ok) {
-          throw new Error("Não foi possível carregar todos os dados do dashboard.");
+          throw new Error(
+            "Não foi possível carregar todos os dados do dashboard.",
+          );
         }
 
         const [dadosQuartos, dadosReservas, dadosClientes] = await Promise.all([
@@ -156,7 +203,9 @@ export default function DashboardAdmin() {
         setClientes(Array.isArray(dadosClientes) ? dadosClientes : []);
       } catch (error) {
         console.error("Erro ao carregar dashboard:", error);
-        setErro("Não foi possível carregar os dados reais. Verifique se o backend está rodando.");
+        setErro(
+          "Não foi possível carregar os dados reais. Verifique se o backend está rodando.",
+        );
       } finally {
         setCarregando(false);
       }
@@ -169,26 +218,44 @@ export default function DashboardAdmin() {
     const hoje = new Date();
     const anoAtual = hoje.getFullYear();
     const mesAtual = hoje.getMonth();
-    const historicoCompleto = calcularHistorico({ quartos, reservas, clientes, anoAtual });
+    const historicoCompleto = calcularHistorico({
+      quartos,
+      reservas,
+      clientes,
+      anoAtual,
+    });
     const historicoVisivel = historicoCompleto.slice(0, mesAtual + 1);
-    const reservasDoMes = reservas.filter((reserva) => reservaEstaNoMes(reserva, anoAtual, mesAtual));
-    const reservasValidasDoMes = reservasDoMes.filter((reserva) => !reservaCancelada(reserva));
+    const reservasDoMes = reservas.filter((reserva) =>
+      reservaEstaNoMes(reserva, anoAtual, mesAtual),
+    );
+    const reservasValidasDoMes = reservasDoMes.filter(
+      (reserva) => !reservaCancelada(reserva),
+    );
     const quartosOcupadosDoMes = new Set(
       reservasValidasDoMes.map((reserva) => reserva.quartoId).filter(Boolean),
     ).size;
-    const reservasCanceladasDoMes = reservasDoMes.filter(reservaCancelada).length;
+    const reservasCanceladasDoMes =
+      reservasDoMes.filter(reservaCancelada).length;
     const avaliacoes = reservas
       .map((reserva) => Number(reserva.avaliacao))
       .filter((avaliacao) => Number.isFinite(avaliacao) && avaliacao > 0);
 
-    const taxaOcupacao = quartos.length ? arredondar((quartosOcupadosDoMes / quartos.length) * 100) : 0;
+    const taxaOcupacao = quartos.length
+      ? arredondar((quartosOcupadosDoMes / quartos.length) * 100)
+      : 0;
     const taxaCancelamento = reservasDoMes.length
       ? arredondar((reservasCanceladasDoMes / reservasDoMes.length) * 100)
       : 0;
-    const mediaReservasPorCliente = clientes.length ? arredondar(reservas.length / clientes.length) : 0;
-    const recorrencia = clientes.length ? arredondar(reservasValidasDoMes.length / clientes.length) : 0;
+    const mediaReservasPorCliente = clientes.length
+      ? arredondar(reservas.length / clientes.length)
+      : 0;
+    const recorrencia = clientes.length
+      ? arredondar(reservasValidasDoMes.length / clientes.length)
+      : 0;
     const satisfacao = avaliacoes.length
-      ? arredondar(avaliacoes.reduce((soma, nota) => soma + nota, 0) / avaliacoes.length)
+      ? arredondar(
+          avaliacoes.reduce((soma, nota) => soma + nota, 0) / avaliacoes.length,
+        )
       : 0;
 
     const cancelamentoTemStatus = reservas.some(
@@ -258,7 +325,9 @@ export default function DashboardAdmin() {
     ];
 
     const ocupacaoPorTipo = quartos.map((quarto) => {
-      const reservasDoQuarto = reservasValidasDoMes.filter((reserva) => reserva.quartoId === quarto.id);
+      const reservasDoQuarto = reservasValidasDoMes.filter(
+        (reserva) => reserva.quartoId === quarto.id,
+      );
       return {
         tipo: `${quarto.numero} - ${quarto.tipo || "Quarto"}`,
         valor: reservasDoQuarto.length > 0 ? 100 : 0,
@@ -286,8 +355,6 @@ export default function DashboardAdmin() {
 
   return (
     <div className="dashboard-admin-wrapper">
-    
-
       <main className="dashboard-admin-container">
         <button
           type="button"
@@ -302,20 +369,25 @@ export default function DashboardAdmin() {
             <span className="dashboard-eyebrow">Painel administrativo</span>
             <h1>Dashboard de Desempenho</h1>
             <p>
-              Indicadores calculados a partir dos quartos, reservas, clientes e avaliações cadastrados no sistema.
+              Indicadores calculados a partir dos quartos, reservas, clientes e
+              avaliações cadastrados no sistema.
             </p>
           </div>
 
           <div className="dashboard-periodo">
             <span>Período analisado</span>
-            <strong>{dados.resumo.mesAtual} de {dados.resumo.anoAtual}</strong>
+            <strong>
+              {dados.resumo.mesAtual} de {dados.resumo.anoAtual}
+            </strong>
           </div>
         </section>
 
         {erro && <div className="dashboard-alerta">{erro}</div>}
 
         {carregando ? (
-          <div className="dashboard-estado">Carregando dados reais do dashboard...</div>
+          <div className="dashboard-estado">
+            Carregando dados reais do dashboard...
+          </div>
         ) : (
           <>
             <section className="dashboard-resumo">
@@ -371,7 +443,10 @@ export default function DashboardAdmin() {
                         <span>{indicador.nome}</span>
                         <strong>{formatarValor(indicador)}</strong>
                       </div>
-                      <LinhaGrafico dados={indicador.historico} cor={indicador.cor} />
+                      <LinhaGrafico
+                        dados={indicador.historico}
+                        cor={indicador.cor}
+                      />
                       <div className="dashboard-meses">
                         {dados.meses.map((mes) => (
                           <span key={mes}>{mes}</span>
@@ -391,7 +466,8 @@ export default function DashboardAdmin() {
                 </div>
                 <Gauge valor={ocupacao.valor} cor={ocupacao.cor} />
                 <p className="dashboard-card-texto">
-                  {ocupacao.valor}% dos quartos possuem reserva ativa no mês analisado.
+                  {ocupacao.valor}% dos quartos possuem reserva ativa no mês
+                  analisado.
                 </p>
               </article>
 
@@ -406,12 +482,20 @@ export default function DashboardAdmin() {
                   <div>
                     <span>Atual</span>
                     <strong>{formatarValor(cancelamento)}</strong>
-                    <i style={{ width: `${Math.min(cancelamento.valor * 5, 100)}%` }} />
+                    <i
+                      style={{
+                        width: `${Math.min(cancelamento.valor * 5, 100)}%`,
+                      }}
+                    />
                   </div>
                   <div>
                     <span>Limite</span>
                     <strong>{cancelamento.meta}%</strong>
-                    <i style={{ width: `${Math.min(cancelamento.meta * 5, 100)}%` }} />
+                    <i
+                      style={{
+                        width: `${Math.min(cancelamento.meta * 5, 100)}%`,
+                      }}
+                    />
                   </div>
                 </div>
               </article>
@@ -425,7 +509,9 @@ export default function DashboardAdmin() {
                 </div>
                 <div className="dashboard-barras">
                   {dados.ocupacaoPorTipo.length === 0 ? (
-                    <p className="dashboard-card-texto">Nenhum quarto cadastrado.</p>
+                    <p className="dashboard-card-texto">
+                      Nenhum quarto cadastrado.
+                    </p>
                   ) : (
                     dados.ocupacaoPorTipo.map((item) => (
                       <div key={item.tipo} className="dashboard-barra">
@@ -448,12 +534,22 @@ export default function DashboardAdmin() {
                   </div>
                 </div>
                 <div className="dashboard-satisfacao">
-                  <strong>{satisfacao.semDados ? "--" : formatarNumero(satisfacao.valor)}</strong>
+                  <strong>
+                    {satisfacao.semDados
+                      ? "--"
+                      : formatarNumero(satisfacao.valor)}
+                  </strong>
                   <span>de 5 pontos</span>
                 </div>
-                <div className="dashboard-estrelas" aria-label="Avaliação média">
+                <div
+                  className="dashboard-estrelas"
+                  aria-label="Avaliação média"
+                >
                   {[1, 2, 3, 4, 5].map((estrela) => (
-                    <span key={estrela} className={satisfacao.valor >= estrela ? "ativo" : ""} />
+                    <span
+                      key={estrela}
+                      className={satisfacao.valor >= estrela ? "ativo" : ""}
+                    />
                   ))}
                 </div>
               </article>

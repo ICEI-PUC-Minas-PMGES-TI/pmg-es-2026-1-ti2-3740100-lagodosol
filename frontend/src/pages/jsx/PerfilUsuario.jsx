@@ -28,7 +28,9 @@ function PerfilUsuario() {
       return;
     }
 
-    fetch(`http://localhost:8081/usuarios/${usuarioId}`)
+    fetch(
+      `https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com/usuarios/${usuarioId}`,
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erro ao carregar usuário");
@@ -62,7 +64,7 @@ function PerfilUsuario() {
   async function salvarPerfil() {
     try {
       const response = await fetch(
-        `http://localhost:8081/usuarios/${usuarioId}`,
+        `https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com/usuarios/${usuarioId}`,
         {
           method: "PUT",
           headers: {
@@ -108,7 +110,7 @@ function PerfilUsuario() {
 
     try {
       const response = await fetch(
-        `http://localhost:8081/usuarios/${usuarioId}/senha`,
+        `https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com/usuarios/${usuarioId}/senha`,
         {
           method: "PUT",
           headers: {

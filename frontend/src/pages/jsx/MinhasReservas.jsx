@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../style/MinhasReservas.css";
 
-const API = "http://localhost:8081";
+const API = "https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com";
 
 function MinhasReservas() {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function MinhasReservas() {
 
       try {
         const response = await fetch(
-          `${API}/reservas/usuario/${usuarioLogado.id}`
+          `${API}/reservas/usuario/${usuarioLogado.id}`,
         );
         if (!response.ok) {
           throw new Error("Falha ao carregar reservas.");
@@ -67,14 +67,17 @@ function MinhasReservas() {
     const d = new Date(`${data}T12:00:00`);
     if (Number.isNaN(d.getTime())) return { dia: "--", mes: "" };
     const dia = d.getDate();
-    const mes = d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "");
+    const mes = d
+      .toLocaleDateString("pt-BR", { month: "short" })
+      .replace(".", "");
     return { dia, mes };
   }
 
   function calcularNoites(checkIn, checkOut) {
     const inicio = new Date(`${checkIn}T12:00:00`);
     const fim = new Date(`${checkOut}T12:00:00`);
-    if (Number.isNaN(inicio.getTime()) || Number.isNaN(fim.getTime())) return null;
+    if (Number.isNaN(inicio.getTime()) || Number.isNaN(fim.getTime()))
+      return null;
     const diff = (fim - inicio) / (1000 * 60 * 60 * 24);
     return diff > 0 ? diff : null;
   }
@@ -105,7 +108,7 @@ function MinhasReservas() {
 
       const reservaAtualizada = await response.json();
       setReservas((prev) =>
-        prev.map((item) => (item.id === id ? reservaAtualizada : item))
+        prev.map((item) => (item.id === id ? reservaAtualizada : item)),
       );
     } catch (error) {
       setErro(error.message);
@@ -128,7 +131,9 @@ function MinhasReservas() {
     ));
   }
 
-  const reservasAtivas = reservas.filter((reserva) => !isReservaConcluida(reserva));
+  const reservasAtivas = reservas.filter(
+    (reserva) => !isReservaConcluida(reserva),
+  );
   const reservasConcluidas = reservas.filter(isReservaConcluida);
 
   function CardReserva({ reserva, concluida }) {
@@ -137,16 +142,22 @@ function MinhasReservas() {
     const noites = calcularNoites(reserva.checkIn, reserva.checkOut);
 
     return (
-      <div className={`reserva-card ${concluida ? "reserva-card-concluida" : ""}`}>
+      <div
+        className={`reserva-card ${concluida ? "reserva-card-concluida" : ""}`}
+      >
         <div className="reserva-card-faixa" />
 
         <div className="reserva-card-topo">
           <div className="reserva-card-titulo">
             <h3>{reserva.nomeQuarto || "Reserva"}</h3>
-            {reserva.tipo && <span className="reserva-card-tag">{reserva.tipo}</span>}
+            {reserva.tipo && (
+              <span className="reserva-card-tag">{reserva.tipo}</span>
+            )}
           </div>
 
-          <span className={`reserva-card-status ${concluida ? "status-concluida" : "status-ativa"}`}>
+          <span
+            className={`reserva-card-status ${concluida ? "status-concluida" : "status-ativa"}`}
+          >
             {concluida ? "Concluída" : "Ativa"}
           </span>
         </div>
@@ -199,9 +210,11 @@ function MinhasReservas() {
               ) : (
                 <>
                   {renderStars(reserva.avaliacao || 0, (value) =>
-                    avaliarReserva(reserva.id, value)
+                    avaliarReserva(reserva.id, value),
                   )}
-                  <span className="rating-help">Clique nas estrelas para avaliar</span>
+                  <span className="rating-help">
+                    Clique nas estrelas para avaliar
+                  </span>
                 </>
               )}
             </div>
@@ -222,9 +235,14 @@ function MinhasReservas() {
           <div className="reservas-header">
             <div>
               <h1 className="title">Minhas Reservas</h1>
-              <p className="subtitle">Acompanhe suas estadias no Hotel Lago do Sol</p>
+              <p className="subtitle">
+                Acompanhe suas estadias no Hotel Lago do Sol
+              </p>
             </div>
-            <button className="btn-voltar-reservas" onClick={() => navigate("/")}>
+            <button
+              className="btn-voltar-reservas"
+              onClick={() => navigate("/")}
+            >
               ← Voltar para Home
             </button>
           </div>
@@ -238,11 +256,17 @@ function MinhasReservas() {
               <h2 className="section-title">Reservas Ativas</h2>
 
               {reservasAtivas.length === 0 ? (
-                <p className="empty-message">Nenhuma reserva ativa encontrada.</p>
+                <p className="empty-message">
+                  Nenhuma reserva ativa encontrada.
+                </p>
               ) : (
                 <div className="reservas-grid">
                   {reservasAtivas.map((reserva) => (
-                    <CardReserva key={reserva.id} reserva={reserva} concluida={false} />
+                    <CardReserva
+                      key={reserva.id}
+                      reserva={reserva}
+                      concluida={false}
+                    />
                   ))}
                 </div>
               )}
@@ -250,11 +274,17 @@ function MinhasReservas() {
               <h2 className="section-title">Histórico de Reservas</h2>
 
               {reservasConcluidas.length === 0 ? (
-                <p className="empty-message">Nenhuma reserva concluída encontrada.</p>
+                <p className="empty-message">
+                  Nenhuma reserva concluída encontrada.
+                </p>
               ) : (
                 <div className="reservas-grid">
                   {reservasConcluidas.map((reserva) => (
-                    <CardReserva key={reserva.id} reserva={reserva} concluida={true} />
+                    <CardReserva
+                      key={reserva.id}
+                      reserva={reserva}
+                      concluida={true}
+                    />
                   ))}
                 </div>
               )}

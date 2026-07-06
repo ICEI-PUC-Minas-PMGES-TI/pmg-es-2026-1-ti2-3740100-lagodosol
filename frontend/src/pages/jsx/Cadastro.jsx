@@ -55,24 +55,28 @@ function CadastroUsuario() {
     setEnviando(true);
 
     try {
-      const response = await fetch("http://localhost:8081/usuarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nome: form.nome,
-          cpf: form.cpf,
-          dataNascimento: form.dataNascimento,
-          email: form.email,
-          senha: form.senha,
-        }),
-      });
+      const response = await fetch(
+        "https://pmg-es-2026-1-ti2-3740100-lagodosol.onrender.com/usuarios",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nome: form.nome,
+            cpf: form.cpf,
+            dataNascimento: form.dataNascimento,
+            email: form.email,
+            senha: form.senha,
+          }),
+        },
+      );
 
       // E-mail já cadastrado
       if (response.status === 409) {
         setAlerta({
           type: "error",
           title: "E-mail já cadastrado",
-          message: "Já existe uma conta com este e-mail. Faça login ou use outro e-mail.",
+          message:
+            "Já existe uma conta com este e-mail. Faça login ou use outro e-mail.",
         });
         return;
       }
@@ -84,7 +88,8 @@ function CadastroUsuario() {
       // Sucesso → redireciona para o login com mensagem
       navigate("/login", {
         state: {
-          mensagem: "Cadastro realizado com sucesso! Faça login para continuar.",
+          mensagem:
+            "Cadastro realizado com sucesso! Faça login para continuar.",
         },
       });
     } catch (error) {
@@ -189,7 +194,11 @@ function CadastroUsuario() {
                 />
               </div>
 
-              <button type="submit" className="btn-cadastrar" disabled={enviando}>
+              <button
+                type="submit"
+                className="btn-cadastrar"
+                disabled={enviando}
+              >
                 {enviando ? "Cadastrando..." : "Cadastrar Conta"}
               </button>
 
